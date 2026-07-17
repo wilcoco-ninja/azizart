@@ -1,0 +1,29 @@
+mutation CreateNewsItem($data: News_Data!) @auth(level: USER) {
+  news_insert(data: $data)
+}
+
+query ListPublishedNews @auth(level: PUBLIC) {
+  newss(where: {isPublished: {eq: true}}, orderBy: [{publishedAt: DESC}]) {
+    id
+    titleEn
+    titleFr
+    contentEn
+    contentFr
+    publishedAt
+  }
+}
+
+mutation CreateContactSubmission($data: ContactSubmission_Data!) @auth(level: PUBLIC) {
+  contactSubmission_insert(data: $data)
+}
+
+query GetArtworksByCategory($categoryId: UUID!) @auth(level: PUBLIC) {
+  artworks(where: {categoryId: {eq: $categoryId}}, orderBy: [{sortOrder: ASC}]) {
+    id
+    titleEn
+    titleFr
+    imageUrl
+    price
+    isAvailable
+  }
+}

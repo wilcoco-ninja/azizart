@@ -1,0 +1,58 @@
+extend type AdminUser {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "AdminUser", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Artwork {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Artwork", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Artwork`.`category`. It must match the value of `ArtworkCategory`.`id`. See `@ref` for how to customize it.
+  """
+  categoryId: UUID! @fdc_generated(from: "Artwork.category", purpose: IMPLICIT_REF_FIELD)
+}
+extend type ArtworkCategory {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "ArtworkCategory", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type AtelierPhoto {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "AtelierPhoto", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type ContactSubmission {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "ContactSubmission", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type Exhibition {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Exhibition", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type MediaItem {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "MediaItem", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type News {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "News", purpose: IMPLICIT_KEY_FIELD)
+}
+extend type SiteSetting {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "SiteSetting", purpose: IMPLICIT_KEY_FIELD)
+}

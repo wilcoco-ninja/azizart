@@ -1,0 +1,85 @@
+type AdminUser @table {
+  firebaseUid: String!
+  email: String!
+  role: String!
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type ArtworkCategory @table {
+  slug: String!
+  nameFr: String!
+  nameEn: String!
+  sortOrder: Int! @default(value: 0)
+}
+
+type Artwork @table {
+  category: ArtworkCategory!
+  titleFr: String!
+  titleEn: String!
+  descriptionFr: String
+  descriptionEn: String
+  technique: String
+  dimensions: String
+  price: Float!
+  isAvailable: Boolean! @default(value: true)
+  isFeatured: Boolean! @default(value: false)
+  imageUrl: String!
+  sortOrder: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type AtelierPhoto @table {
+  imageUrl: String!
+  captionFr: String
+  captionEn: String
+  sortOrder: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type MediaItem @table {
+  mediaType: String!
+  titleFr: String!
+  sourceUrl: String
+  fileUrl: String
+  sortOrder: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type News @table {
+  titleFr: String!
+  titleEn: String!
+  contentFr: String!
+  contentEn: String!
+  isPublished: Boolean! @default(value: false)
+  publishedAt: Timestamp
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type Exhibition @table {
+  title: String!
+  venueName: String!
+  latitude: Float
+  longitude: Float
+  startDate: Date!
+  endDate: Date!
+  sortOrder: Int! @default(value: 0)
+}
+
+type ContactSubmission @table {
+  fullName: String!
+  email: String!
+  message: String!
+  status: String! @default(value: "pending")
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type SiteSetting @table {
+  key: String!
+  valueFr: String!
+  valueEn: String!
+  updatedAt: Timestamp! @default(expr: "request.time")
+}

@@ -1,0 +1,479 @@
+extend type Query {
+  """
+  ✨ Look up a single `AdminUser` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  adminUser(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AdminUser_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AdminUser_FirstRow
+  ): AdminUser @fdc_generated(from: "AdminUser", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Artwork` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  artwork(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Artwork_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Artwork_FirstRow
+  ): Artwork @fdc_generated(from: "Artwork", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `ArtworkCategory` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  artworkCategory(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ArtworkCategory_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ArtworkCategory_FirstRow
+  ): ArtworkCategory @fdc_generated(from: "ArtworkCategory", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `AtelierPhoto` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  atelierPhoto(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AtelierPhoto_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AtelierPhoto_FirstRow
+  ): AtelierPhoto @fdc_generated(from: "AtelierPhoto", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `ContactSubmission` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  contactSubmission(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ContactSubmission_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ContactSubmission_FirstRow
+  ): ContactSubmission @fdc_generated(from: "ContactSubmission", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Exhibition` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  exhibition(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Exhibition_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Exhibition_FirstRow
+  ): Exhibition @fdc_generated(from: "Exhibition", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `MediaItem` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  mediaItem(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: MediaItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: MediaItem_FirstRow
+  ): MediaItem @fdc_generated(from: "MediaItem", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `News` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  news(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: News_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: News_FirstRow
+  ): News @fdc_generated(from: "News", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `SiteSetting` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  siteSetting(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: SiteSetting_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SiteSetting_FirstRow
+  ): SiteSetting @fdc_generated(from: "SiteSetting", purpose: QUERY_SINGLE)
+  """
+  ✨ List `AdminUser` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  adminUsers(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: AdminUser_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [AdminUser_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: AdminUser_Having
+  ): [AdminUser!]! @fdc_generated(from: "AdminUser", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Artwork` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  artworks(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Artwork_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Artwork_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Artwork_Having
+  ): [Artwork!]! @fdc_generated(from: "Artwork", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `ArtworkCategory` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  artworkCategories(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: ArtworkCategory_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [ArtworkCategory_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: ArtworkCategory_Having
+  ): [ArtworkCategory!]! @fdc_generated(from: "ArtworkCategory", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `AtelierPhoto` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  atelierPhotos(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: AtelierPhoto_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [AtelierPhoto_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: AtelierPhoto_Having
+  ): [AtelierPhoto!]! @fdc_generated(from: "AtelierPhoto", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `ContactSubmission` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  contactSubmissions(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: ContactSubmission_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [ContactSubmission_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: ContactSubmission_Having
+  ): [ContactSubmission!]! @fdc_generated(from: "ContactSubmission", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Exhibition` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  exhibitions(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Exhibition_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Exhibition_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Exhibition_Having
+  ): [Exhibition!]! @fdc_generated(from: "Exhibition", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `MediaItem` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  mediaItems(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: MediaItem_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [MediaItem_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: MediaItem_Having
+  ): [MediaItem!]! @fdc_generated(from: "MediaItem", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `News` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  newss(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: News_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [News_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: News_Having
+  ): [News!]! @fdc_generated(from: "News", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `SiteSetting` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  siteSettings(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: SiteSetting_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [SiteSetting_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: SiteSetting_Having
+  ): [SiteSetting!]! @fdc_generated(from: "SiteSetting", purpose: QUERY_MULTIPLE)
+}

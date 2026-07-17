@@ -1,0 +1,1010 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `AdminUser` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  adminUser_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: AdminUser_Data!
+  ): AdminUser_KeyOutput! @fdc_generated(from: "AdminUser", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Artwork` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  artwork_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Artwork_Data!
+  ): Artwork_KeyOutput! @fdc_generated(from: "Artwork", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ArtworkCategory` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  artworkCategory_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ArtworkCategory_Data!
+  ): ArtworkCategory_KeyOutput! @fdc_generated(from: "ArtworkCategory", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `AtelierPhoto` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  atelierPhoto_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: AtelierPhoto_Data!
+  ): AtelierPhoto_KeyOutput! @fdc_generated(from: "AtelierPhoto", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ContactSubmission` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  contactSubmission_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ContactSubmission_Data!
+  ): ContactSubmission_KeyOutput! @fdc_generated(from: "ContactSubmission", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Exhibition` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  exhibition_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Exhibition_Data!
+  ): Exhibition_KeyOutput! @fdc_generated(from: "Exhibition", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `MediaItem` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  mediaItem_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: MediaItem_Data!
+  ): MediaItem_KeyOutput! @fdc_generated(from: "MediaItem", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `News` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  news_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: News_Data!
+  ): News_KeyOutput! @fdc_generated(from: "News", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `SiteSetting` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  siteSetting_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: SiteSetting_Data!
+  ): SiteSetting_KeyOutput! @fdc_generated(from: "SiteSetting", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `AdminUser` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  adminUser_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [AdminUser_Data!]!
+  ): [AdminUser_KeyOutput!]! @fdc_generated(from: "AdminUser", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Artwork` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  artwork_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Artwork_Data!]!
+  ): [Artwork_KeyOutput!]! @fdc_generated(from: "Artwork", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ArtworkCategory` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  artworkCategory_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ArtworkCategory_Data!]!
+  ): [ArtworkCategory_KeyOutput!]! @fdc_generated(from: "ArtworkCategory", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `AtelierPhoto` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  atelierPhoto_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [AtelierPhoto_Data!]!
+  ): [AtelierPhoto_KeyOutput!]! @fdc_generated(from: "AtelierPhoto", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ContactSubmission` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  contactSubmission_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ContactSubmission_Data!]!
+  ): [ContactSubmission_KeyOutput!]! @fdc_generated(from: "ContactSubmission", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Exhibition` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  exhibition_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Exhibition_Data!]!
+  ): [Exhibition_KeyOutput!]! @fdc_generated(from: "Exhibition", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `MediaItem` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  mediaItem_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [MediaItem_Data!]!
+  ): [MediaItem_KeyOutput!]! @fdc_generated(from: "MediaItem", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `News` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  news_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [News_Data!]!
+  ): [News_KeyOutput!]! @fdc_generated(from: "News", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `SiteSetting` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  siteSetting_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [SiteSetting_Data!]!
+  ): [SiteSetting_KeyOutput!]! @fdc_generated(from: "SiteSetting", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `AdminUser` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AdminUser`.
+  """
+  adminUser_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: AdminUser_Data!
+  ): AdminUser_KeyOutput! @fdc_generated(from: "AdminUser", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Artwork` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Artwork`.
+  """
+  artwork_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Artwork_Data!
+  ): Artwork_KeyOutput! @fdc_generated(from: "Artwork", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ArtworkCategory` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ArtworkCategory`.
+  """
+  artworkCategory_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ArtworkCategory_Data!
+  ): ArtworkCategory_KeyOutput! @fdc_generated(from: "ArtworkCategory", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `AtelierPhoto` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AtelierPhoto`.
+  """
+  atelierPhoto_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: AtelierPhoto_Data!
+  ): AtelierPhoto_KeyOutput! @fdc_generated(from: "AtelierPhoto", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ContactSubmission` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ContactSubmission`.
+  """
+  contactSubmission_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ContactSubmission_Data!
+  ): ContactSubmission_KeyOutput! @fdc_generated(from: "ContactSubmission", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Exhibition` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Exhibition`.
+  """
+  exhibition_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Exhibition_Data!
+  ): Exhibition_KeyOutput! @fdc_generated(from: "Exhibition", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `MediaItem` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `MediaItem`.
+  """
+  mediaItem_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: MediaItem_Data!
+  ): MediaItem_KeyOutput! @fdc_generated(from: "MediaItem", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `News` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `News`.
+  """
+  news_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: News_Data!
+  ): News_KeyOutput! @fdc_generated(from: "News", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `SiteSetting` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SiteSetting`.
+  """
+  siteSetting_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: SiteSetting_Data!
+  ): SiteSetting_KeyOutput! @fdc_generated(from: "SiteSetting", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `AdminUser` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AdminUser`.
+  """
+  adminUser_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [AdminUser_Data!]!
+  ): [AdminUser_KeyOutput!]! @fdc_generated(from: "AdminUser", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Artwork` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Artwork`.
+  """
+  artwork_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Artwork_Data!]!
+  ): [Artwork_KeyOutput!]! @fdc_generated(from: "Artwork", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ArtworkCategory` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ArtworkCategory`.
+  """
+  artworkCategory_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ArtworkCategory_Data!]!
+  ): [ArtworkCategory_KeyOutput!]! @fdc_generated(from: "ArtworkCategory", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `AtelierPhoto` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `AtelierPhoto`.
+  """
+  atelierPhoto_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [AtelierPhoto_Data!]!
+  ): [AtelierPhoto_KeyOutput!]! @fdc_generated(from: "AtelierPhoto", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ContactSubmission` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ContactSubmission`.
+  """
+  contactSubmission_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ContactSubmission_Data!]!
+  ): [ContactSubmission_KeyOutput!]! @fdc_generated(from: "ContactSubmission", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Exhibition` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Exhibition`.
+  """
+  exhibition_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Exhibition_Data!]!
+  ): [Exhibition_KeyOutput!]! @fdc_generated(from: "Exhibition", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `MediaItem` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `MediaItem`.
+  """
+  mediaItem_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [MediaItem_Data!]!
+  ): [MediaItem_KeyOutput!]! @fdc_generated(from: "MediaItem", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `News` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `News`.
+  """
+  news_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [News_Data!]!
+  ): [News_KeyOutput!]! @fdc_generated(from: "News", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `SiteSetting` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `SiteSetting`.
+  """
+  siteSetting_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [SiteSetting_Data!]!
+  ): [SiteSetting_KeyOutput!]! @fdc_generated(from: "SiteSetting", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `AdminUser` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `AdminUser` or `null` if not found.
+  """
+  adminUser_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AdminUser_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AdminUser_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: AdminUser_Data!
+  ): AdminUser_KeyOutput @fdc_generated(from: "AdminUser", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Artwork` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Artwork` or `null` if not found.
+  """
+  artwork_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Artwork_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Artwork_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Artwork_Data!
+  ): Artwork_KeyOutput @fdc_generated(from: "Artwork", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ArtworkCategory` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ArtworkCategory` or `null` if not found.
+  """
+  artworkCategory_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ArtworkCategory_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ArtworkCategory_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ArtworkCategory_Data!
+  ): ArtworkCategory_KeyOutput @fdc_generated(from: "ArtworkCategory", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `AtelierPhoto` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `AtelierPhoto` or `null` if not found.
+  """
+  atelierPhoto_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AtelierPhoto_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AtelierPhoto_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: AtelierPhoto_Data!
+  ): AtelierPhoto_KeyOutput @fdc_generated(from: "AtelierPhoto", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ContactSubmission` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ContactSubmission` or `null` if not found.
+  """
+  contactSubmission_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ContactSubmission_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ContactSubmission_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ContactSubmission_Data!
+  ): ContactSubmission_KeyOutput @fdc_generated(from: "ContactSubmission", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Exhibition` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Exhibition` or `null` if not found.
+  """
+  exhibition_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Exhibition_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Exhibition_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Exhibition_Data!
+  ): Exhibition_KeyOutput @fdc_generated(from: "Exhibition", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `MediaItem` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `MediaItem` or `null` if not found.
+  """
+  mediaItem_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: MediaItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: MediaItem_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: MediaItem_Data!
+  ): MediaItem_KeyOutput @fdc_generated(from: "MediaItem", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `News` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `News` or `null` if not found.
+  """
+  news_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: News_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: News_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: News_Data!
+  ): News_KeyOutput @fdc_generated(from: "News", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `SiteSetting` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `SiteSetting` or `null` if not found.
+  """
+  siteSetting_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: SiteSetting_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SiteSetting_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: SiteSetting_Data!
+  ): SiteSetting_KeyOutput @fdc_generated(from: "SiteSetting", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `AdminUser` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  adminUser_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: AdminUser_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: AdminUser_Data!
+  ): Int! @fdc_generated(from: "AdminUser", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Artwork` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  artwork_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Artwork_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Artwork_Data!
+  ): Int! @fdc_generated(from: "Artwork", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ArtworkCategory` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  artworkCategory_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ArtworkCategory_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ArtworkCategory_Data!
+  ): Int! @fdc_generated(from: "ArtworkCategory", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `AtelierPhoto` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  atelierPhoto_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: AtelierPhoto_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: AtelierPhoto_Data!
+  ): Int! @fdc_generated(from: "AtelierPhoto", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ContactSubmission` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  contactSubmission_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ContactSubmission_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ContactSubmission_Data!
+  ): Int! @fdc_generated(from: "ContactSubmission", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Exhibition` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  exhibition_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Exhibition_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Exhibition_Data!
+  ): Int! @fdc_generated(from: "Exhibition", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `MediaItem` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  mediaItem_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: MediaItem_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: MediaItem_Data!
+  ): Int! @fdc_generated(from: "MediaItem", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `News` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  news_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: News_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: News_Data!
+  ): Int! @fdc_generated(from: "News", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `SiteSetting` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  siteSetting_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: SiteSetting_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: SiteSetting_Data!
+  ): Int! @fdc_generated(from: "SiteSetting", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `AdminUser` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  adminUser_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AdminUser_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AdminUser_FirstRow
+  ): AdminUser_KeyOutput @fdc_generated(from: "AdminUser", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Artwork` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  artwork_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Artwork_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Artwork_FirstRow
+  ): Artwork_KeyOutput @fdc_generated(from: "Artwork", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ArtworkCategory` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  artworkCategory_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ArtworkCategory_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ArtworkCategory_FirstRow
+  ): ArtworkCategory_KeyOutput @fdc_generated(from: "ArtworkCategory", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `AtelierPhoto` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  atelierPhoto_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: AtelierPhoto_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: AtelierPhoto_FirstRow
+  ): AtelierPhoto_KeyOutput @fdc_generated(from: "AtelierPhoto", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ContactSubmission` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  contactSubmission_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ContactSubmission_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ContactSubmission_FirstRow
+  ): ContactSubmission_KeyOutput @fdc_generated(from: "ContactSubmission", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Exhibition` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  exhibition_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Exhibition_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Exhibition_FirstRow
+  ): Exhibition_KeyOutput @fdc_generated(from: "Exhibition", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `MediaItem` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  mediaItem_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: MediaItem_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: MediaItem_FirstRow
+  ): MediaItem_KeyOutput @fdc_generated(from: "MediaItem", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `News` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  news_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: News_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: News_FirstRow
+  ): News_KeyOutput @fdc_generated(from: "News", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `SiteSetting` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  siteSetting_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: SiteSetting_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: SiteSetting_FirstRow
+  ): SiteSetting_KeyOutput @fdc_generated(from: "SiteSetting", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `AdminUser` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  adminUser_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: AdminUser_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "AdminUser", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Artwork` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  artwork_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Artwork_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Artwork", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ArtworkCategory` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  artworkCategory_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ArtworkCategory_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ArtworkCategory", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `AtelierPhoto` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  atelierPhoto_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: AtelierPhoto_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "AtelierPhoto", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ContactSubmission` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  contactSubmission_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ContactSubmission_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ContactSubmission", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Exhibition` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  exhibition_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Exhibition_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Exhibition", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `MediaItem` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  mediaItem_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: MediaItem_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "MediaItem", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `News` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  news_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: News_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "News", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `SiteSetting` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  siteSetting_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: SiteSetting_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "SiteSetting", purpose: DELETE_MULTIPLE)
+}

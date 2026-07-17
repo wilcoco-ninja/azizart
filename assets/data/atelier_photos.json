@@ -1,0 +1,154 @@
+[
+  {
+    "id": "atelier_01",
+    "imagePath": "assets/images/atelier/t1.jpg",
+    "imageUrl": "",
+    "title": "Préparation de la cire",
+    "description": "La cire chaude est appliquée avec précision sur le tissu pour créer les réserves caractéristiques du batik.",
+    "order": 1
+  },
+  {
+    "id": "atelier_02",
+    "imagePath": "assets/images/atelier/t2.jpg",
+    "imageUrl": "",
+    "title": "Bain de teinture",
+    "description": "Le tissu plonge dans des bains successifs de teintures naturelles, chaque couleur ajoutant une profondeur nouvelle.",
+    "order": 2
+  },
+  {
+    "id": "atelier_03",
+    "imagePath": "assets/images/atelier/t3.jpg",
+    "imageUrl": "",
+    "title": "L'atelier en lumière",
+    "description": "Vue d'ensemble de l'espace de création, baigné par la lumière naturelle du matin.",
+    "order": 3
+  },
+  {
+    "id": "atelier_04",
+    "imagePath": "assets/images/atelier/t4.jpg",
+    "imageUrl": "",
+    "title": "Finitions à la main",
+    "description": "Chaque pièce reçoit des retouches à la main pour parfaire les détails et assurer une qualité irréprochable.",
+    "order": 4
+  },
+  {
+    "id": "atelier_05",
+    "imagePath": "assets/images/atelier/t5.jpg",
+    "imageUrl": "",
+    "title": "Œuvres en séchage",
+    "description": "Les tissus teints sèchent lentement, révélant progressivement leurs motifs et leurs nuances.",
+    "order": 5
+  },
+  {
+    "id": "atelier_06",
+    "imagePath": "assets/images/atelier/t6.jpg",
+    "imageUrl": "",
+    "title": "Collection récente",
+    "description": "Aperçu des créations les plus récentes, prêtes à rejoindre leur nouveau foyer.",
+    "order": 6
+  },
+  {
+    "id": "atelier_07",
+    "imagePath": "assets/images/atelier/t7.jpg",
+    "imageUrl": "",
+    "title": "Détail d'une œuvre",
+    "description": "Zoom sur les détails complexes d'une pièce, témoignant du savoir-faire artisanal.",
+    "order": 7
+  },
+  {
+    "id": "atelier_08",
+    "imagePath": "assets/images/atelier/t8.jpg",
+    "imageUrl": "",
+    "title": "L'atelier en activité",
+    "description": "Un moment de création intense, où chaque geste compte pour donner vie à une nouvelle œuvre.",
+    "order": 8
+  },
+  {
+    "id": "atelier_09",
+    "imagePath": "assets/images/atelier/t9.jpg",
+    "imageUrl": "",
+    "title": "Palette de couleurs",
+    "description": "La palette de teintures naturelles, prête à être utilisée pour les prochaines créations.",
+    "order": 9
+  },
+  {
+    "id": "atelier_10",
+    "imagePath": "assets/images/atelier/t10.jpg",
+    "imageUrl": "",
+    "title": "Finitions minutieuses",
+    "description": "Chaque pièce est soigneusement inspectée et retouchée pour garantir une qualité exceptionnelle.",
+    "order": 10
+  },
+  {
+    "id": "atelier_11",
+    "imagePath": "assets/images/atelier/t11.jpg",
+    "imageUrl": "",
+    "title": "Œuvres en exposition",
+    "description": "Les créations prêtes à être exposées, témoignant de la richesse du patrimoine textile béninois.",
+    "order": 11
+  },
+  {
+    "id": "atelier_12",
+    "imagePath": "assets/images/atelier/t12.jpg",
+    "imageUrl": "",
+    "title": "L'atelier au quotidien",
+    "description": "Un aperçu de la vie quotidienne dans l'atelier, où la passion pour l'art textile se transmet de génération en génération.",
+    "order": 12
+  },
+  {
+    "id": "atelier_13",
+    "imagePath": "assets/images/atelier/t13.jpg",
+    "imageUrl": "",
+    "title": "Détail d'une œuvre en cours",
+    "description": "Zoom sur les détails d'une pièce en cours de création, révélant les étapes intermédiaires du processus artistique.",
+    "order": 13
+  },
+  {
+    "id": "atelier_14",
+    "imagePath": "assets/images/atelier/t14.jpg",
+    "imageUrl": "",
+    "title": "L'atelier en pleine effervescence",
+    "description": "Un moment de créativité intense, où chaque artisan apporte sa touche unique à l'œuvre collective.",
+    "order": 14
+  },
+  {
+    "id": "atelier_15",
+    "imagePath": "assets/images/atelier/t15.jpeg",
+    "imageUrl": "",
+    "title": "Palette de matériaux",
+    "description": "La diversité des matériaux utilisés dans la création textile, prêts à être transformés en œuvres d'art uniques.",
+    "order": 15
+  },
+  {
+    "id": "atelier_16",
+    "imagePath": "assets/images/atelier/t16.jpeg",
+    "imageUrl": "",
+    "title": "Finitions finales",
+    "description": "Chaque pièce reçoit les touches finales pour parfaire son esthétique et sa qualité.",
+    "order": 16
+  },
+  {
+    "id": "atelier_17",
+    "imagePath": "assets/images/atelier/t17.jpg",
+    "imageUrl": "",
+    "title": "Œuvres prêtes à être exposées",
+    "description": "Les créations prêtes à être exposées, témoignant de la richesse du patrimoine textile béninois.",
+    "order": 17
+  },
+  {
+    "id": "atelier_18",
+    "imagePath": "assets/images/atelier/t18.jpg",
+    "imageUrl": "",
+    "title": "L'atelier au quotidien",
+    "description": "Un aperçu de la vie quotidienne dans l'atelier, où la passion pour l'art textile se transmet de génération en génération.",
+    "order": 18
+  },
+  {
+    "id": "atelier_19",
+    "imagePath": "assets/images/atelier/t19.jpg",
+    "imageUrl": "",
+    "title": "Détail d'une œuvre en cours",
+    "description": "Zoom sur les détails d'une pièce en cours de création, révélant les étapes intermédiaires du processus artistique.",
+    "order": 19
+  }
+]

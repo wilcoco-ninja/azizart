@@ -1,0 +1,3161 @@
+"""
+✨ `AdminUser_KeyOutput` returns the primary key fields of table type `AdminUser`.
+
+It has the same format as `AdminUser_Key`, but is only used as mutation return value.
+"""
+scalar AdminUser_KeyOutput
+"""
+✨ `Artwork_KeyOutput` returns the primary key fields of table type `Artwork`.
+
+It has the same format as `Artwork_Key`, but is only used as mutation return value.
+"""
+scalar Artwork_KeyOutput
+"""
+✨ `ArtworkCategory_KeyOutput` returns the primary key fields of table type `ArtworkCategory`.
+
+It has the same format as `ArtworkCategory_Key`, but is only used as mutation return value.
+"""
+scalar ArtworkCategory_KeyOutput
+"""
+✨ `AtelierPhoto_KeyOutput` returns the primary key fields of table type `AtelierPhoto`.
+
+It has the same format as `AtelierPhoto_Key`, but is only used as mutation return value.
+"""
+scalar AtelierPhoto_KeyOutput
+"""
+✨ `ContactSubmission_KeyOutput` returns the primary key fields of table type `ContactSubmission`.
+
+It has the same format as `ContactSubmission_Key`, but is only used as mutation return value.
+"""
+scalar ContactSubmission_KeyOutput
+"""
+✨ `Exhibition_KeyOutput` returns the primary key fields of table type `Exhibition`.
+
+It has the same format as `Exhibition_Key`, but is only used as mutation return value.
+"""
+scalar Exhibition_KeyOutput
+"""
+✨ `MediaItem_KeyOutput` returns the primary key fields of table type `MediaItem`.
+
+It has the same format as `MediaItem_Key`, but is only used as mutation return value.
+"""
+scalar MediaItem_KeyOutput
+"""
+✨ `News_KeyOutput` returns the primary key fields of table type `News`.
+
+It has the same format as `News_Key`, but is only used as mutation return value.
+"""
+scalar News_KeyOutput
+"""
+✨ `SiteSetting_KeyOutput` returns the primary key fields of table type `SiteSetting`.
+
+It has the same format as `SiteSetting_Key`, but is only used as mutation return value.
+"""
+scalar SiteSetting_KeyOutput
+"""
+✨ Generated data input type for table 'AdminUser'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input AdminUser_Data {
+  """
+  ✨ Generated from Field `AdminUser`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `AdminUser`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`email` of type `String!`
+  """
+  email: String
+  """
+  ✨ `_expr` server value variant of `email` (✨ Generated from Field `AdminUser`.`email` of type `String!`)
+  """
+  email_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`firebaseUid` of type `String!`
+  """
+  firebaseUid: String
+  """
+  ✨ `_expr` server value variant of `firebaseUid` (✨ Generated from Field `AdminUser`.`firebaseUid` of type `String!`)
+  """
+  firebaseUid_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`isActive` of type `Boolean!`
+  """
+  isActive: Boolean
+  """
+  ✨ `_expr` server value variant of `isActive` (✨ Generated from Field `AdminUser`.`isActive` of type `Boolean!`)
+  """
+  isActive_expr: Boolean_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`role` of type `String!`
+  """
+  role: String
+  """
+  ✨ `_expr` server value variant of `role` (✨ Generated from Field `AdminUser`.`role` of type `String!`)
+  """
+  role_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'AdminUser'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input AdminUser_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [AdminUser_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: AdminUser_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [AdminUser_Filter!]
+  """
+  ✨ Generated from Field `AdminUser`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`email` of type `String!`
+  """
+  email: String_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`firebaseUid` of type `String!`
+  """
+  firebaseUid: String_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`isActive` of type `Boolean!`
+  """
+  isActive: Boolean_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`role` of type `String!`
+  """
+  role: String_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'AdminUser'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input AdminUser_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [AdminUser_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: AdminUser_Filter
+}
+"""
+✨ Generated having input type for table 'AdminUser'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input AdminUser_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [AdminUser_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: AdminUser_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [AdminUser_Having!]
+  """
+  ✨ Generated from Field `AdminUser`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`email_count` of type `Int!`
+  """
+  email_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`firebaseUid_count` of type `Int!`
+  """
+  firebaseUid_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`isActive_count` of type `Int!`
+  """
+  isActive_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`role_count` of type `Int!`
+  """
+  role_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'AdminUser'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input AdminUser_Key {
+  """
+  ✨ Generated from Field `AdminUser`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `AdminUser`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'AdminUser'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input AdminUser_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: AdminUser_Filter
+}
+"""
+✨ Generated order input type for table 'AdminUser'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input AdminUser_Order {
+  """
+  ✨ Generated from Field `AdminUser`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`email` of type `String!`
+  """
+  email: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`firebaseUid` of type `String!`
+  """
+  firebaseUid: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`isActive` of type `Boolean!`
+  """
+  isActive: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`role` of type `String!`
+  """
+  role: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`email_count` of type `Int!`
+  """
+  email_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`firebaseUid_count` of type `Int!`
+  """
+  firebaseUid_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`isActive_count` of type `Int!`
+  """
+  isActive_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`role_count` of type `Int!`
+  """
+  role_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `AdminUser`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Artwork'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Artwork_Data {
+  """
+  ✨ Generated from Field `Artwork`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Artwork`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`categoryId` of type `UUID!`
+  """
+  categoryId: UUID
+  """
+  ✨ `_expr` server value variant of `categoryId` (✨ Generated from Field `Artwork`.`categoryId` of type `UUID!`)
+  """
+  categoryId_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`category` of type `ArtworkCategory!`
+  """
+  category: ArtworkCategory_Key @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`descriptionEn` of type `String`
+  """
+  descriptionEn: String
+  """
+  ✨ `_expr` server value variant of `descriptionEn` (✨ Generated from Field `Artwork`.`descriptionEn` of type `String`)
+  """
+  descriptionEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`descriptionFr` of type `String`
+  """
+  descriptionFr: String
+  """
+  ✨ `_expr` server value variant of `descriptionFr` (✨ Generated from Field `Artwork`.`descriptionFr` of type `String`)
+  """
+  descriptionFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`dimensions` of type `String`
+  """
+  dimensions: String
+  """
+  ✨ `_expr` server value variant of `dimensions` (✨ Generated from Field `Artwork`.`dimensions` of type `String`)
+  """
+  dimensions_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`imageUrl` of type `String!`
+  """
+  imageUrl: String
+  """
+  ✨ `_expr` server value variant of `imageUrl` (✨ Generated from Field `Artwork`.`imageUrl` of type `String!`)
+  """
+  imageUrl_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`isAvailable` of type `Boolean!`
+  """
+  isAvailable: Boolean
+  """
+  ✨ `_expr` server value variant of `isAvailable` (✨ Generated from Field `Artwork`.`isAvailable` of type `Boolean!`)
+  """
+  isAvailable_expr: Boolean_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`isFeatured` of type `Boolean!`
+  """
+  isFeatured: Boolean
+  """
+  ✨ `_expr` server value variant of `isFeatured` (✨ Generated from Field `Artwork`.`isFeatured` of type `Boolean!`)
+  """
+  isFeatured_expr: Boolean_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`price` of type `Float!`
+  """
+  price: Float
+  """
+  ✨ `_expr` server value variant of `price` (✨ Generated from Field `Artwork`.`price` of type `Float!`)
+  """
+  price_expr: Float_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `price` (✨ Generated from Field `Artwork`.`price` of type `Float!`)
+  """
+  price_update: [Float_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int
+  """
+  ✨ `_expr` server value variant of `sortOrder` (✨ Generated from Field `Artwork`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `sortOrder` (✨ Generated from Field `Artwork`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_update: [Int_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`technique` of type `String`
+  """
+  technique: String
+  """
+  ✨ `_expr` server value variant of `technique` (✨ Generated from Field `Artwork`.`technique` of type `String`)
+  """
+  technique_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`titleEn` of type `String!`
+  """
+  titleEn: String
+  """
+  ✨ `_expr` server value variant of `titleEn` (✨ Generated from Field `Artwork`.`titleEn` of type `String!`)
+  """
+  titleEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`titleFr` of type `String!`
+  """
+  titleFr: String
+  """
+  ✨ `_expr` server value variant of `titleFr` (✨ Generated from Field `Artwork`.`titleFr` of type `String!`)
+  """
+  titleFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'Artwork'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Artwork_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Artwork_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Artwork_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Artwork_Filter!]
+  """
+  ✨ Generated from Field `Artwork`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Artwork`.`categoryId` of type `UUID!`
+  """
+  categoryId: UUID_Filter
+  """
+  ✨ Generated from Field `Artwork`.`category` of type `ArtworkCategory!`
+  """
+  category: ArtworkCategory_Filter
+  """
+  ✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `Artwork`.`descriptionEn` of type `String`
+  """
+  descriptionEn: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`descriptionFr` of type `String`
+  """
+  descriptionFr: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`dimensions` of type `String`
+  """
+  dimensions: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`imageUrl` of type `String!`
+  """
+  imageUrl: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`isAvailable` of type `Boolean!`
+  """
+  isAvailable: Boolean_Filter
+  """
+  ✨ Generated from Field `Artwork`.`isFeatured` of type `Boolean!`
+  """
+  isFeatured: Boolean_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price` of type `Float!`
+  """
+  price: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`technique` of type `String`
+  """
+  technique: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`titleEn` of type `String!`
+  """
+  titleEn: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`titleFr` of type `String!`
+  """
+  titleFr: String_Filter
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'Artwork'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Artwork_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Artwork_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Artwork_Filter
+}
+"""
+✨ Generated having input type for table 'Artwork'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Artwork_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Artwork_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Artwork_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Artwork_Having!]
+  """
+  ✨ Generated from Field `Artwork`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`categoryId_count` of type `Int!`
+  """
+  categoryId_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`descriptionEn_count` of type `Int!`
+  """
+  descriptionEn_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`descriptionFr_count` of type `Int!`
+  """
+  descriptionFr_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`dimensions_count` of type `Int!`
+  """
+  dimensions_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`isAvailable_count` of type `Int!`
+  """
+  isAvailable_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`isFeatured_count` of type `Int!`
+  """
+  isFeatured_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price_count` of type `Int!`
+  """
+  price_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`technique_count` of type `Int!`
+  """
+  technique_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`titleEn_count` of type `Int!`
+  """
+  titleEn_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price_sum` of type `Float`
+  """
+  price_sum: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price_avg` of type `Float`
+  """
+  price_avg: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price_min` of type `Float`
+  """
+  price_min: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `Artwork`.`price_max` of type `Float`
+  """
+  price_max: Float_Filter
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: Int_Filter
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'Artwork'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Artwork_Key {
+  """
+  ✨ Generated from Field `Artwork`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Artwork`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'Artwork'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Artwork_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Artwork_Filter
+}
+"""
+✨ Generated order input type for table 'Artwork'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Artwork_Order {
+  """
+  ✨ Generated from Field `Artwork`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`categoryId` of type `UUID!`
+  """
+  categoryId: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`category` of type `ArtworkCategory!`
+  """
+  category: ArtworkCategory_Order
+  """
+  ✨ Generated from Field `Artwork`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`descriptionEn` of type `String`
+  """
+  descriptionEn: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`descriptionFr` of type `String`
+  """
+  descriptionFr: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`dimensions` of type `String`
+  """
+  dimensions: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`imageUrl` of type `String!`
+  """
+  imageUrl: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`isAvailable` of type `Boolean!`
+  """
+  isAvailable: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`isFeatured` of type `Boolean!`
+  """
+  isFeatured: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price` of type `Float!`
+  """
+  price: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder` of type `Int!`
+  """
+  sortOrder: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`technique` of type `String`
+  """
+  technique: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`titleEn` of type `String!`
+  """
+  titleEn: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`titleFr` of type `String!`
+  """
+  titleFr: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`categoryId_count` of type `Int!`
+  """
+  categoryId_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`descriptionEn_count` of type `Int!`
+  """
+  descriptionEn_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`descriptionFr_count` of type `Int!`
+  """
+  descriptionFr_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`dimensions_count` of type `Int!`
+  """
+  dimensions_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`isAvailable_count` of type `Int!`
+  """
+  isAvailable_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`isFeatured_count` of type `Int!`
+  """
+  isFeatured_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price_count` of type `Int!`
+  """
+  price_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`technique_count` of type `Int!`
+  """
+  technique_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`titleEn_count` of type `Int!`
+  """
+  titleEn_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price_sum` of type `Float`
+  """
+  price_sum: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price_avg` of type `Float`
+  """
+  price_avg: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price_min` of type `Float`
+  """
+  price_min: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`price_max` of type `Float`
+  """
+  price_max: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: OrderDirection
+  """
+  ✨ Generated from Field `Artwork`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'ArtworkCategory'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input ArtworkCategory_Data {
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameEn` of type `String!`
+  """
+  nameEn: String
+  """
+  ✨ `_expr` server value variant of `nameEn` (✨ Generated from Field `ArtworkCategory`.`nameEn` of type `String!`)
+  """
+  nameEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameFr` of type `String!`
+  """
+  nameFr: String
+  """
+  ✨ `_expr` server value variant of `nameFr` (✨ Generated from Field `ArtworkCategory`.`nameFr` of type `String!`)
+  """
+  nameFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ArtworkCategory`.`slug` of type `String!`
+  """
+  slug: String
+  """
+  ✨ `_expr` server value variant of `slug` (✨ Generated from Field `ArtworkCategory`.`slug` of type `String!`)
+  """
+  slug_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int
+  """
+  ✨ `_expr` server value variant of `sortOrder` (✨ Generated from Field `ArtworkCategory`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `sortOrder` (✨ Generated from Field `ArtworkCategory`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_update: [Int_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ArtworkCategory`.`artworks_on_category` of type `[Artwork!]!`
+  """
+  artworks_on_category: [Artwork_Data!]
+}
+"""
+✨ Generated filter input type for table 'ArtworkCategory'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ArtworkCategory_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [ArtworkCategory_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: ArtworkCategory_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [ArtworkCategory_Filter!]
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameEn` of type `String!`
+  """
+  nameEn: String_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameFr` of type `String!`
+  """
+  nameFr: String_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`slug` of type `String!`
+  """
+  slug: String_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`artworks_on_category` of type `[Artwork!]!`
+  """
+  artworks_on_category: Artwork_ListFilter
+}
+"""
+✨ Generated first-row input type for table 'ArtworkCategory'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input ArtworkCategory_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [ArtworkCategory_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: ArtworkCategory_Filter
+}
+"""
+✨ Generated having input type for table 'ArtworkCategory'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ArtworkCategory_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [ArtworkCategory_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: ArtworkCategory_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [ArtworkCategory_Having!]
+  """
+  ✨ Generated from Field `ArtworkCategory`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameEn_count` of type `Int!`
+  """
+  nameEn_count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameFr_count` of type `Int!`
+  """
+  nameFr_count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`slug_count` of type `Int!`
+  """
+  slug_count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: Float_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: Int_Filter
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: Int_Filter
+}
+"""
+✨ Generated key input type for table 'ArtworkCategory'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input ArtworkCategory_Key {
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'ArtworkCategory'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input ArtworkCategory_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: ArtworkCategory_Filter
+}
+"""
+✨ Generated order input type for table 'ArtworkCategory'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input ArtworkCategory_Order {
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameEn` of type `String!`
+  """
+  nameEn: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameFr` of type `String!`
+  """
+  nameFr: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`slug` of type `String!`
+  """
+  slug: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder` of type `Int!`
+  """
+  sortOrder: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameEn_count` of type `Int!`
+  """
+  nameEn_count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`nameFr_count` of type `Int!`
+  """
+  nameFr_count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`slug_count` of type `Int!`
+  """
+  slug_count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: OrderDirection
+  """
+  ✨ Generated from Field `ArtworkCategory`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'AtelierPhoto'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input AtelierPhoto_Data {
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionEn` of type `String`
+  """
+  captionEn: String
+  """
+  ✨ `_expr` server value variant of `captionEn` (✨ Generated from Field `AtelierPhoto`.`captionEn` of type `String`)
+  """
+  captionEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionFr` of type `String`
+  """
+  captionFr: String
+  """
+  ✨ `_expr` server value variant of `captionFr` (✨ Generated from Field `AtelierPhoto`.`captionFr` of type `String`)
+  """
+  captionFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AtelierPhoto`.`imageUrl` of type `String!`
+  """
+  imageUrl: String
+  """
+  ✨ `_expr` server value variant of `imageUrl` (✨ Generated from Field `AtelierPhoto`.`imageUrl` of type `String!`)
+  """
+  imageUrl_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int
+  """
+  ✨ `_expr` server value variant of `sortOrder` (✨ Generated from Field `AtelierPhoto`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `sortOrder` (✨ Generated from Field `AtelierPhoto`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_update: [Int_Update!] @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'AtelierPhoto'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input AtelierPhoto_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [AtelierPhoto_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: AtelierPhoto_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [AtelierPhoto_Filter!]
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionEn` of type `String`
+  """
+  captionEn: String_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionFr` of type `String`
+  """
+  captionFr: String_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`imageUrl` of type `String!`
+  """
+  imageUrl: String_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int_Filter
+}
+"""
+✨ Generated first-row input type for table 'AtelierPhoto'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input AtelierPhoto_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [AtelierPhoto_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: AtelierPhoto_Filter
+}
+"""
+✨ Generated having input type for table 'AtelierPhoto'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input AtelierPhoto_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [AtelierPhoto_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: AtelierPhoto_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [AtelierPhoto_Having!]
+  """
+  ✨ Generated from Field `AtelierPhoto`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionEn_count` of type `Int!`
+  """
+  captionEn_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionFr_count` of type `Int!`
+  """
+  captionFr_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: Float_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: Int_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: Int_Filter
+}
+"""
+✨ Generated key input type for table 'AtelierPhoto'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input AtelierPhoto_Key {
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'AtelierPhoto'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input AtelierPhoto_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: AtelierPhoto_Filter
+}
+"""
+✨ Generated order input type for table 'AtelierPhoto'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input AtelierPhoto_Order {
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionEn` of type `String`
+  """
+  captionEn: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionFr` of type `String`
+  """
+  captionFr: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`imageUrl` of type `String!`
+  """
+  imageUrl: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder` of type `Int!`
+  """
+  sortOrder: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionEn_count` of type `Int!`
+  """
+  captionEn_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`captionFr_count` of type `Int!`
+  """
+  captionFr_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`imageUrl_count` of type `Int!`
+  """
+  imageUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `AtelierPhoto`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'ContactSubmission'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input ContactSubmission_Data {
+  """
+  ✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ContactSubmission`.`email` of type `String!`
+  """
+  email: String
+  """
+  ✨ `_expr` server value variant of `email` (✨ Generated from Field `ContactSubmission`.`email` of type `String!`)
+  """
+  email_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ContactSubmission`.`fullName` of type `String!`
+  """
+  fullName: String
+  """
+  ✨ `_expr` server value variant of `fullName` (✨ Generated from Field `ContactSubmission`.`fullName` of type `String!`)
+  """
+  fullName_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ContactSubmission`.`message` of type `String!`
+  """
+  message: String
+  """
+  ✨ `_expr` server value variant of `message` (✨ Generated from Field `ContactSubmission`.`message` of type `String!`)
+  """
+  message_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `ContactSubmission`.`status` of type `String!`
+  """
+  status: String
+  """
+  ✨ `_expr` server value variant of `status` (✨ Generated from Field `ContactSubmission`.`status` of type `String!`)
+  """
+  status_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'ContactSubmission'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ContactSubmission_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [ContactSubmission_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: ContactSubmission_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [ContactSubmission_Filter!]
+  """
+  ✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`email` of type `String!`
+  """
+  email: String_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`fullName` of type `String!`
+  """
+  fullName: String_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`message` of type `String!`
+  """
+  message: String_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`status` of type `String!`
+  """
+  status: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'ContactSubmission'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input ContactSubmission_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [ContactSubmission_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: ContactSubmission_Filter
+}
+"""
+✨ Generated having input type for table 'ContactSubmission'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input ContactSubmission_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [ContactSubmission_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: ContactSubmission_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [ContactSubmission_Having!]
+  """
+  ✨ Generated from Field `ContactSubmission`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`email_count` of type `Int!`
+  """
+  email_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`fullName_count` of type `Int!`
+  """
+  fullName_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`message_count` of type `Int!`
+  """
+  message_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`status_count` of type `Int!`
+  """
+  status_count: Int_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'ContactSubmission'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input ContactSubmission_Key {
+  """
+  ✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'ContactSubmission'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input ContactSubmission_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: ContactSubmission_Filter
+}
+"""
+✨ Generated order input type for table 'ContactSubmission'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input ContactSubmission_Order {
+  """
+  ✨ Generated from Field `ContactSubmission`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`email` of type `String!`
+  """
+  email: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`fullName` of type `String!`
+  """
+  fullName: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`message` of type `String!`
+  """
+  message: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`status` of type `String!`
+  """
+  status: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`email_count` of type `Int!`
+  """
+  email_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`fullName_count` of type `Int!`
+  """
+  fullName_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`message_count` of type `Int!`
+  """
+  message_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`status_count` of type `Int!`
+  """
+  status_count: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `ContactSubmission`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'Exhibition'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input Exhibition_Data {
+  """
+  ✨ Generated from Field `Exhibition`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Exhibition`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`endDate` of type `Date!`
+  """
+  endDate: Date
+  """
+  ✨ `_date` server value variant of `endDate` (✨ Generated from Field `Exhibition`.`endDate` of type `Date!`)
+  """
+  endDate_date: Date_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_expr` server value variant of `endDate` (✨ Generated from Field `Exhibition`.`endDate` of type `Date!`)
+  """
+  endDate_expr: Date_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `endDate` (✨ Generated from Field `Exhibition`.`endDate` of type `Date!`)
+  """
+  endDate_update: [Date_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`latitude` of type `Float`
+  """
+  latitude: Float
+  """
+  ✨ `_expr` server value variant of `latitude` (✨ Generated from Field `Exhibition`.`latitude` of type `Float`)
+  """
+  latitude_expr: Float_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `latitude` (✨ Generated from Field `Exhibition`.`latitude` of type `Float`)
+  """
+  latitude_update: [Float_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`longitude` of type `Float`
+  """
+  longitude: Float
+  """
+  ✨ `_expr` server value variant of `longitude` (✨ Generated from Field `Exhibition`.`longitude` of type `Float`)
+  """
+  longitude_expr: Float_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `longitude` (✨ Generated from Field `Exhibition`.`longitude` of type `Float`)
+  """
+  longitude_update: [Float_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int
+  """
+  ✨ `_expr` server value variant of `sortOrder` (✨ Generated from Field `Exhibition`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `sortOrder` (✨ Generated from Field `Exhibition`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_update: [Int_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`startDate` of type `Date!`
+  """
+  startDate: Date
+  """
+  ✨ `_date` server value variant of `startDate` (✨ Generated from Field `Exhibition`.`startDate` of type `Date!`)
+  """
+  startDate_date: Date_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_expr` server value variant of `startDate` (✨ Generated from Field `Exhibition`.`startDate` of type `Date!`)
+  """
+  startDate_expr: Date_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `startDate` (✨ Generated from Field `Exhibition`.`startDate` of type `Date!`)
+  """
+  startDate_update: [Date_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`title` of type `String!`
+  """
+  title: String
+  """
+  ✨ `_expr` server value variant of `title` (✨ Generated from Field `Exhibition`.`title` of type `String!`)
+  """
+  title_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `Exhibition`.`venueName` of type `String!`
+  """
+  venueName: String
+  """
+  ✨ `_expr` server value variant of `venueName` (✨ Generated from Field `Exhibition`.`venueName` of type `String!`)
+  """
+  venueName_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'Exhibition'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Exhibition_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [Exhibition_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: Exhibition_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [Exhibition_Filter!]
+  """
+  ✨ Generated from Field `Exhibition`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`endDate` of type `Date!`
+  """
+  endDate: Date_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude` of type `Float`
+  """
+  latitude: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude` of type `Float`
+  """
+  longitude: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`startDate` of type `Date!`
+  """
+  startDate: Date_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`title` of type `String!`
+  """
+  title: String_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`venueName` of type `String!`
+  """
+  venueName: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'Exhibition'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input Exhibition_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [Exhibition_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: Exhibition_Filter
+}
+"""
+✨ Generated having input type for table 'Exhibition'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input Exhibition_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [Exhibition_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: Exhibition_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [Exhibition_Having!]
+  """
+  ✨ Generated from Field `Exhibition`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_count` of type `Int!`
+  """
+  endDate_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_count` of type `Int!`
+  """
+  latitude_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_count` of type `Int!`
+  """
+  longitude_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_count` of type `Int!`
+  """
+  startDate_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`title_count` of type `Int!`
+  """
+  title_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`venueName_count` of type `Int!`
+  """
+  venueName_count: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_sum` of type `Float`
+  """
+  latitude_sum: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_sum` of type `Float`
+  """
+  longitude_sum: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_avg` of type `Float`
+  """
+  latitude_avg: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_avg` of type `Float`
+  """
+  longitude_avg: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_min` of type `Date`
+  """
+  endDate_min: Date_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_min` of type `Float`
+  """
+  latitude_min: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_min` of type `Float`
+  """
+  longitude_min: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_min` of type `Date`
+  """
+  startDate_min: Date_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_max` of type `Date`
+  """
+  endDate_max: Date_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_max` of type `Float`
+  """
+  latitude_max: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_max` of type `Float`
+  """
+  longitude_max: Float_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: Int_Filter
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_max` of type `Date`
+  """
+  startDate_max: Date_Filter
+}
+"""
+✨ Generated key input type for table 'Exhibition'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input Exhibition_Key {
+  """
+  ✨ Generated from Field `Exhibition`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `Exhibition`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'Exhibition'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input Exhibition_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: Exhibition_Filter
+}
+"""
+✨ Generated order input type for table 'Exhibition'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input Exhibition_Order {
+  """
+  ✨ Generated from Field `Exhibition`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`endDate` of type `Date!`
+  """
+  endDate: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude` of type `Float`
+  """
+  latitude: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude` of type `Float`
+  """
+  longitude: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder` of type `Int!`
+  """
+  sortOrder: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`startDate` of type `Date!`
+  """
+  startDate: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`title` of type `String!`
+  """
+  title: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`venueName` of type `String!`
+  """
+  venueName: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_count` of type `Int!`
+  """
+  endDate_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_count` of type `Int!`
+  """
+  latitude_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_count` of type `Int!`
+  """
+  longitude_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_count` of type `Int!`
+  """
+  startDate_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`title_count` of type `Int!`
+  """
+  title_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`venueName_count` of type `Int!`
+  """
+  venueName_count: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_sum` of type `Float`
+  """
+  latitude_sum: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_sum` of type `Float`
+  """
+  longitude_sum: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_avg` of type `Float`
+  """
+  latitude_avg: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_avg` of type `Float`
+  """
+  longitude_avg: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_min` of type `Date`
+  """
+  endDate_min: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_min` of type `Float`
+  """
+  latitude_min: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_min` of type `Float`
+  """
+  longitude_min: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_min` of type `Date`
+  """
+  startDate_min: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`endDate_max` of type `Date`
+  """
+  endDate_max: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`latitude_max` of type `Float`
+  """
+  latitude_max: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`longitude_max` of type `Float`
+  """
+  longitude_max: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: OrderDirection
+  """
+  ✨ Generated from Field `Exhibition`.`startDate_max` of type `Date`
+  """
+  startDate_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'MediaItem'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input MediaItem_Data {
+  """
+  ✨ Generated from Field `MediaItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `MediaItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`fileUrl` of type `String`
+  """
+  fileUrl: String
+  """
+  ✨ `_expr` server value variant of `fileUrl` (✨ Generated from Field `MediaItem`.`fileUrl` of type `String`)
+  """
+  fileUrl_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`mediaType` of type `String!`
+  """
+  mediaType: String
+  """
+  ✨ `_expr` server value variant of `mediaType` (✨ Generated from Field `MediaItem`.`mediaType` of type `String!`)
+  """
+  mediaType_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int
+  """
+  ✨ `_expr` server value variant of `sortOrder` (✨ Generated from Field `MediaItem`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_expr: Int_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `sortOrder` (✨ Generated from Field `MediaItem`.`sortOrder` of type `Int!`)
+  """
+  sortOrder_update: [Int_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`sourceUrl` of type `String`
+  """
+  sourceUrl: String
+  """
+  ✨ `_expr` server value variant of `sourceUrl` (✨ Generated from Field `MediaItem`.`sourceUrl` of type `String`)
+  """
+  sourceUrl_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `MediaItem`.`titleFr` of type `String!`
+  """
+  titleFr: String
+  """
+  ✨ `_expr` server value variant of `titleFr` (✨ Generated from Field `MediaItem`.`titleFr` of type `String!`)
+  """
+  titleFr_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'MediaItem'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input MediaItem_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [MediaItem_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: MediaItem_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [MediaItem_Filter!]
+  """
+  ✨ Generated from Field `MediaItem`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`fileUrl` of type `String`
+  """
+  fileUrl: String_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`mediaType` of type `String!`
+  """
+  mediaType: String_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder` of type `Int!`
+  """
+  sortOrder: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sourceUrl` of type `String`
+  """
+  sourceUrl: String_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`titleFr` of type `String!`
+  """
+  titleFr: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'MediaItem'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input MediaItem_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [MediaItem_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: MediaItem_Filter
+}
+"""
+✨ Generated having input type for table 'MediaItem'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input MediaItem_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [MediaItem_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: MediaItem_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [MediaItem_Having!]
+  """
+  ✨ Generated from Field `MediaItem`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`fileUrl_count` of type `Int!`
+  """
+  fileUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`mediaType_count` of type `Int!`
+  """
+  mediaType_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sourceUrl_count` of type `Int!`
+  """
+  sourceUrl_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: Float_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: Int_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: Int_Filter
+}
+"""
+✨ Generated key input type for table 'MediaItem'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input MediaItem_Key {
+  """
+  ✨ Generated from Field `MediaItem`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `MediaItem`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'MediaItem'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input MediaItem_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: MediaItem_Filter
+}
+"""
+✨ Generated order input type for table 'MediaItem'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input MediaItem_Order {
+  """
+  ✨ Generated from Field `MediaItem`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`fileUrl` of type `String`
+  """
+  fileUrl: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`mediaType` of type `String!`
+  """
+  mediaType: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder` of type `Int!`
+  """
+  sortOrder: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sourceUrl` of type `String`
+  """
+  sourceUrl: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`titleFr` of type `String!`
+  """
+  titleFr: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`fileUrl_count` of type `Int!`
+  """
+  fileUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`mediaType_count` of type `Int!`
+  """
+  mediaType_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_count` of type `Int!`
+  """
+  sortOrder_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sourceUrl_count` of type `Int!`
+  """
+  sourceUrl_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_sum` of type `Int`
+  """
+  sortOrder_sum: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_avg` of type `Float`
+  """
+  sortOrder_avg: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_min` of type `Int`
+  """
+  sortOrder_min: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `MediaItem`.`sortOrder_max` of type `Int`
+  """
+  sortOrder_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'News'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input News_Data {
+  """
+  ✨ Generated from Field `News`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `News`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`contentEn` of type `String!`
+  """
+  contentEn: String
+  """
+  ✨ `_expr` server value variant of `contentEn` (✨ Generated from Field `News`.`contentEn` of type `String!`)
+  """
+  contentEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`contentFr` of type `String!`
+  """
+  contentFr: String
+  """
+  ✨ `_expr` server value variant of `contentFr` (✨ Generated from Field `News`.`contentFr` of type `String!`)
+  """
+  contentFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `createdAt` (✨ Generated from Field `News`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `createdAt` (✨ Generated from Field `News`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `createdAt` (✨ Generated from Field `News`.`createdAt` of type `Timestamp!`)
+  """
+  createdAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`isPublished` of type `Boolean!`
+  """
+  isPublished: Boolean
+  """
+  ✨ `_expr` server value variant of `isPublished` (✨ Generated from Field `News`.`isPublished` of type `Boolean!`)
+  """
+  isPublished_expr: Boolean_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`publishedAt` of type `Timestamp`
+  """
+  publishedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `publishedAt` (✨ Generated from Field `News`.`publishedAt` of type `Timestamp`)
+  """
+  publishedAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `publishedAt` (✨ Generated from Field `News`.`publishedAt` of type `Timestamp`)
+  """
+  publishedAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `publishedAt` (✨ Generated from Field `News`.`publishedAt` of type `Timestamp`)
+  """
+  publishedAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`titleEn` of type `String!`
+  """
+  titleEn: String
+  """
+  ✨ `_expr` server value variant of `titleEn` (✨ Generated from Field `News`.`titleEn` of type `String!`)
+  """
+  titleEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`titleFr` of type `String!`
+  """
+  titleFr: String
+  """
+  ✨ `_expr` server value variant of `titleFr` (✨ Generated from Field `News`.`titleFr` of type `String!`)
+  """
+  titleFr_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'News'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input News_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [News_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: News_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [News_Filter!]
+  """
+  ✨ Generated from Field `News`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `News`.`contentEn` of type `String!`
+  """
+  contentEn: String_Filter
+  """
+  ✨ Generated from Field `News`.`contentFr` of type `String!`
+  """
+  contentFr: String_Filter
+  """
+  ✨ Generated from Field `News`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`isPublished` of type `Boolean!`
+  """
+  isPublished: Boolean_Filter
+  """
+  ✨ Generated from Field `News`.`publishedAt` of type `Timestamp`
+  """
+  publishedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`titleEn` of type `String!`
+  """
+  titleEn: String_Filter
+  """
+  ✨ Generated from Field `News`.`titleFr` of type `String!`
+  """
+  titleFr: String_Filter
+  """
+  ✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+}
+"""
+✨ Generated first-row input type for table 'News'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input News_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [News_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: News_Filter
+}
+"""
+✨ Generated having input type for table 'News'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input News_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [News_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: News_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [News_Having!]
+  """
+  ✨ Generated from Field `News`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`contentEn_count` of type `Int!`
+  """
+  contentEn_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`contentFr_count` of type `Int!`
+  """
+  contentFr_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`isPublished_count` of type `Int!`
+  """
+  isPublished_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`publishedAt_count` of type `Int!`
+  """
+  publishedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`titleEn_count` of type `Int!`
+  """
+  titleEn_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `News`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`publishedAt_min` of type `Timestamp`
+  """
+  publishedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`publishedAt_max` of type `Timestamp`
+  """
+  publishedAt_max: Timestamp_Filter
+  """
+  ✨ Generated from Field `News`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'News'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input News_Key {
+  """
+  ✨ Generated from Field `News`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `News`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'News'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input News_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: News_Filter
+}
+"""
+✨ Generated order input type for table 'News'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input News_Order {
+  """
+  ✨ Generated from Field `News`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `News`.`contentEn` of type `String!`
+  """
+  contentEn: OrderDirection
+  """
+  ✨ Generated from Field `News`.`contentFr` of type `String!`
+  """
+  contentFr: OrderDirection
+  """
+  ✨ Generated from Field `News`.`createdAt` of type `Timestamp!`
+  """
+  createdAt: OrderDirection
+  """
+  ✨ Generated from Field `News`.`isPublished` of type `Boolean!`
+  """
+  isPublished: OrderDirection
+  """
+  ✨ Generated from Field `News`.`publishedAt` of type `Timestamp`
+  """
+  publishedAt: OrderDirection
+  """
+  ✨ Generated from Field `News`.`titleEn` of type `String!`
+  """
+  titleEn: OrderDirection
+  """
+  ✨ Generated from Field `News`.`titleFr` of type `String!`
+  """
+  titleFr: OrderDirection
+  """
+  ✨ Generated from Field `News`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+  """
+  ✨ Generated from Field `News`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`contentEn_count` of type `Int!`
+  """
+  contentEn_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`contentFr_count` of type `Int!`
+  """
+  contentFr_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`createdAt_count` of type `Int!`
+  """
+  createdAt_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`isPublished_count` of type `Int!`
+  """
+  isPublished_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`publishedAt_count` of type `Int!`
+  """
+  publishedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`titleEn_count` of type `Int!`
+  """
+  titleEn_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`titleFr_count` of type `Int!`
+  """
+  titleFr_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `News`.`createdAt_min` of type `Timestamp`
+  """
+  createdAt_min: OrderDirection
+  """
+  ✨ Generated from Field `News`.`publishedAt_min` of type `Timestamp`
+  """
+  publishedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `News`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `News`.`createdAt_max` of type `Timestamp`
+  """
+  createdAt_max: OrderDirection
+  """
+  ✨ Generated from Field `News`.`publishedAt_max` of type `Timestamp`
+  """
+  publishedAt_max: OrderDirection
+  """
+  ✨ Generated from Field `News`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: OrderDirection
+}
+"""
+✨ Generated data input type for table 'SiteSetting'. It includes all necessary fields for creating or upserting rows into table.
+"""
+input SiteSetting_Data {
+  """
+  ✨ Generated from Field `SiteSetting`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `SiteSetting`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `SiteSetting`.`key` of type `String!`
+  """
+  key: String
+  """
+  ✨ `_expr` server value variant of `key` (✨ Generated from Field `SiteSetting`.`key` of type `String!`)
+  """
+  key_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp
+  """
+  ✨ `_expr` server value variant of `updatedAt` (✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_expr: Timestamp_Expr @fdc_forbiddenInVariables
+  """
+  ✨ `_time` server value variant of `updatedAt` (✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_time: Timestamp_Relative @fdc_forbiddenInVariables
+  """
+  ✨ `_update` server value variant of `updatedAt` (✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`)
+  """
+  updatedAt_update: [Timestamp_Update!] @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `SiteSetting`.`valueEn` of type `String!`
+  """
+  valueEn: String
+  """
+  ✨ `_expr` server value variant of `valueEn` (✨ Generated from Field `SiteSetting`.`valueEn` of type `String!`)
+  """
+  valueEn_expr: String_Expr @fdc_forbiddenInVariables
+  """
+  ✨ Generated from Field `SiteSetting`.`valueFr` of type `String!`
+  """
+  valueFr: String
+  """
+  ✨ `_expr` server value variant of `valueFr` (✨ Generated from Field `SiteSetting`.`valueFr` of type `String!`)
+  """
+  valueFr_expr: String_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated filter input type for table 'SiteSetting'. This input allows filtering objects using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input SiteSetting_Filter {
+  """
+  Apply multiple filter conditions using `AND` logic.
+  """
+  _and: [SiteSetting_Filter!]
+  """
+  Negate the result of the provided filter condition.
+  """
+  _not: SiteSetting_Filter
+  """
+  Apply multiple filter conditions using `OR` logic.
+  """
+  _or: [SiteSetting_Filter!]
+  """
+  ✨ Generated from Field `SiteSetting`.`id` of type `UUID!`
+  """
+  id: UUID_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`key` of type `String!`
+  """
+  key: String_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: Timestamp_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`valueEn` of type `String!`
+  """
+  valueEn: String_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`valueFr` of type `String!`
+  """
+  valueFr: String_Filter
+}
+"""
+✨ Generated first-row input type for table 'SiteSetting'. This input selects the first row matching the filter criteria, ordered according to the specified conditions.
+"""
+input SiteSetting_FirstRow {
+  """
+  Order the result by the specified fields.
+  """
+  orderBy: [SiteSetting_Order!]
+  """
+  Filters rows based on the specified conditions.
+  """
+  where: SiteSetting_Filter
+}
+"""
+✨ Generated having input type for table 'SiteSetting'. This input allows you to filter groups during aggregate queries using various conditions. Use `_or`, `_and`, and `_not` to compose complex filters.
+"""
+input SiteSetting_Having {
+  """
+  Apply multiple Having conditions using `AND` logic.
+  """
+  _and: [SiteSetting_Having!]
+  """
+  Whether to apply DISTINCT to the aggregate function.
+  """
+  _distinct: Boolean
+  """
+  Negate the result of the provided Having condition.
+  """
+  _not: SiteSetting_Having
+  """
+  Apply multiple Having conditions using `OR` logic.
+  """
+  _or: [SiteSetting_Having!]
+  """
+  ✨ Generated from Field `SiteSetting`.`_count` of type `Int!`
+  """
+  _count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`id_count` of type `Int!`
+  """
+  id_count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`key_count` of type `Int!`
+  """
+  key_count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`valueEn_count` of type `Int!`
+  """
+  valueEn_count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`valueFr_count` of type `Int!`
+  """
+  valueFr_count: Int_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: Timestamp_Filter
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: Timestamp_Filter
+}
+"""
+✨ Generated key input type for table 'SiteSetting'. It represents the primary key fields used to uniquely identify a row in the table.
+"""
+input SiteSetting_Key {
+  """
+  ✨ Generated from Field `SiteSetting`.`id` of type `UUID!`
+  """
+  id: UUID
+  """
+  ✨ `_expr` server value variant of `id` (✨ Generated from Field `SiteSetting`.`id` of type `UUID!`)
+  """
+  id_expr: UUID_Expr @fdc_forbiddenInVariables
+}
+"""
+✨ Generated list filter input type for table 'SiteSetting'. This input applies filtering logic based on the count or existence of related objects that matches certain criteria.
+"""
+input SiteSetting_ListFilter {
+  """
+  The desired number of objects that match the condition (defaults to at least one).
+  """
+  count: Int_Filter = {gt:0}
+  """
+  Condition of the related objects to filter for.
+  """
+  exist: SiteSetting_Filter
+}
+"""
+✨ Generated order input type for table 'SiteSetting'. This input defines the sorting order of rows in query results based on one or more fields.
+"""
+input SiteSetting_Order {
+  """
+  ✨ Generated from Field `SiteSetting`.`id` of type `UUID!`
+  """
+  id: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`key` of type `String!`
+  """
+  key: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt` of type `Timestamp!`
+  """
+  updatedAt: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`valueEn` of type `String!`
+  """
+  valueEn: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`valueFr` of type `String!`
+  """
+  valueFr: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`_count` of type `Int!`
+  """
+  _count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`id_count` of type `Int!`
+  """
+  id_count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`key_count` of type `Int!`
+  """
+  key_count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_count` of type `Int!`
+  """
+  updatedAt_count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`valueEn_count` of type `Int!`
+  """
+  valueEn_count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`valueFr_count` of type `Int!`
+  """
+  valueFr_count: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_min` of type `Timestamp`
+  """
+  updatedAt_min: OrderDirection
+  """
+  ✨ Generated from Field `SiteSetting`.`updatedAt_max` of type `Timestamp`
+  """
+  updatedAt_max: OrderDirection
+}

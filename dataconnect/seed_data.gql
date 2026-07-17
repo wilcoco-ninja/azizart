@@ -1,0 +1,50 @@
+mutation SeedDatabase @transaction {
+  adminUser_insertMany(data: [
+    {
+      firebaseUid: "admin-uid-001",
+      email: "admin@example.com",
+      role: "admin"
+    }
+  ])
+  artworkCategory_insertMany(data: [
+    {
+      id: "a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1",
+      slug: "paintings",
+      nameFr: "Peintures",
+      nameEn: "Paintings",
+      sortOrder: 1
+    },
+    {
+      id: "b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2",
+      slug: "sculptures",
+      nameFr: "Sculptures",
+      nameEn: "Sculptures",
+      sortOrder: 2
+    }
+  ])
+  artwork_insertMany(data: [
+    {
+      categoryId: "a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1",
+      titleFr: "Le Matin",
+      titleEn: "The Morning",
+      imageUrl: "https://example.com/morning.jpg",
+      price: 1500.00
+    },
+    {
+      categoryId: "b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2",
+      titleFr: "Forme Libre",
+      titleEn: "Free Form",
+      imageUrl: "https://example.com/freeform.jpg",
+      price: 2500.00
+    }
+  ])
+  news_insertMany(data: [
+    {
+      titleFr: "Nouvelle exposition",
+      titleEn: "New Exhibition",
+      contentFr: "Bienvenue à ma nouvelle exposition.",
+      contentEn: "Welcome to my new exhibition.",
+      isPublished: true
+    }
+  ])
+}
