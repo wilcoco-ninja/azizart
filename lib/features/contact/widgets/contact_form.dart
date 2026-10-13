@@ -4,7 +4,7 @@ import '../services/contact_service.dart';
 import '../../../theme/aziz_colors.dart';
 import '../../../core/localization/language_provider.dart';
 
-/// ContactForm — Formulaire bilingue FR/EN connecté à Firestore.
+/// ContactForm — Formulaire bilingue FR/EN connecté à Supabase.
 /// Utilise context.tr() (LanguageProvider) pour que la langue
 /// change en temps réel quand l'utilisateur bascule FR ↔ EN.
 class ContactForm extends StatefulWidget {
@@ -99,6 +99,7 @@ class _ContactFormState extends State<ContactForm> {
     TextInputType? keyboardType,
     IconData? prefixIcon,
     String? hintKey,
+    bool isEmail = false,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
@@ -161,18 +162,18 @@ class _ContactFormState extends State<ContactForm> {
             fontSize: 11,
           ),
         ),
-        validator: required
-            ? (v) {
-                if (v == null || v.trim().isEmpty) {
-                  return context.tr('contact.field_required');
-                }
-                if (labelKey == 'contact.email' &&
-                    !ContactMessage.emailRegex.hasMatch(v.trim())) {
-                  return context.tr('contact.invalid_email');
-                }
-                return null;
-              }
-            : null,
+        validator: (v) {
+          if (required && (v == null || v.trim().isEmpty)) {
+            return context.tr('contact.field_required');
+          }
+          if (isEmail &&
+              v != null &&
+              v.trim().isNotEmpty &&
+              !ContactMessage.emailRegex.hasMatch(v.trim())) {
+            return context.tr('contact.invalid_email');
+          }
+          return null;
+        },
       ),
     );
   }
@@ -222,6 +223,7 @@ class _ContactFormState extends State<ContactForm> {
               'contact.email',
               keyboardType: TextInputType.emailAddress,
               prefixIcon: Icons.email_outlined,
+              isEmail: true,
             ),
             _field(
               _phone,

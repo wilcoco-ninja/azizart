@@ -1,77 +1,166 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../config.dart';
+import '../../core/app_data_provider.dart';
 import '../../core/localization/language_provider.dart';
 import '../../theme/aziz_colors.dart';
+import '../../widgets/optimized_image.dart';
+import '../home/shared_components.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PAGE PRINCIPALE : ABOUT (Optimisée pour l'accessibilité multi-générationnelle)
+// RÉSOLUTION DES DONNÉES (BASE DE DONNÉES / FALLBACK TRADUCTIONS)
 // ═══════════════════════════════════════════════════════════════════════════
 
-class AboutPage extends StatelessWidget {
+const Map<String, String> _aboutKeyToColumn = {
+  'about.title': 'hero_label',
+  'about.name': 'artist_name',
+  'about.heritage': 'heritage_line',
+  'about.heritage_badge': 'heritage_badge',
+  'about.intro_title': 'intro_title',
+  'about.intro_text': 'intro_text',
+  'about.intro_text2': 'intro_text2',
+  'about.origins_title': 'origins_title',
+  'about.origins_text1': 'origins_text1',
+  'about.origins_text2': 'origins_text2',
+  'about.grandma_quote': 'quote',
+  'about.grandma_author': 'quote_author',
+  'about.art_title': 'art_title',
+  'about.art_text1': 'art_text1',
+  'about.art_text2': 'art_text2',
+  'about.dyes_title': 'dyes_title',
+  'about.timeline_title': 'timeline_title',
+  'about.representation_title': 'representation_title',
+  'about.representation_text': 'representation_text',
+};
+
+/// Vrai si au moins un élément de [before] ET un de [after] sont affichés :
+/// sert à n'insérer un espacement qu'entre deux blocs réellement visibles.
+bool _gap(BuildContext context, List<String> before, List<String> after) =>
+    before.any((c) => !context.aboutHidden(c)) &&
+    after.any((c) => !context.aboutHidden(c));
+
+extension AboutContentExtension on BuildContext {
+  Map<String, dynamic>? get _aboutData => watch<Map<String, dynamic>?>();
+
+  String aboutTr(String key) {
+    final dbKey = _aboutKeyToColumn[key];
+    final data = _aboutData;
+    if (data != null && dbKey != null) {
+      final lang = watch<LanguageProvider>().languageCode;
+      final value = data['${dbKey}_$lang'] as String? ?? data[dbKey] as String?;
+      if (value != null && value.trim().isNotEmpty) return value;
+    }
+    return tr(key);
+  }
+
+  /// Vrai si l'admin a masqué ce contenu (colonne `hidden_fields`).
+  bool aboutHidden(String column) {
+    final raw = _aboutData?['hidden_fields'];
+    return raw is List && raw.contains(column);
+  }
+
+  List<Map<String, dynamic>> aboutList(
+    String columnBaseName,
+    List<Map<String, dynamic>> fallback,
+  ) {
+    final data = _aboutData;
+    if (data == null) return fallback;
+    final lang = watch<LanguageProvider>().languageCode;
+    final raw = data['${columnBaseName}_$lang'] ?? data[columnBaseName];
+    if (raw is List && raw.isNotEmpty) {
+      try {
+        return raw.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+      } catch (_) {
+        return fallback;
+      }
+    }
+    return fallback;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PAGE PRINCIPALE : ABOUT (MODE VISIONNAGE)
+// ═══════════════════════════════════════════════════════════════════════════
+
+class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
+
+  @override
+  State<AboutPage> createState() => _AboutPageState();
+}
+
+class _AboutPageState extends State<AboutPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Provider<Map<String, dynamic>?>.value(
+      value: context.watch<AppDataProvider>().aboutContent,
+      child: const _AboutPageBody(),
+    );
+  }
+}
+
+class _AboutPageBody extends StatelessWidget {
+  const _AboutPageBody();
 
   @override
   Widget build(BuildContext context) {
     context.watch<LanguageProvider>();
 
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 900;
+    final isMobile = homeIsMobile(context);
+    final gutter = homeGutter(context);
+
+    bool any(List<String> columns) =>
+        columns.any((c) => !context.aboutHidden(c));
+
+    // Uniquement les sections visibles (selon l'admin).
+    final sections = <Widget>[
+      if (any(['intro_title', 'intro_text', 'intro_text2']))
+        const _IntroTextSection(),
+      if (any(['origins_title', 'origins_text1', 'origins_text2']))
+        const _StorySection(),
+      if (any(['quote', 'quote_author'])) const _QuoteBlockSection(),
+      if (any(['art_title', 'art_text1', 'art_text2', 'technique_steps']))
+        const _TechniqueShowcase(),
+      if (any(['dyes_title', 'natural_dyes']))
+        const _NaturalIngredientsSection(),
+      if (any(['timeline_title', 'timeline_events']))
+        const _TimelineSection(),
+      if (any(['stats'])) const _StatsDashboard(),
+      if (!context.aboutHidden('custom_sections') &&
+          context.aboutList('custom_sections', const []).isNotEmpty)
+        const _CustomSectionsSection(),
+      if (any(['representation_title', 'representation_text']))
+        const _RepresentationSection(),
+    ];
+
+    final sectionGap = isMobile ? 72.0 : 112.0;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AzizColors.lightBackground,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(
-          horizontal: isMobile
-              ? 24
-              : width * 0.10, // Augmentation douce des marges desktop
-          vertical: 40,
-        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const FadeSlideIn(delay: Duration.zero, child: _AboutHero()),
-            const SizedBox(height: 56),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 150),
-              child: _IntroTextSection(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(gutter, isMobile ? 32 : 56, gutter, 0),
+              child: const _AboutHero(),
             ),
-            const SizedBox(height: 72),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 250),
-              child: _StorySection(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(gutter, 32, gutter, 0),
+              child: const _ProfileInfoBar(),
             ),
-            const SizedBox(height: 64),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 300),
-              child: _QuoteBlockSection(),
-            ),
-            const SizedBox(height: 72),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 350),
-              child: _TechniqueShowcase(),
-            ),
-            const SizedBox(height: 72),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 400),
-              child: _NaturalIngredientsSection(),
-            ),
-            const SizedBox(height: 72),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 450),
-              child: _TimelineSection(),
-            ),
-            const SizedBox(height: 72),
-            FadeSlideIn(
-              delay: const Duration(milliseconds: 500),
-              child: _StatsDashboard(isMobile: isMobile),
-            ),
-            const SizedBox(height: 64),
-            const FadeSlideIn(
-              delay: Duration(milliseconds: 550),
-              child: _RepresentationSection(),
-            ),
-            const SizedBox(height: 40),
+            SizedBox(height: sectionGap),
+            for (var i = 0; i < sections.length; i++) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: gutter),
+                child: sections[i],
+              ),
+              SizedBox(height: i == sections.length - 1 ? 96 : sectionGap),
+            ],
           ],
         ),
       ),
@@ -80,7 +169,7 @@ class AboutPage extends StatelessWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// WIDGET UTILITAIRE : Animation d'entrée
+// WIDGETS UTILITAIRES PUBLICS (conservés)
 // ═══════════════════════════════════════════════════════════════════════════
 
 class FadeSlideIn extends StatefulWidget {
@@ -92,8 +181,7 @@ class FadeSlideIn extends StatefulWidget {
     super.key,
     required this.child,
     required this.delay,
-    this.duration = const Duration(
-        milliseconds: 700), // Légèrement ralenti pour plus de douceur visuelle
+    this.duration = const Duration(milliseconds: 900),
   });
 
   @override
@@ -112,8 +200,7 @@ class _FadeSlideInState extends State<FadeSlideIn>
     _ctrl = AnimationController(vsync: this, duration: widget.duration);
     _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
     _slide = Tween<Offset>(
-      begin: const Offset(0,
-          0.04), // Animation plus subtile (évite le mal des transports visuel)
+      begin: const Offset(0, 0.03),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
 
@@ -137,72 +224,6 @@ class _FadeSlideInState extends State<FadeSlideIn>
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// WIDGET UTILITAIRE : Carte avec effet Hover moderne
-// ═══════════════════════════════════════════════════════════════════════════
-
-class HoverCard extends StatefulWidget {
-  final Widget child;
-  final EdgeInsets padding;
-  final double height;
-  final bool fixedHeight;
-
-  const HoverCard({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsets.all(32), // Espace intérieur augmenté
-    this.height = 280,
-    this.fixedHeight = true,
-  });
-
-  @override
-  State<HoverCard> createState() => _HoverCardState();
-}
-
-class _HoverCardState extends State<HoverCard> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        height: widget.fixedHeight ? widget.height : null,
-        padding: widget.padding,
-        decoration: BoxDecoration(
-          color: _isHovered
-              ? AzizColors.surface
-              : AzizColors.card.withValues(alpha: 0.7),
-          borderRadius:
-              BorderRadius.circular(20), // Bords plus arrondis et chaleureux
-          border: Border.all(
-            color: _isHovered
-                ? AzizColors.gold.withValues(alpha: 0.6)
-                : AzizColors.divider.withValues(alpha: 0.5),
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: _isHovered
-                  ? AzizColors.gold.withValues(alpha: 0.06)
-                  : Colors.black.withValues(alpha: 0.02),
-              blurRadius: _isHovered ? 24 : 12,
-              offset: _isHovered ? const Offset(0, 8) : const Offset(0, 4),
-            )
-          ],
-        ),
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// WIDGET UTILITAIRE : Compteur animé
-// ═══════════════════════════════════════════════════════════════════════════
-
 class AnimatedCounter extends StatefulWidget {
   final String rawValue;
   final TextStyle style;
@@ -222,13 +243,26 @@ class _AnimatedCounterState extends State<AnimatedCounter>
   late final AnimationController _ctrl;
   late final Animation<double> _anim;
 
-  late final double _targetNumber;
-  late final String _prefix;
-  late final String _suffix;
+  late double _targetNumber;
+  late String _prefix;
+  late String _suffix;
 
   @override
   void initState() {
     super.initState();
+    _parseValue();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    );
+    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.fastOutSlowIn);
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _ctrl.forward();
+    });
+  }
+
+  void _parseValue() {
     final match = RegExp(r'([^0-9]*?)(\d+)(.*)').firstMatch(widget.rawValue);
     if (match != null) {
       _prefix = match.group(1)?.trim() ?? '';
@@ -239,16 +273,15 @@ class _AnimatedCounterState extends State<AnimatedCounter>
       _targetNumber = -1;
       _suffix = widget.rawValue;
     }
+  }
 
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    );
-    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.fastOutSlowIn);
-
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) _ctrl.forward();
-    });
+  @override
+  void didUpdateWidget(covariant AnimatedCounter oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.rawValue != widget.rawValue) {
+      _parseValue();
+      _ctrl.forward(from: 0.0);
+    }
   }
 
   @override
@@ -264,7 +297,7 @@ class _AnimatedCounterState extends State<AnimatedCounter>
     }
     return AnimatedBuilder(
       animation: _anim,
-      builder: (_, __) {
+      builder: (_, _) {
         final current = (_anim.value * _targetNumber).round();
         return Text('$_prefix$current$_suffix', style: widget.style);
       },
@@ -273,7 +306,7 @@ class _AnimatedCounterState extends State<AnimatedCounter>
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Hero plein cadre optimisé pour le contraste textuel
+// EN-TÊTE : bannière, portrait encadré, nom
 // ═══════════════════════════════════════════════════════════════════════════
 
 class _AboutHero extends StatelessWidget {
@@ -281,91 +314,126 @@ class _AboutHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 900;
-    final heroHeight = isMobile ? 460.0 : 620.0;
+    final isMobile = homeIsMobile(context);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: SizedBox(
-        height: heroHeight,
-        width: double.infinity,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              'assets/images/portrait.jpeg',
-              fit: BoxFit.cover,
-              alignment: const Alignment(
-                  0, -0.2), // Recadrage intelligent sur le visage
-              errorBuilder: (_, __, ___) => const _PortraitFallback(),
-            ),
-            // Double voile de lisibilité pour garantir l'accessibilité WCAG du texte
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.2),
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.6),
-                    Colors.black.withValues(alpha: 0.9),
-                  ],
-                  stops: const [0.0, 0.4, 0.75, 1.0],
-                ),
-              ),
-            ),
-            Positioned(
-              top: isMobile ? 24 : 36,
-              left: isMobile ? 24 : 40,
-              child: const _HeritageBadgeWidget(),
-            ),
-            Positioned(
-              left: isMobile ? 24 : 48,
-              right: isMobile ? 24 : 48,
-              bottom: isMobile ? 28 : 44,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.tr('about.title').toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      letterSpacing: 7,
-                      fontWeight: FontWeight.w700,
-                      color: AzizColors.gold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    context.tr('about.name'),
-                    style: TextStyle(
-                      fontFamily: 'Georgia',
-                      fontSize: isMobile ? 38 : 58,
-                      color: Colors
-                          .white, // Forcé en blanc pour un contraste absolu sur fond sombre
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.5,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    context.tr('about.heritage'),
-                    style: TextStyle(
-                      fontFamily: 'Georgia',
-                      fontSize: isMobile ? 16 : 20,
-                      color: AzizColors.gold.withValues(alpha: 0.9),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    final data = context.watch<Map<String, dynamic>?>();
+    String? clean(Object? value) {
+      final text = value is String ? value.trim() : '';
+      return text.isEmpty ? null : text;
+    }
+
+    // Images de la base (Cloudflare R2). À défaut, visuels R2 par défaut.
+    final base = AppConfig.mediaBase;
+    final bannerUrl = clean(data?['banner_url']) ??
+        '$base/about_banners/1790340121483_283187000.jpeg';
+    final avatarUrl = clean(data?['avatar_path']) ??
+        clean(data?['avatar_url']) ??
+        '$base/about_avatars/1790212952290_501257559.jpeg';
+    final displayName =
+        clean(data?['artist_name']) ?? context.aboutTr('about.name');
+
+    final banner = SizedBox(
+      height: isMobile ? 260 : 460,
+      width: double.infinity,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(kHomeRadius),
+        child: OptimizedImage(
+          url: bannerUrl,
+          folder: 'about_banners',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          memCacheWidth: 1600,
+          alignment: const Alignment(0, -0.2),
+          errorWidget: const _PortraitFallback(),
         ),
       ),
+    );
+
+    final portrait = SizedBox(
+      width: isMobile ? 120 : 176,
+      height: isMobile ? 150 : 220,
+      child: HomeMat(
+        raised: true,
+        padding: 6,
+        child: OptimizedImage(
+          url: avatarUrl,
+          folder: 'about_avatars',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          memCacheWidth: 400,
+          errorWidget: const _PortraitFallback(),
+        ),
+      ),
+    );
+
+    final text = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!context.aboutHidden('hero_label')) ...[
+          Text(
+            context.aboutTr('about.title'),
+            style: homeSans(
+              size: 15,
+              color: AzizColors.trueIndigoLight,
+              weight: FontWeight.w600,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+        Semantics(
+          header: true,
+          child: Text(
+            displayName,
+            style: homeSerif(
+              size: isMobile ? 44 : 72,
+              height: 1.04,
+              letterSpacing: isMobile ? -0.8 : -1.4,
+            ),
+          ),
+        ),
+        if (!context.aboutHidden('heritage_line')) ...[
+          const SizedBox(height: 14),
+          Text(
+            context.aboutTr('about.heritage'),
+            style: homeSerif(
+              size: isMobile ? 19 : 24,
+              color: AzizColors.lightTextMuted,
+              style: FontStyle.italic,
+              height: 1.35,
+            ),
+          ),
+        ],
+        if (!context.aboutHidden('heritage_badge')) ...[
+          const SizedBox(height: 20),
+          const _HeritageBadgeWidget(),
+        ],
+      ],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        banner,
+        SizedBox(height: isMobile ? 28 : 40),
+        if (isMobile)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [portrait, const SizedBox(height: 24), text],
+          )
+        else
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              portrait,
+              const SizedBox(width: 40),
+              Expanded(child: text),
+            ],
+          ),
+      ],
     );
   }
 }
@@ -375,56 +443,13 @@ class _PortraitFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AzizColors.card,
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.brush_outlined,
-        size: 72,
-        color: AzizColors.gold.withValues(alpha: 0.4),
-      ),
-    );
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Introduction textuelle
-// ═══════════════════════════════════════════════════════════════════════════
-
-class _IntroTextSection extends StatelessWidget {
-  const _IntroTextSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 900;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment
-              .start, // Toujours à gauche pour maximiser l'accessibilité
-          children: [
-            Text(
-              context.tr('about.intro_title'),
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontFamily: 'Georgia',
-                fontSize: isMobile ? 24 : 30,
-                color: AzizColors.gold,
-                fontStyle: FontStyle.italic,
-                height: 1.4,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 32),
-            _ParagraphText(
-                text: context.tr('about.intro_text'), emphasis: true),
-            const SizedBox(height: 20),
-            _ParagraphText(
-                text: context.tr('about.intro_text2'), secondary: true),
-          ],
+    return ColoredBox(
+      color: AzizColors.lightSurface,
+      child: Center(
+        child: Icon(
+          Icons.brush_outlined,
+          size: 56,
+          color: AzizColors.trueIndigo.withValues(alpha: 0.3),
         ),
       ),
     );
@@ -432,8 +457,145 @@ class _IntroTextSection extends StatelessWidget {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Section Histoire / Origines
+// BARRE D'INFORMATIONS DE PROFIL
 // ═══════════════════════════════════════════════════════════════════════════
+
+class _ProfileInfoBar extends StatelessWidget {
+  const _ProfileInfoBar();
+
+  @override
+  Widget build(BuildContext context) {
+    final data = context.watch<Map<String, dynamic>?>();
+    final lang = context.watch<LanguageProvider>().languageCode;
+    final location = (data?['location_$lang'] ?? data?['location']) as String?;
+    final startYear = data?['career_start_year'];
+    final langDisciplines = data?['disciplines_$lang'];
+    final disciplinesRaw =
+        (langDisciplines is List && langDisciplines.isNotEmpty)
+            ? langDisciplines
+            : data?['disciplines'];
+    final disciplines = disciplinesRaw is List
+        ? disciplinesRaw
+            .map((e) => e.toString())
+            .where((s) => s.trim().isNotEmpty)
+            .toList()
+        : <String>[];
+
+    final hasLocation = location != null && location.trim().isNotEmpty;
+    final hasStartYear = startYear != null && startYear.toString().isNotEmpty;
+    final hasDisciplines = disciplines.isNotEmpty;
+
+    if (!hasLocation && !hasStartYear && !hasDisciplines) {
+      return const SizedBox.shrink();
+    }
+
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: [
+        if (hasLocation)
+          _InfoChip(icon: Icons.location_on_outlined, label: location),
+        if (hasStartYear)
+          _InfoChip(
+            icon: Icons.history_outlined,
+            label: homeText(
+              context,
+              fr: 'Depuis $startYear',
+              en: 'Since $startYear',
+            ),
+          ),
+        for (final d in disciplines)
+          _InfoChip(icon: Icons.palette_outlined, label: d),
+      ],
+    );
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _InfoChip({required this.icon, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+      decoration: BoxDecoration(
+        color: AzizColors.mat,
+        borderRadius: BorderRadius.circular(kHomeRadius),
+        border: Border.all(color: AzizColors.lightBorder),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: AzizColors.trueIndigo),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: homeSans(
+              size: 13.5,
+              color: AzizColors.lightTextPrimary,
+              weight: FontWeight.w600,
+              height: 1.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SECTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+class _IntroTextSection extends StatelessWidget {
+  const _IntroTextSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = homeIsMobile(context);
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (!context.aboutHidden('intro_title'))
+              Text(
+                context.aboutTr('about.intro_title'),
+                textAlign: TextAlign.center,
+                style: homeSerif(
+                  size: isMobile ? 30 : 42,
+                  color: AzizColors.trueIndigo,
+                  style: FontStyle.italic,
+                  height: 1.3,
+                  letterSpacing: -0.4,
+                ),
+              ),
+            if (_gap(context, ['intro_title'], ['intro_text', 'intro_text2']))
+              const SizedBox(height: 40),
+            if (!context.aboutHidden('intro_text'))
+              _ParagraphText(
+                text: context.aboutTr('about.intro_text'),
+                emphasis: true,
+                center: true,
+              ),
+            if (_gap(context, ['intro_text'], ['intro_text2']))
+              const SizedBox(height: 24),
+            if (!context.aboutHidden('intro_text2'))
+              _ParagraphText(
+                text: context.aboutTr('about.intro_text2'),
+                secondary: true,
+                center: true,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _StorySection extends StatelessWidget {
   const _StorySection();
@@ -443,323 +605,296 @@ class _StorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitleWidget(titleKey: 'about.origins_title'),
-        const SizedBox(height: 28),
-        _ParagraphText(text: context.tr('about.origins_text1')),
-        const SizedBox(height: 20),
-        _ParagraphText(text: context.tr('about.origins_text2')),
+        if (!context.aboutHidden('origins_title'))
+          const _SectionTitleWidget(titleKey: 'about.origins_title'),
+        if (_gap(context, ['origins_title'], ['origins_text1', 'origins_text2']))
+          const SizedBox(height: 32),
+        if (!context.aboutHidden('origins_text1'))
+          _ParagraphText(text: context.aboutTr('about.origins_text1')),
+        if (_gap(context, ['origins_text1'], ['origins_text2']))
+          const SizedBox(height: 24),
+        if (!context.aboutHidden('origins_text2'))
+          _ParagraphText(text: context.aboutTr('about.origins_text2')),
       ],
     );
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Bloc de citation artistique
-// ═══════════════════════════════════════════════════════════════════════════
-
+/// Citation : le temps fort de la page, sur bande indigo.
 class _QuoteBlockSection extends StatelessWidget {
   const _QuoteBlockSection();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 44),
-      decoration: BoxDecoration(
-        color: AzizColors.surface.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AzizColors.gold.withValues(alpha: 0.25)),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -10,
-            bottom: -35,
-            child: Text(
-              '❞',
-              style: TextStyle(
-                fontFamily: 'Georgia',
-                fontSize: 130,
-                color: AzizColors.gold.withValues(alpha: 0.06),
-                height: 1,
-              ),
+    final isMobile = homeIsMobile(context);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(kHomeRadius),
+      child: ColoredBox(
+        color: AzizColors.trueIndigoDark,
+        child: Stack(
+          children: [
+            const Positioned.fill(
+              child: BatikTexture(opacity: 0.08, seed: 61),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '« ${context.tr('about.grandma_quote')} »',
-                style: const TextStyle(
-                  fontFamily: 'Georgia',
-                  fontSize: 19,
-                  color: AzizColors.textPrimary,
-                  height: 1.8,
-                  fontStyle: FontStyle.italic,
-                  letterSpacing: 0.2,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: isMobile ? 56 : 88,
+                horizontal: isMobile ? 28 : 72,
+              ),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (!context.aboutHidden('quote'))
+                        Text(
+                          '« ${context.aboutTr('about.grandma_quote')} »',
+                          textAlign: TextAlign.center,
+                          style: homeSerif(
+                            size: isMobile ? 24 : 34,
+                            color: AzizColors.lightBackground,
+                            style: FontStyle.italic,
+                            height: 1.45,
+                          ),
+                        ),
+                      if (_gap(context, ['quote'], ['quote_author']))
+                        const SizedBox(height: 28),
+                      if (!context.aboutHidden('quote_author'))
+                        Text(
+                          context.aboutTr('about.grandma_author'),
+                          textAlign: TextAlign.center,
+                          style: homeSans(
+                            size: 15,
+                            color: AzizColors.saffronLight,
+                            weight: FontWeight.w600,
+                            height: 1.3,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Container(width: 40, height: 1.5, color: AzizColors.gold),
-                  const SizedBox(width: 16),
-                  Text(
-                    context.tr('about.grandma_author'),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AzizColors.gold,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Savoir-Faire (Batik)
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _TechniqueShowcase extends StatelessWidget {
   const _TechniqueShowcase();
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isCompact = width < 980;
+    final isCompact = !homeIsDesktop(context);
 
-    final steps = [
-      _CardModel(
-        icon: Icons.water_drop_outlined,
-        title: context.tr('about.step1_title'),
-        text: context.tr('about.step1_text'),
-        stepNumber: '01',
-      ),
-      _CardModel(
-        icon: Icons.color_lens_outlined,
-        title: context.tr('about.step2_title'),
-        text: context.tr('about.step2_text'),
-        stepNumber: '02',
-      ),
-      _CardModel(
-        icon: Icons.auto_fix_high_outlined,
-        title: context.tr('about.step3_title'),
-        text: context.tr('about.step3_text'),
-        stepNumber: '03',
-      ),
+    // cire → goutte, bain de teinture → palette, fixation → éclat
+    const stepIcons = [
+      Icons.water_drop_outlined,
+      Icons.color_lens_outlined,
+      Icons.auto_fix_high_outlined,
     ];
+    final stepsData = context.aboutList('technique_steps', [
+      {
+        'title': context.aboutTr('about.step1_title'),
+        'text': context.aboutTr('about.step1_text'),
+      },
+      {
+        'title': context.aboutTr('about.step2_title'),
+        'text': context.aboutTr('about.step2_text'),
+      },
+      {
+        'title': context.aboutTr('about.step3_title'),
+        'text': context.aboutTr('about.step3_text'),
+      },
+    ]);
+    final steps = List.generate(
+      stepsData.length,
+      (i) => _CardModel(
+        icon: stepIcons[i % stepIcons.length],
+        title: stepsData[i]['title'] as String? ?? '',
+        text: stepsData[i]['text'] as String? ?? '',
+        stepNumber: (i + 1).toString().padLeft(2, '0'),
+      ),
+    );
+    final useRow = !isCompact && steps.length <= 4;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitleWidget(titleKey: 'about.art_title'),
-        const SizedBox(height: 28),
-        _ParagraphText(text: context.tr('about.art_text1')),
-        const SizedBox(height: 20),
-        _ParagraphText(text: context.tr('about.art_text2')),
-        const SizedBox(height: 44),
-        isCompact
-            ? Column(
-                children: steps
-                    .map((s) => Padding(
-                          padding: const EdgeInsets.only(bottom: 24),
-                          child: _TechniqueCard(data: s, isFullWidth: true),
-                        ))
-                    .toList(),
-              )
-            : IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: steps
-                      .map((s) => Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child:
-                                  _TechniqueCard(data: s, isFullWidth: false),
+        if (!context.aboutHidden('art_title'))
+          const _SectionTitleWidget(titleKey: 'about.art_title'),
+        if (_gap(context, ['art_title'],
+            ['art_text1', 'art_text2', 'technique_steps']))
+          const SizedBox(height: 32),
+        if (!context.aboutHidden('art_text1'))
+          _ParagraphText(text: context.aboutTr('about.art_text1')),
+        if (_gap(context, ['art_text1'], ['art_text2']))
+          const SizedBox(height: 24),
+        if (!context.aboutHidden('art_text2'))
+          _ParagraphText(text: context.aboutTr('about.art_text2')),
+        if (_gap(context, ['art_text1', 'art_text2'], ['technique_steps']))
+          const SizedBox(height: 56),
+        if (!context.aboutHidden('technique_steps'))
+          useRow
+              ? IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var i = 0; i < steps.length; i++)
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              right: i == steps.length - 1 ? 0 : 32,
                             ),
-                          ))
-                      .toList(),
+                            child: _StepItem(data: steps[i]),
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              : Column(
+                  children: [for (final s in steps) _StepItem(data: s)],
                 ),
-              ),
       ],
     );
   }
 }
 
-class _TechniqueCard extends StatelessWidget {
+/// Étape numérotée : les étapes se suivent réellement (cire, bain, fixation).
+class _StepItem extends StatelessWidget {
   final _CardModel data;
-  final bool isFullWidth;
 
-  const _TechniqueCard({required this.data, required this.isFullWidth});
+  const _StepItem({required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return HoverCard(
-      fixedHeight: false,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 24, 0, 32),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: AzizColors.lightBorder)),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AzizColors.gold.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(data.icon, color: AzizColors.gold, size: 32),
-              ),
               Text(
                 data.stepNumber,
-                style: TextStyle(
-                  fontFamily: 'Georgia',
-                  fontSize: 26,
-                  fontWeight: FontWeight.w900,
-                  color: AzizColors.gold.withValues(alpha: 0.25),
+                style: homeSerif(
+                  size: 32,
+                  color: AzizColors.trueIndigoLight,
+                  height: 1.0,
                 ),
               ),
+              Icon(data.icon, color: AzizColors.trueIndigo, size: 24),
             ],
           ),
-          const SizedBox(height: 28),
-          Text(
-            data.title,
-            style: const TextStyle(
-              fontFamily: 'Georgia',
-              fontSize: 19,
-              color: AzizColors.textPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            data.text,
-            style: const TextStyle(
-              fontSize: 14.5,
-              color: AzizColors.textSecondary,
-              height: 1.7,
-            ),
-          ),
+          const SizedBox(height: 24),
+          Text(data.title, style: homeSerif(size: 24, height: 1.2)),
+          const SizedBox(height: 12),
+          Text(data.text, style: homeSans(size: 15.5, height: 1.75)),
         ],
       ),
     );
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Teintures Naturelles
-// ═══════════════════════════════════════════════════════════════════════════
-
 class _NaturalIngredientsSection extends StatelessWidget {
   const _NaturalIngredientsSection();
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isTablet = width < 900;
-
-    final dyes = [
-      _CardModel(
-          icon: Icons.spa_outlined,
-          title: context.tr('about.indigo_title'),
-          text: context.tr('about.indigo_text')),
-      _CardModel(
-          icon: Icons.forest_outlined,
-          title: context.tr('about.cola_title'),
-          text: context.tr('about.cola_text')),
-      _CardModel(
-          icon: Icons.park_outlined,
-          title: context.tr('about.baobab_title'),
-          text: context.tr('about.baobab_text')),
-      _CardModel(
-          icon: Icons.eco_outlined,
-          title: context.tr('about.teck_title'),
-          text: context.tr('about.teck_text')),
+    // indigo, cola, baobab, teck : plantes et écorces
+    const dyeIcons = [
+      Icons.spa_outlined,
+      Icons.forest_outlined,
+      Icons.park_outlined,
+      Icons.eco_outlined,
     ];
+    final dyesData = context.aboutList('natural_dyes', [
+      {
+        'title': context.aboutTr('about.indigo_title'),
+        'text': context.aboutTr('about.indigo_text'),
+      },
+      {
+        'title': context.aboutTr('about.cola_title'),
+        'text': context.aboutTr('about.cola_text'),
+      },
+      {
+        'title': context.aboutTr('about.baobab_title'),
+        'text': context.aboutTr('about.baobab_text'),
+      },
+      {
+        'title': context.aboutTr('about.teck_title'),
+        'text': context.aboutTr('about.teck_text'),
+      },
+    ]);
+    final dyes = List.generate(
+      dyesData.length,
+      (i) => _CardModel(
+        icon: dyeIcons[i % dyeIcons.length],
+        title: dyesData[i]['title'] as String? ?? '',
+        text: dyesData[i]['text'] as String? ?? '',
+      ),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitleWidget(titleKey: 'about.dyes_title'),
-        const SizedBox(height: 36),
-        Wrap(
-          spacing: 24,
-          runSpacing: 24,
-          children: dyes.map((item) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: isTablet
-                    ? double.infinity
-                    : (width - width * 0.20 - 24) / 2,
-                maxWidth: isTablet
-                    ? double.infinity
-                    : (width - width * 0.20 - 24) / 2,
-              ),
-              child: _DyeCard(item: item),
-            );
-          }).toList(),
-        ),
+        if (!context.aboutHidden('dyes_title'))
+          const _SectionTitleWidget(titleKey: 'about.dyes_title'),
+        if (_gap(context, ['dyes_title'], ['natural_dyes']))
+          const SizedBox(height: 40),
+        if (!context.aboutHidden('natural_dyes'))
+          LayoutBuilder(
+            builder: (context, constraints) {
+              const gap = 48.0;
+              final twoColumns = constraints.maxWidth >= 760;
+              final itemWidth = twoColumns
+                  ? (constraints.maxWidth - gap) / 2
+                  : constraints.maxWidth;
+              return Wrap(
+                spacing: gap,
+                children: [
+                  for (final item in dyes)
+                    SizedBox(width: itemWidth, child: _DyeItem(item: item)),
+                ],
+              );
+            },
+          ),
       ],
     );
   }
 }
 
-class _DyeCard extends StatelessWidget {
+class _DyeItem extends StatelessWidget {
   final _CardModel item;
-  const _DyeCard({required this.item});
+  const _DyeItem({required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AzizColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AzizColors.gold.withValues(alpha: 0.15)),
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: AzizColors.lightBorder)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(
-                  75, 0, 130, 0.08), // Rappel subtil de l'Indigo
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Icon(item.icon, color: AzizColors.gold, size: 26),
-          ),
+          Icon(item.icon, color: AzizColors.trueIndigo, size: 26),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(
-                    fontFamily: 'Georgia',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: AzizColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item.text,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AzizColors.textSecondary,
-                    height: 1.65,
-                  ),
-                ),
+                Text(item.title, style: homeSerif(size: 22, height: 1.25)),
+                const SizedBox(height: 10),
+                Text(item.text, style: homeSans(size: 15, height: 1.7)),
               ],
             ),
           ),
@@ -769,53 +904,56 @@ class _DyeCard extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Chronologie visuelle améliorée pour un scan rapide
-// ═══════════════════════════════════════════════════════════════════════════
-
 class _TimelineSection extends StatelessWidget {
   const _TimelineSection();
 
   @override
   Widget build(BuildContext context) {
-    final events = [
-      _TimelineEvent(
-        year: context.tr('about.timeline_year1'),
-        title: context.tr('about.timeline_title1'),
-        description: context.tr('about.timeline_desc1'),
-        icon: Icons.celebration_outlined,
+    final eventsData = context.aboutList('timeline_events', [
+      {
+        'year': context.aboutTr('about.timeline_year1'),
+        'title': context.aboutTr('about.timeline_title1'),
+        'description': context.aboutTr('about.timeline_desc1'),
+      },
+      {
+        'year': context.aboutTr('about.timeline_year2'),
+        'title': context.aboutTr('about.timeline_title2'),
+        'description': context.aboutTr('about.timeline_desc2'),
+      },
+      {
+        'year': context.aboutTr('about.timeline_year3'),
+        'title': context.aboutTr('about.timeline_title3'),
+        'description': context.aboutTr('about.timeline_desc3'),
+      },
+      {
+        'year': context.aboutTr('about.timeline_year4'),
+        'title': context.aboutTr('about.timeline_title4'),
+        'description': context.aboutTr('about.timeline_desc4'),
+      },
+    ]);
+    final events = List.generate(
+      eventsData.length,
+      (i) => _TimelineEvent(
+        year: eventsData[i]['year'] as String? ?? '',
+        title: eventsData[i]['title'] as String? ?? '',
+        description: eventsData[i]['description'] as String? ?? '',
       ),
-      _TimelineEvent(
-        year: context.tr('about.timeline_year2'),
-        title: context.tr('about.timeline_title2'),
-        description: context.tr('about.timeline_desc2'),
-        icon: Icons.flight_takeoff_outlined,
-      ),
-      _TimelineEvent(
-        year: context.tr('about.timeline_year3'),
-        title: context.tr('about.timeline_title3'),
-        description: context.tr('about.timeline_desc3'),
-        icon: Icons.map_outlined,
-      ),
-      _TimelineEvent(
-        year: context.tr('about.timeline_year4'),
-        title: context.tr('about.timeline_title4'),
-        description: context.tr('about.timeline_desc4'),
-        icon: Icons.home_outlined,
-      ),
-    ];
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitleWidget(titleKey: 'about.timeline_title'),
-        const SizedBox(height: 48),
-        ...List.generate(events.length, (i) {
-          return _TimelineItem(
-            event: events[i],
-            isLast: i == events.length - 1,
-          );
-        }),
+        if (!context.aboutHidden('timeline_title'))
+          const _SectionTitleWidget(titleKey: 'about.timeline_title'),
+        if (_gap(context, ['timeline_title'], ['timeline_events']))
+          const SizedBox(height: 56),
+        if (!context.aboutHidden('timeline_events'))
+          ...List.generate(events.length, (i) {
+            return _TimelineItem(
+              event: events[i],
+              isLast: i == events.length - 1,
+            );
+          }),
       ],
     );
   }
@@ -829,84 +967,62 @@ class _TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = homeIsMobile(context);
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Année stylisée sous forme de badge fixe
           SizedBox(
-            width: 80,
+            width: isMobile ? 64 : 96,
             child: Padding(
-              padding: const EdgeInsets.only(top: 6),
+              padding: const EdgeInsets.only(top: 2),
               child: Text(
                 event.year,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
-                  fontFamily: 'Georgia',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: AzizColors.gold,
-                  letterSpacing: 0.5,
+                style: homeSerif(
+                  size: 19,
+                  color: AzizColors.trueIndigo,
+                  weight: FontWeight.w600,
+                  height: 1.2,
                 ),
               ),
             ),
           ),
           const SizedBox(width: 24),
-          // Colonne vertébrale graphique de la ligne temporelle
           Column(
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 12,
+                height: 12,
+                margin: const EdgeInsets.only(top: 6),
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AzizColors.card,
-                  border: Border.all(color: AzizColors.gold, width: 1.8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AzizColors.gold.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                    )
-                  ],
+                  color: AzizColors.trueIndigo,
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                child: Icon(event.icon, size: 18, color: AzizColors.gold),
               ),
               if (!isLast)
                 Expanded(
                   child: Container(
-                    width: 2,
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    color: AzizColors.gold.withValues(alpha: 0.3),
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    color: AzizColors.lightBorder,
                   ),
                 ),
             ],
           ),
           const SizedBox(width: 24),
-          // Contenu textuel de l'événement
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 12 : 40),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 48),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    event.title,
-                    style: const TextStyle(
-                      fontFamily: 'Georgia',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: AzizColors.textPrimary,
-                    ),
-                  ),
+                  Text(event.title, style: homeSerif(size: 22, height: 1.25)),
                   const SizedBox(height: 10),
                   Text(
                     event.description,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: AzizColors.textSecondary,
-                      height: 1.7,
-                    ),
+                    style: homeSans(size: 15.5, height: 1.7),
                   ),
                 ],
               ),
@@ -918,195 +1034,192 @@ class _TimelineItem extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Tableau de Bord des Statistiques
-// ═══════════════════════════════════════════════════════════════════════════
-
 class _StatsDashboard extends StatelessWidget {
-  final bool isMobile;
-  const _StatsDashboard({required this.isMobile});
+  const _StatsDashboard();
 
   @override
   Widget build(BuildContext context) {
-    final stats = [
-      _StatModel(
-          value: context.tr('about.stat_aho'),
-          label: context.tr('about.stat_aho_label')),
-      _StatModel(
-          value: context.tr('about.stat_dyes'),
-          label: context.tr('about.stat_dyes_label')),
-      _StatModel(
-          value: context.tr('about.stat_handmade'),
-          label: context.tr('about.stat_handmade_label')),
-      _StatModel(
-          value: context.tr('about.stat_heritage'),
-          label: context.tr('about.stat_heritage_label')),
-    ];
+    final statsData = context.aboutList('stats', [
+      {
+        'value': context.aboutTr('about.stat_aho'),
+        'label': context.aboutTr('about.stat_aho_label'),
+      },
+      {
+        'value': context.aboutTr('about.stat_dyes'),
+        'label': context.aboutTr('about.stat_dyes_label'),
+      },
+      {
+        'value': context.aboutTr('about.stat_handmade'),
+        'label': context.aboutTr('about.stat_handmade_label'),
+      },
+      {
+        'value': context.aboutTr('about.stat_heritage'),
+        'label': context.aboutTr('about.stat_heritage_label'),
+      },
+    ]);
+    final stats = statsData
+        .map((s) => _StatModel(
+              value: s['value'] as String? ?? '',
+              label: s['label'] as String? ?? '',
+            ))
+        .toList();
+    if (stats.isEmpty) return const SizedBox.shrink();
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
-      decoration: BoxDecoration(
-        color: AzizColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AzizColors.divider.withValues(alpha: 0.6)),
-      ),
-      child: Wrap(
-        spacing: 24,
-        runSpacing: 44,
-        alignment: WrapAlignment.spaceEvenly,
-        children: stats.map((s) {
-          return SizedBox(
-            width: isMobile ? 150 : 200,
-            child: Column(
-              children: [
-                AnimatedCounter(
-                  rawValue: s.value,
-                  style: const TextStyle(
-                    fontFamily: 'Georgia',
-                    fontSize: 42,
-                    fontWeight: FontWeight.w900,
-                    color: AzizColors.gold,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  s.label.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color: AzizColors.textSecondary,
-                    letterSpacing: 1.5,
-                    height: 1.5,
-                  ),
-                ),
-              ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gap = 24.0;
+        final columns = math.max(
+          1,
+          math.min(stats.length, constraints.maxWidth < 560 ? 2 : 4),
+        );
+        final itemWidth =
+            (constraints.maxWidth - gap * (columns - 1)) / columns;
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 56),
+          decoration: const BoxDecoration(
+            border: Border.symmetric(
+              horizontal: BorderSide(color: AzizColors.lightBorder),
             ),
-          );
-        }).toList(),
-      ),
+          ),
+          child: Wrap(
+            spacing: gap,
+            runSpacing: 44,
+            children: [
+              for (final s in stats)
+                SizedBox(
+                  width: itemWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AnimatedCounter(
+                        rawValue: s.value,
+                        style: homeSerif(
+                          size: 56,
+                          color: AzizColors.trueIndigo,
+                          height: 1.0,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        s.label,
+                        style: homeSans(
+                          size: 14,
+                          color: AzizColors.lightTextSecondary,
+                          weight: FontWeight.w600,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// WIDGET COMPAGNON : Titre de Section Typographique
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _SectionTitleWidget extends StatelessWidget {
-  final String titleKey;
-  const _SectionTitleWidget({required this.titleKey});
+  final String? titleKey;
+  final String? text;
+  const _SectionTitleWidget({this.titleKey, this.text});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.tr(titleKey),
-          style: const TextStyle(
-            fontFamily: 'Georgia',
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-            color: AzizColors.textPrimary,
-            letterSpacing: 0.3,
-          ),
+    final isMobile = homeIsMobile(context);
+
+    return Semantics(
+      header: true,
+      child: Text(
+        text ?? context.aboutTr(titleKey ?? ''),
+        style: homeSerif(
+          size: isMobile ? 34 : 48,
+          height: 1.08,
+          letterSpacing: -0.8,
         ),
-        const SizedBox(height: 12),
-        Container(
-          width: 64,
-          height: 3.0,
-          decoration: BoxDecoration(
-            color: AzizColors.gold,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// WIDGET COMPAGNON : Paragraphe Universel (Optimisé Accessibilité)
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _ParagraphText extends StatelessWidget {
   final String text;
   final bool emphasis;
   final bool secondary;
+  final bool center;
 
   const _ParagraphText({
     required this.text,
     this.emphasis = false,
     this.secondary = false,
+    this.center = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    final paragraph = Text(
       text,
-      textAlign: TextAlign
-          .start, // UX Correction: Changé de 'justify' à 'start' pour éviter la fatigue cognitive/visuelle
-      style: TextStyle(
-        fontSize: emphasis
-            ? 18.0
-            : 16.5, // Légère augmentation de la taille pour toutes les tranches d'âges
-        fontWeight: emphasis ? FontWeight.w500 : FontWeight.w400,
-        color: secondary ? AzizColors.textSecondary : AzizColors.textPrimary,
-        height:
-            1.8, // Espacement parfait (Golden Ratio textuel) pour le parcours fluide des yeux
-        letterSpacing: 0.2,
+      textAlign: center ? TextAlign.center : TextAlign.start,
+      style: homeSans(
+        size: emphasis ? 18 : 16.5,
+        color: secondary
+            ? AzizColors.lightTextSecondary
+            : AzizColors.lightTextPrimary,
+        weight: emphasis ? FontWeight.w500 : FontWeight.w400,
+        height: 1.85,
       ),
+    );
+    if (center) return paragraph;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 720),
+      child: paragraph,
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// WIDGET COMPAGNON : Badge Patrimoine
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _HeritageBadgeWidget extends StatelessWidget {
   const _HeritageBadgeWidget();
 
   @override
   Widget build(BuildContext context) {
-    return UnconstrainedBox(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(
-              alpha:
-                  0.4), // Fond sombre uniforme pour garantir la lisibilité sur l'image
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: AzizColors.gold.withValues(alpha: 0.5)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AzizColors.mat,
+        borderRadius: BorderRadius.circular(kHomeRadius),
+        border: Border.all(
+          color: AzizColors.trueIndigo.withValues(alpha: 0.35),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.auto_awesome_outlined,
-                size: 16, color: AzizColors.gold),
-            const SizedBox(width: 10),
-            Text(
-              context.tr('about.heritage_badge'),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AzizColors.gold,
-                fontStyle: FontStyle.italic,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.account_balance_outlined,
+            size: 18,
+            color: AzizColors.trueIndigo,
+          ),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Text(
+              context.aboutTr('about.heritage_badge'),
+              style: homeSans(
+                size: 14,
+                color: AzizColors.trueIndigo,
+                weight: FontWeight.w600,
+                height: 1.3,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// MODÈLES DE DONNÉES LOCAUX
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _CardModel {
   final IconData icon;
@@ -1131,76 +1244,93 @@ class _TimelineEvent {
   final String year;
   final String title;
   final String description;
-  final IconData icon;
   const _TimelineEvent({
     required this.year,
     required this.title,
     required this.description,
-    required this.icon,
   });
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT : Représentation — Galerie SAGA
-// ═══════════════════════════════════════════════════════════════════════════
 
 class _RepresentationSection extends StatelessWidget {
   const _RepresentationSection();
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = homeIsMobile(context);
+
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: AzizColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AzizColors.gold.withValues(alpha: 0.3)),
+      padding: EdgeInsets.symmetric(vertical: isMobile ? 36 : 56),
+      decoration: const BoxDecoration(
+        border: Border.symmetric(
+          horizontal: BorderSide(color: AzizColors.lightBorder),
+        ),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: AzizColors.gold.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(kHomeRadius),
+              border: Border.all(color: AzizColors.lightBorder),
             ),
             child: const Icon(
-              Icons.business_outlined,
-              color: AzizColors.gold,
+              Icons.workspace_premium_outlined,
               size: 28,
+              color: AzizColors.trueIndigo,
             ),
           ),
-          const SizedBox(width: 24),
+          SizedBox(width: isMobile ? 20 : 32),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.tr('about.representation_title').toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    letterSpacing: 4,
-                    fontWeight: FontWeight.w800,
-                    color: AzizColors.gold,
+                if (!context.aboutHidden('representation_title'))
+                  Text(
+                    context.aboutTr('about.representation_title'),
+                    style: homeSerif(size: isMobile ? 24 : 30, height: 1.2),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  context.tr('about.representation_text'),
-                  style: const TextStyle(
-                    fontFamily: 'Georgia',
-                    fontSize: 16,
-                    color: AzizColors.textPrimary,
-                    height: 1.6,
+                if (_gap(context, ['representation_title'],
+                    ['representation_text']))
+                  const SizedBox(height: 14),
+                if (!context.aboutHidden('representation_text'))
+                  Text(
+                    context.aboutTr('about.representation_text'),
+                    style: homeSerif(
+                      size: isMobile ? 18 : 21,
+                      color: AzizColors.lightTextSecondary,
+                      style: FontStyle.italic,
+                      height: 1.6,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CustomSectionsSection extends StatelessWidget {
+  const _CustomSectionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final items = context.aboutList('custom_sections', const []);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < items.length; i++) ...[
+          if ((items[i]['title'] as String? ?? '').trim().isNotEmpty) ...[
+            _SectionTitleWidget(text: items[i]['title'] as String),
+            const SizedBox(height: 28),
+          ],
+          if ((items[i]['text'] as String? ?? '').trim().isNotEmpty)
+            _ParagraphText(text: items[i]['text'] as String),
+          if (i < items.length - 1) const SizedBox(height: 72),
+        ],
+      ],
     );
   }
 }

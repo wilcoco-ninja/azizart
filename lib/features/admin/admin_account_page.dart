@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../theme/aziz_colors.dart';
+import 'package:azizart/theme/admin_colors.dart';
+import 'admin_forms.dart';
 import 'admin_credentials_service.dart';
 
-/// Page "Mon compte" — permet à l'administrateur connecté de changer son
-/// pseudo et/ou son mot de passe, sans jamais passer par le Dashboard
-/// Supabase.
 class AdminAccountPage extends StatefulWidget {
   const AdminAccountPage({super.key});
 
@@ -14,24 +11,22 @@ class AdminAccountPage extends StatefulWidget {
 }
 
 class _AdminAccountPageState extends State<AdminAccountPage> {
-  final _service = AdminCredentialsService();
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _currentPwdController = TextEditingController();
+  final _newPwdController = TextEditingController();
+  final _credentialsService = AdminCredentialsService();
+  bool _isSaving = false;
 
-  final _pseudoFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
+  /// Pseudo enregistré à l'ouverture : on ne réécrit le pseudo que s'il change.
+  String _initialPseudo = '';
 
-  final _pseudoController = TextEditingController();
-  final _currentPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  /// Message d'avertissement si la lecture du pseudo échoue (droits, réseau).
+  String? _loadError;
 
-  bool _loadingPseudo = true;
-  bool _savingPseudo = false;
-  bool _savingPassword = false;
-
-  String? _pseudoMessage;
-  bool _pseudoSuccess = false;
-  String? _passwordMessage;
-  bool _passwordSuccess = false;
+  /// Dernier résultat de « Mettre à jour le compte », affiché sans disparaître.
+  String? _banner;
+  bool _bannerIsError = false;
 
   @override
   void initState() {
@@ -40,270 +35,282 @@ class _AdminAccountPageState extends State<AdminAccountPage> {
   }
 
   Future<void> _loadCurrentPseudo() async {
-    final pseudo = await _service.getCurrentPseudo();
-    if (!mounted) return;
-    setState(() {
-      if (pseudo != null) _pseudoController.text = pseudo;
-      _loadingPseudo = false;
-    });
+    try {
+      final pseudo = await _credentialsService.loadPseudo();
+      if (!mounted) return;
+      if (pseudo != null && pseudo.isNotEmpty) {
+        _initialPseudo = pseudo.trim();
+        _nameController.text = pseudo;
+      }
+    } on AdminCredentialsException catch (e) {
+      if (mounted) setState(() => _loadError = e.message);
+    } catch (e) {
+      if (mounted) setState(() => _loadError = 'Lecture du pseudo impossible : $e');
+    }
   }
 
   @override
   void dispose() {
-    _pseudoController.dispose();
-    _currentPasswordController.dispose();
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
+    _nameController.dispose();
+    _currentPwdController.dispose();
+    _newPwdController.dispose();
     super.dispose();
   }
 
-  Future<void> _savePseudo() async {
-    if (!_pseudoFormKey.currentState!.validate()) return;
-    final email = Supabase.instance.client.auth.currentUser?.email;
-    if (email == null) return;
-
+  /// Affiche le résultat dans un bandeau permanent (et une bulle si succès).
+  void _notify(String message, {required bool isError}) {
+    if (!mounted) return;
     setState(() {
-      _savingPseudo = true;
-      _pseudoMessage = null;
+      _banner = message;
+      _bannerIsError = isError;
     });
-    try {
-      await _service.setPseudo(
-          pseudo: _pseudoController.text.trim(), email: email);
-      setState(() {
-        _pseudoSuccess = true;
-        _pseudoMessage =
-            'Pseudo mis à jour. Utilisez-le dès votre prochaine connexion.';
-      });
-    } catch (e) {
-      setState(() {
-        _pseudoSuccess = false;
-        _pseudoMessage = 'Erreur : $e';
-      });
-    } finally {
-      if (mounted) setState(() => _savingPseudo = false);
+    if (!isError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: AdminColors.success),
+      );
     }
   }
 
-  Future<void> _savePassword() async {
-    if (!_passwordFormKey.currentState!.validate()) return;
+  Future<void> _handleUpdateAccount() async {
+    setState(() => _banner = null);
+    if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _savingPassword = true;
-      _passwordMessage = null;
-    });
-    try {
-      await _service.changePassword(
-        currentPassword: _currentPasswordController.text,
-        newPassword: _newPasswordController.text,
+    final newPseudo = _nameController.text.trim();
+    final currentPwd = _currentPwdController.text;
+    final newPwd = _newPwdController.text;
+
+    // Seul le NOUVEAU mot de passe déclenche un changement de mot de passe :
+    // un champ « actuel » rempli automatiquement par le navigateur ne doit
+    // pas empêcher la mise à jour du pseudo.
+    final wantsPasswordChange = newPwd.isNotEmpty;
+    final pseudoChanged =
+        newPseudo.isNotEmpty && newPseudo != _initialPseudo;
+
+    if (wantsPasswordChange && currentPwd.isEmpty) {
+      _notify(
+        'Renseignez le mot de passe actuel pour en choisir un nouveau.',
+        isError: true,
       );
-      setState(() {
-        _passwordSuccess = true;
-        _passwordMessage = 'Mot de passe mis à jour avec succès.';
-        _currentPasswordController.clear();
-        _newPasswordController.clear();
-        _confirmPasswordController.clear();
-      });
-    } on AuthException catch (e) {
-      setState(() {
-        _passwordSuccess = false;
-        _passwordMessage = switch (e.code) {
-          'invalid_credentials' => 'Mot de passe actuel incorrect.',
-          'weak_password' =>
-            'Le nouveau mot de passe est trop faible (6 caractères minimum).',
-          'same_password' =>
-            'Le nouveau mot de passe doit être différent de l\'actuel.',
-          'reauthentication_needed' =>
-            'Reconnectez-vous puis réessayez immédiatement.',
-          _ => 'Erreur : ${e.message}',
-        };
-      });
-    } catch (e) {
-      setState(() {
-        _passwordSuccess = false;
-        _passwordMessage = 'Erreur inattendue : $e';
-      });
-    } finally {
-      if (mounted) setState(() => _savingPassword = false);
+      return;
     }
-  }
 
-  InputDecoration _decoration(String label, {IconData? icon}) =>
-      InputDecoration(
-        labelText: label,
-        prefixIcon: icon != null ? Icon(icon) : null,
+    if (!wantsPasswordChange && !pseudoChanged) {
+      _notify('Aucune modification à enregistrer.', isError: false);
+      return;
+    }
+
+    setState(() => _isSaving = true);
+    var passwordChanged = false;
+    try {
+      // Mot de passe d'abord : il échoue sans effet de bord si le mot de
+      // passe actuel est faux, ce qui évite une mise à jour partielle.
+      if (wantsPasswordChange) {
+        await _credentialsService.changePassword(
+          currentPassword: currentPwd,
+          newPassword: newPwd,
+        );
+        passwordChanged = true;
+      }
+      if (pseudoChanged) {
+        await _credentialsService.setPseudo(pseudo: newPseudo);
+        _initialPseudo = newPseudo;
+        if (mounted) setState(() => _loadError = null);
+      }
+      _currentPwdController.clear();
+      _newPwdController.clear();
+
+      _notify(
+        passwordChanged && pseudoChanged
+            ? 'Mot de passe et pseudo mis à jour.'
+            : passwordChanged
+                ? 'Mot de passe mis à jour.'
+                : 'Pseudo mis à jour : utilisez-le à la prochaine connexion.',
+        isError: false,
       );
-
-  Widget _sectionTitle(String text) => Text(
-        text,
-        style: const TextStyle(
-          color: AzizColors.textPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+    } on AdminCredentialsException catch (e) {
+      if (passwordChanged) {
+        _currentPwdController.clear();
+        _newPwdController.clear();
+      }
+      _notify(
+        passwordChanged
+            ? 'Mot de passe modifié, mais le pseudo n\'a pas été enregistré : ${e.message}'
+            : e.message,
+        isError: true,
       );
-
-  Widget _feedback(String? message, bool success) {
-    if (message == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Text(
-        message,
-        style: TextStyle(
-          color: success ? AzizColors.success : AzizColors.error,
-          fontSize: 13,
-        ),
-      ),
-    );
+    } catch (e) {
+      if (passwordChanged) {
+        _currentPwdController.clear();
+        _newPwdController.clear();
+      }
+      _notify('Erreur inattendue : $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final email = Supabase.instance.client.auth.currentUser?.email ?? '';
-
     return Scaffold(
-      backgroundColor: AzizColors.backgroundDark,
+      backgroundColor: AdminColors.bg,
       appBar: AppBar(
-        backgroundColor: AzizColors.backgroundMedium,
-        elevation: 0,
         title: const Text(
-          'Mon compte',
-          style: TextStyle(
-            fontFamily: 'Playfair Display',
-            color: AzizColors.saffron,
-            fontSize: 18,
-            letterSpacing: 2,
-          ),
+          'Paramètres du Compte',
+          style: TextStyle(color: AdminColors.text),
         ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AdminColors.text),
       ),
-      body: SafeArea(
+      body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
+          padding: const EdgeInsets.all(24.0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 450),
+            child: Form(
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    'Connecté avec : $email',
-                    style: const TextStyle(
-                      color: AzizColors.textSecondary,
-                      fontSize: 13,
+                  const CircleAvatar(
+                    radius: 40,
+                    backgroundColor: AdminColors.surface,
+                    child: Icon(
+                      Icons.person,
+                      size: 40,
+                      color: AdminColors.text,
                     ),
                   ),
-                  const SizedBox(height: 32),
-
-                  // ── Changer le pseudo ─────────────────────────────────
-                  _sectionTitle('Pseudo de connexion'),
-                  const SizedBox(height: 4),
-                  const Text(
-                    "C'est ce pseudo (et non l'e-mail) que vous utiliserez "
-                    "pour vous connecter à /admin.",
-                    style: TextStyle(
-                      color: AzizColors.textMuted,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (_loadingPseudo)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: LinearProgressIndicator(),
-                    )
-                  else
-                    Form(
-                      key: _pseudoFormKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          TextFormField(
-                            controller: _pseudoController,
-                            decoration: _decoration('Pseudo',
-                                icon: Icons.person_outline_rounded),
-                            validator: (v) => (v == null || v.trim().isEmpty)
-                                ? 'Le pseudo ne peut pas être vide'
-                                : null,
-                          ),
-                          _feedback(_pseudoMessage, _pseudoSuccess),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: _savingPseudo ? null : _savePseudo,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AzizColors.saffron,
-                              foregroundColor: AzizColors.textOnAccent,
-                            ),
-                            child: _savingPseudo
-                                ? const SizedBox(
-                                    width: 18,
-                                    height: 18,
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2),
-                                  )
-                                : const Text('Enregistrer le pseudo'),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  const SizedBox(height: 40),
-                  const Divider(color: AzizColors.cardBorder),
                   const SizedBox(height: 24),
 
-                  // ── Changer le mot de passe ────────────────────────────
-                  _sectionTitle('Mot de passe'),
-                  const SizedBox(height: 12),
-                  Form(
-                    key: _passwordFormKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextFormField(
-                          controller: _currentPasswordController,
-                          decoration: _decoration('Mot de passe actuel',
-                              icon: Icons.lock_outline),
-                          obscureText: true,
-                          validator: (v) =>
-                              (v == null || v.isEmpty) ? 'Champ requis' : null,
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: _newPasswordController,
-                          decoration: _decoration('Nouveau mot de passe',
-                              icon: Icons.lock_outline),
-                          obscureText: true,
-                          validator: (v) => (v == null || v.length < 6)
-                              ? '6 caractères minimum'
-                              : null,
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          decoration: _decoration(
-                              'Confirmer le nouveau mot de passe',
-                              icon: Icons.lock_outline),
-                          obscureText: true,
-                          validator: (v) => (v != _newPasswordController.text)
-                              ? 'Les mots de passe ne correspondent pas'
-                              : null,
-                        ),
-                        _feedback(_passwordMessage, _passwordSuccess),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _savingPassword ? null : _savePassword,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AzizColors.saffron,
-                            foregroundColor: AzizColors.textOnAccent,
+                  if (_loadError != null) ...[
+                    AdminInfoBanner(message: _loadError!, isWarning: true),
+                    const SizedBox(height: 16),
+                  ],
+
+                  adminTextField(
+                    _nameController,
+                    'Nom d\'administrateur',
+                    helper: 'Pseudo utilisé pour se connecter.',
+                    validator: (value) {
+                      final t = (value ?? '').trim();
+                      if (t.isEmpty) return null;
+                      return AdminCredentialsService.validatePseudo(t);
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  const Divider(color: AdminColors.border),
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    'Sécurité',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AdminColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Pas de « autofillHints » ici : le navigateur ne doit pas
+                  // préremplir le mot de passe actuel à l'ouverture.
+                  adminTextField(
+                    _currentPwdController,
+                    'Mot de passe actuel',
+                    isPassword: true,
+                    helper: 'Nécessaire uniquement pour changer le mot de passe.',
+                  ),
+                  const SizedBox(height: 16),
+
+                  adminTextField(
+                    _newPwdController,
+                    'Nouveau mot de passe',
+                    isPassword: true,
+                    helper: '8 caractères minimum.',
+                    autofillHints: const [AutofillHints.newPassword],
+                    validator: (value) {
+                      final v = value ?? '';
+                      if (v.isEmpty) return null;
+                      return v.length < 8 ? 'Au moins 8 caractères' : null;
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  if (_banner != null) ...[
+                    AdminInfoBanner(
+                      message: _banner!,
+                      isWarning: _bannerIsError,
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  ElevatedButton(
+                    onPressed: _isSaving ? null : _handleUpdateAccount,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AdminColors.accent,
+                      foregroundColor: AdminColors.bg,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _isSaving
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AdminColors.bg,
+                            ),
+                          )
+                        : const Text(
+                            'Mettre à jour le compte',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          child: _savingPassword
-                              ? const SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child:
-                                      CircularProgressIndicator(strokeWidth: 2),
-                                )
-                              : const Text('Enregistrer le mot de passe'),
-                        ),
-                      ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  OutlinedButton.icon(
+                    onPressed: () async {
+                      try {
+                        await _credentialsService.signOut();
+
+                        if (!context.mounted) return;
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/',
+                          (route) => false,
+                        );
+                      } catch (e) {
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Erreur de déconnexion: $e'),
+                            backgroundColor: AdminColors.danger,
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.logout, color: AdminColors.danger),
+                    label: const Text(
+                      'Se déconnecter',
+                      style: TextStyle(
+                        color: AdminColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: const BorderSide(color: AdminColors.danger),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ],

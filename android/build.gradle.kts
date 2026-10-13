@@ -5,20 +5,21 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory =
-    rootProject.layout.buildDirectory
-        .dir("../../build")
-        .get()
-rootProject.layout.buildDirectory.value(newBuildDir)
+// 1. Calculer le nouveau chemin à partir du répertoire du projet (plus sûr)
+val newBuildDir = rootProject.layout.projectDirectory.dir("../build")
+rootProject.layout.buildDirectory.set(newBuildDir)
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
+    // 2. Assigner le répertoire de build de chaque sous-projet
+    val newSubprojectBuildDir = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.set(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
 
+// 3. Tâche de nettoyage
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

@@ -1,54 +1,51 @@
 import 'package:flutter/material.dart';
 import 'aziz_colors.dart';
 
-/// 🎨 THÈME AZIZART · OASIS VÉGÉTALE
-/// Nouvelle direction visuelle, plus fraîche et organique :
-/// - Fonds brun olive profond, chaleureux et feutré
-/// - Accents vert menthe lumineux pour les actions principales
-/// - Touches sauge bleutée pour les éléments secondaires
-/// - Texte citron pâle pour une lisibilité douce et naturelle
+/// 🎨 THÈME AZIZART COLORS — galerie d'art.
+/// Mur clair, encre indigo, accents ambre, angles quasi droits (2 px),
+/// boutons de 48 px sans ombre.
 class AppTheme {
   AppTheme._();
 
   static const String _fontFamily = 'Playfair Display';
   static const String _fontFamilyBody = 'Raleway';
 
+  /// Rayon commun : angles presque droits, comme un cadre ou un cartel.
+  static const double _radius = 2;
+
   static ThemeData get theme => _buildTheme(Brightness.light);
   static ThemeData get dark => _buildTheme(Brightness.dark);
 
   static ThemeData _buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
+    final shape =
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(_radius));
 
-    // ══════════════════════════════════════════════════════════════════════════════
-    // ColorScheme — Palette Oasis Végétale
-    // ══════════════════════════════════════════════════════════════════════════════
+    final ink = isDark ? AzizColors.textPrimary : AzizColors.lightTextPrimary;
+    final inkSoft =
+        isDark ? AzizColors.textSecondary : AzizColors.lightTextSecondary;
+    final inkMuted = isDark ? AzizColors.textMuted : AzizColors.lightTextMuted;
+    final line = isDark ? AzizColors.border : AzizColors.lightBorder;
+    final action = isDark ? AzizColors.saffron : AzizColors.trueIndigo;
 
     final colorScheme = isDark
         ? const ColorScheme.dark(
-            // Primaire : Vert Menthe — boutons CTA, actions principales
             primary: AzizColors.saffron,
-            // Secondaire : Sauge Bleutée — éléments calmes, info
-            secondary: AzizColors.greenBatik,
-            // Surface : Olive moyen pour les cartes et surfaces
+            secondary: AzizColors.petrolBlue,
             surface: AzizColors.surface,
-            // Erreur : Rouge doux pour les erreurs
             error: AzizColors.error,
-            // Texte sur primaire (menthe) : Olive nuit pour contraste
             onPrimary: AzizColors.textOnAccent,
-            // Texte sur secondaire (sauge) : Citron pour lisibilité
             onSecondary: AzizColors.textOnAccent,
-            // Texte sur surface : Citron Pâle
             onSurface: AzizColors.textPrimary,
           )
         : const ColorScheme.light(
-            // Mode clair : fonds Citron Pâle, accents Menthe
             primary: AzizColors.saffron,
-            secondary: AzizColors.greenBatik,
-            surface: AzizColors.mistIndigo,
+            secondary: AzizColors.trueIndigo,
+            surface: AzizColors.lightSurface,
             error: AzizColors.error,
             onPrimary: AzizColors.textOnAccent,
-            onSecondary: AzizColors.textOnAccent,
-            onSurface: AzizColors.background,
+            onSecondary: AzizColors.lightBackground,
+            onSurface: AzizColors.lightTextPrimary,
           );
 
     return ThemeData(
@@ -56,85 +53,69 @@ class AppTheme {
       brightness: brightness,
       colorScheme: colorScheme,
       fontFamily: _fontFamilyBody,
-      // Fond principal : Olive Nuit (sombre) ou Citron Pâle (clair)
       scaffoldBackgroundColor:
-          isDark ? AzizColors.background : AzizColors.mistIndigo,
+          isDark ? AzizColors.background : AzizColors.lightBackground,
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // AppBar — Bandeau Olive Profond
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── AppBar ─────────────────────────────────────────────────────────
       appBarTheme: AppBarTheme(
         backgroundColor:
-            isDark ? AzizColors.backgroundMedium : AzizColors.indigoDeep,
-        foregroundColor: AzizColors.textPrimary,
+            isDark ? AzizColors.backgroundMedium : AzizColors.lightBackground,
+        foregroundColor: ink,
         elevation: 0,
-        centerTitle: true,
-        titleTextStyle: const TextStyle(
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
           fontFamily: _fontFamily,
-          color: AzizColors.saffron,
-          fontSize: 18,
+          color: ink,
+          fontSize: 20,
           fontWeight: FontWeight.w400,
-          letterSpacing: 3,
+          letterSpacing: 1,
         ),
-        iconTheme: const IconThemeData(color: AzizColors.textPrimary),
+        iconTheme: IconThemeData(color: ink),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Card — Cartes Olive, coins plus doux pour un rendu organique
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Card : cadre fin, sans ombre ───────────────────────────────────
       cardTheme: CardThemeData(
-        color: isDark ? AzizColors.cardBackground : AzizColors.mistIndigo,
+        color: isDark ? AzizColors.cardBackground : AzizColors.mat,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(
-            color: isDark ? AzizColors.cardBorder : AzizColors.indigoLight,
-            width: 0.6,
-          ),
+          borderRadius: BorderRadius.circular(4),
+          side: BorderSide(color: line, width: 0.8),
         ),
         margin: const EdgeInsets.all(8),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Dialog — Fenêtres modales Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Dialog ─────────────────────────────────────────────────────────
       dialogTheme: DialogThemeData(
-        backgroundColor:
-            isDark ? AzizColors.backgroundMedium : AzizColors.mistIndigo,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        titleTextStyle: const TextStyle(
+        backgroundColor: isDark ? AzizColors.backgroundMedium : AzizColors.mat,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        titleTextStyle: TextStyle(
           fontFamily: _fontFamily,
-          color: AzizColors.textPrimary,
-          fontSize: 20,
+          color: ink,
+          fontSize: 22,
           fontWeight: FontWeight.w400,
         ),
-        contentTextStyle: TextStyle(
-          color: isDark ? AzizColors.textSecondary : AzizColors.background,
-          fontSize: 14,
-        ),
+        contentTextStyle: TextStyle(color: inkSoft, fontSize: 14, height: 1.6),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // TabBar — Onglets Vert Menthe
-      // ════════════════════════════════════════════════════════════════════════════
-      tabBarTheme: const TabBarThemeData(
-        labelColor: AzizColors.saffron,
-        unselectedLabelColor: AzizColors.textMuted,
+      // ── TabBar ─────────────────────────────────────────────────────────
+      tabBarTheme: TabBarThemeData(
+        labelColor: isDark ? AzizColors.saffron : AzizColors.trueIndigoDark,
+        unselectedLabelColor: inkMuted,
         indicatorColor: AzizColors.saffron,
-        indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+        indicatorSize: TabBarIndicatorSize.label,
+        dividerColor: line,
+        labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         unselectedLabelStyle:
-            TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+            const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // ElevatedButton — Boutons Vert Menthe (CTA principaux)
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Boutons ────────────────────────────────────────────────────────
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return AzizColors.textMuted;
+              return isDark ? AzizColors.textMuted : AzizColors.lightBorder;
             }
             return AzizColors.saffron;
           }),
@@ -145,243 +126,214 @@ class AppTheme {
             }
             return null;
           }),
+          minimumSize: WidgetStateProperty.all(const Size(0, 48)),
           padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: WidgetStateProperty.all(
+            const TextStyle(
+              fontFamily: _fontFamilyBody,
+              fontSize: 14.5,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+            ),
           ),
-          elevation: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) return 0;
-            return 2;
-          }),
+          shape: WidgetStateProperty.all(shape),
+          elevation: WidgetStateProperty.all(0),
         ),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // OutlinedButton — Boutons contour Vert Menthe
-      // ════════════════════════════════════════════════════════════════════════════
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           foregroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.disabled)) {
-              return AzizColors.textMuted;
-            }
-            return AzizColors.saffron;
+            if (states.contains(WidgetState.disabled)) return inkMuted;
+            return action;
           }),
           side: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return const BorderSide(color: AzizColors.textMuted);
+              return BorderSide(color: line);
             }
-            return const BorderSide(color: AzizColors.saffron, width: 1.2);
+            return BorderSide(color: action.withValues(alpha: 0.6), width: 1);
           }),
           overlayColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
-              return AzizColors.saffron.withValues(alpha: 0.1);
+              return action.withValues(alpha: 0.1);
             }
             return null;
           }),
+          minimumSize: WidgetStateProperty.all(const Size(0, 48)),
           padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: WidgetStateProperty.all(
+            const TextStyle(
+              fontFamily: _fontFamilyBody,
+              fontSize: 14.5,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
+            ),
           ),
+          shape: WidgetStateProperty.all(shape),
         ),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // TextButton — Boutons texte Vert Menthe
-      // ════════════════════════════════════════════════════════════════════════════
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all(AzizColors.saffron),
+          foregroundColor: WidgetStateProperty.all(action),
           overlayColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
-              return AzizColors.saffron.withValues(alpha: 0.08);
+              return action.withValues(alpha: 0.08);
             }
             return null;
           }),
+          shape: WidgetStateProperty.all(shape),
+          textStyle: WidgetStateProperty.all(
+            const TextStyle(
+              fontFamily: _fontFamilyBody,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
+            ),
+          ),
         ),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // InputDecoration — Champs Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Champs de saisie : champ blanc sur le mur ───────────────────────
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? AzizColors.surface : AzizColors.mistIndigo,
+        fillColor: isDark ? AzizColors.surface : AzizColors.mat,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: const TextStyle(color: AzizColors.textMuted, fontSize: 14),
-        labelStyle:
-            const TextStyle(color: AzizColors.textSecondary, fontSize: 14),
+        hintStyle: TextStyle(color: inkMuted, fontSize: 14),
+        labelStyle: TextStyle(color: inkSoft, fontSize: 14),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: isDark ? AzizColors.border : AzizColors.indigoLight),
+          borderRadius: BorderRadius.circular(_radius),
+          borderSide: BorderSide(color: line),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-              color: isDark ? AzizColors.border : AzizColors.indigoLight,
-              width: 0.8),
+          borderRadius: BorderRadius.circular(_radius),
+          borderSide: BorderSide(color: line, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AzizColors.saffron, width: 1.5),
+          borderRadius: BorderRadius.circular(_radius),
+          borderSide: BorderSide(color: action, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(_radius),
           borderSide: const BorderSide(color: AzizColors.error),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(_radius),
           borderSide: const BorderSide(color: AzizColors.error, width: 1.5),
         ),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Text — Typographie Citron Pâle
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Texte ──────────────────────────────────────────────────────────
       textTheme: TextTheme(
-        displayLarge: const TextStyle(
+        displayLarge: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 48,
-            fontWeight: FontWeight.w300,
-            letterSpacing: 2),
-        displayMedium: const TextStyle(
+            color: ink,
+            fontSize: 56,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -1),
+        displayMedium: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 36,
-            fontWeight: FontWeight.w300),
-        displaySmall: const TextStyle(
+            color: ink,
+            fontSize: 40,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -0.5),
+        displaySmall: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 28,
+            color: ink,
+            fontSize: 30,
             fontWeight: FontWeight.w400),
-        headlineLarge: const TextStyle(
+        headlineLarge: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 24,
+            color: ink,
+            fontSize: 26,
             fontWeight: FontWeight.w400),
-        headlineMedium: const TextStyle(
+        headlineMedium: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 20,
+            color: ink,
+            fontSize: 22,
             fontWeight: FontWeight.w400),
-        headlineSmall: const TextStyle(
+        headlineSmall: TextStyle(
             fontFamily: _fontFamily,
-            color: AzizColors.textPrimary,
-            fontSize: 18,
+            color: ink,
+            fontSize: 19,
             fontWeight: FontWeight.w400),
         titleLarge: TextStyle(
-            color: isDark ? AzizColors.textPrimary : AzizColors.background,
-            fontSize: 16,
-            fontWeight: FontWeight.w600),
+            color: ink, fontSize: 17, fontWeight: FontWeight.w600),
         titleMedium: TextStyle(
-            color: isDark ? AzizColors.textPrimary : AzizColors.background,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
+            color: ink, fontSize: 15, fontWeight: FontWeight.w500),
         titleSmall: TextStyle(
-            color: isDark ? AzizColors.textSecondary : AzizColors.background,
-            fontSize: 12,
-            fontWeight: FontWeight.w500),
-        bodyLarge: TextStyle(
-            color: isDark ? AzizColors.textPrimary : AzizColors.background,
-            fontSize: 16,
-            height: 1.6),
-        bodyMedium: TextStyle(
-            color: isDark ? AzizColors.textSecondary : AzizColors.background,
-            fontSize: 14,
-            height: 1.6),
-        bodySmall: TextStyle(
-            color: isDark ? AzizColors.textMuted : AzizColors.background,
-            fontSize: 12,
-            height: 1.5),
-        labelLarge: const TextStyle(
-            color: AzizColors.textPrimary,
-            fontSize: 14,
+            color: inkSoft, fontSize: 13, fontWeight: FontWeight.w500),
+        bodyLarge: TextStyle(color: ink, fontSize: 16, height: 1.7),
+        bodyMedium: TextStyle(color: inkSoft, fontSize: 14.5, height: 1.65),
+        bodySmall: TextStyle(color: inkMuted, fontSize: 12.5, height: 1.5),
+        labelLarge: TextStyle(
+            color: ink,
+            fontSize: 14.5,
             fontWeight: FontWeight.w600,
-            letterSpacing: 1),
-        labelMedium: TextStyle(
-            color: isDark ? AzizColors.textSecondary : AzizColors.background,
-            fontSize: 12,
-            letterSpacing: 0.5),
-        labelSmall: TextStyle(
-            color: isDark ? AzizColors.textMuted : AzizColors.background,
-            fontSize: 10,
-            letterSpacing: 0.5),
+            letterSpacing: 0.2),
+        labelMedium:
+            TextStyle(color: inkSoft, fontSize: 12.5, letterSpacing: 0.2),
+        labelSmall:
+            TextStyle(color: inkMuted, fontSize: 11.5, letterSpacing: 0.2),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Divider — Séparateurs Olive
-      // ════════════════════════════════════════════════════════════════════════════
-      dividerTheme: DividerThemeData(
-        color: isDark ? AzizColors.divider : AzizColors.indigoLight,
-        thickness: 0.5,
-        space: 1,
-      ),
+      // ── Divider ────────────────────────────────────────────────────────
+      dividerTheme: DividerThemeData(color: line, thickness: 0.8, space: 1),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // BottomNavigationBar — Navigation Olive & Menthe
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── BottomNavigationBar ────────────────────────────────────────────
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor:
-            isDark ? AzizColors.backgroundMedium : AzizColors.mistIndigo,
-        selectedItemColor: AzizColors.saffron,
-        unselectedItemColor: AzizColors.textMuted,
+            isDark ? AzizColors.backgroundMedium : AzizColors.lightBackground,
+        selectedItemColor: isDark ? AzizColors.saffron : AzizColors.trueIndigo,
+        unselectedItemColor: inkMuted,
         showSelectedLabels: true,
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // SnackBar — Notifications Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── SnackBar ───────────────────────────────────────────────────────
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: isDark ? AzizColors.surface : AzizColors.indigoDeep,
-        contentTextStyle: const TextStyle(color: AzizColors.textPrimary),
+        backgroundColor:
+            isDark ? AzizColors.surface : AzizColors.trueIndigoDark,
+        contentTextStyle: TextStyle(
+          color: isDark ? AzizColors.textPrimary : AzizColors.lightBackground,
+        ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: shape,
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Tooltip — Infobulles Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Tooltip ────────────────────────────────────────────────────────
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
-          color: isDark ? AzizColors.surface : AzizColors.indigoDeep,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-              color: isDark ? AzizColors.border : AzizColors.indigoLight),
+          color: isDark ? AzizColors.surface : AzizColors.trueIndigoDark,
+          borderRadius: BorderRadius.circular(_radius),
         ),
-        textStyle: const TextStyle(color: AzizColors.textPrimary, fontSize: 12),
+        textStyle: TextStyle(
+          color: isDark ? AzizColors.textPrimary : AzizColors.lightBackground,
+          fontSize: 12.5,
+        ),
         constraints: const BoxConstraints(minHeight: 32),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Chip — Étiquettes Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Chip ───────────────────────────────────────────────────────────
       chipTheme: ChipThemeData(
-        backgroundColor: isDark ? AzizColors.surface : AzizColors.mistIndigo,
-        labelStyle: TextStyle(
-            color: isDark ? AzizColors.textSecondary : AzizColors.background,
-            fontSize: 12),
-        side: BorderSide(
-            color: isDark ? AzizColors.border : AzizColors.indigoLight),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        backgroundColor: isDark ? AzizColors.surface : AzizColors.mat,
+        labelStyle: TextStyle(color: inkSoft, fontSize: 13),
+        side: BorderSide(color: line),
+        shape: shape,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // IconButton — Boutons icône Citron
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── IconButton ─────────────────────────────────────────────────────
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: WidgetStateProperty.all(AzizColors.textPrimary),
+          foregroundColor: WidgetStateProperty.all(ink),
+          shape: WidgetStateProperty.all(shape),
           overlayColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.pressed)) {
               return AzizColors.saffron.withValues(alpha: 0.15);
@@ -391,46 +343,36 @@ class AppTheme {
         ),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Floating Action Button — FAB Vert Menthe
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Floating Action Button ─────────────────────────────────────────
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: AzizColors.saffron,
         foregroundColor: AzizColors.textOnAccent,
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        elevation: 2,
+        shape: shape,
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Navigation Rail — Rail latéral Olive
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Navigation Rail ────────────────────────────────────────────────
       navigationRailTheme: NavigationRailThemeData(
         backgroundColor:
-            isDark ? AzizColors.backgroundMedium : AzizColors.mistIndigo,
-        indicatorColor: AzizColors.saffron.withValues(alpha: 0.15),
+            isDark ? AzizColors.backgroundMedium : AzizColors.lightBackground,
+        indicatorColor: AzizColors.saffron.withValues(alpha: 0.2),
       ),
 
-      // ════════════════════════════════════════════════════════════════════════════
-      // Scrollbar — Barre de défilement Menthe visible
-      // ════════════════════════════════════════════════════════════════════════════
+      // ── Scrollbar ──────────────────────────────────────────────────────
       scrollbarTheme: ScrollbarThemeData(
         thumbColor: WidgetStateProperty.all(
           isDark
               ? AzizColors.saffron.withValues(alpha: 0.6)
-              : AzizColors.saffron.withValues(alpha: 0.8),
+              : AzizColors.trueIndigo.withValues(alpha: 0.45),
         ),
         trackColor: WidgetStateProperty.all(
           isDark
               ? AzizColors.saffron.withValues(alpha: 0.1)
-              : AzizColors.saffron.withValues(alpha: 0.15),
+              : AzizColors.lightBorder.withValues(alpha: 0.5),
         ),
-        trackBorderColor: WidgetStateProperty.all(
-          isDark
-              ? AzizColors.saffron.withValues(alpha: 0.05)
-              : AzizColors.saffron.withValues(alpha: 0.1),
-        ),
+        trackBorderColor: WidgetStateProperty.all(Colors.transparent),
         thickness: WidgetStateProperty.all(6),
-        radius: const Radius.circular(3),
+        radius: const Radius.circular(2),
         crossAxisMargin: 4,
         mainAxisMargin: 4,
       ),

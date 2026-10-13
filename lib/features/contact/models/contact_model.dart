@@ -1,6 +1,3 @@
-// ══════════════════════════════════════════════════════════════════════════
-// ContactMessage — Modèle de message de contact
-// ══════════════════════════════════════════════════════════════════════════
 class ContactMessage {
   final String name;
   final String email;
@@ -29,6 +26,8 @@ class ContactMessage {
       name.trim().length <= maxNameLength &&
       email.trim().isNotEmpty &&
       emailRegex.hasMatch(email.trim()) &&
+      subject.trim().isNotEmpty &&
+      subject.trim().length <= maxSubjectLength &&
       message.trim().isNotEmpty &&
       message.trim().length <= maxMessageLength;
 
@@ -38,6 +37,7 @@ class ContactMessage {
         'subject': subject.trim(),
         'message': message.trim(),
         'phone': phone.trim(),
+        if (sentAt != null) 'created_at': sentAt!.toIso8601String(),
       };
 
   factory ContactMessage.fromMap(Map<String, dynamic> d) => ContactMessage(
@@ -46,5 +46,10 @@ class ContactMessage {
         subject: d['subject'] as String? ?? '',
         message: d['message'] as String? ?? '',
         phone: d['phone'] as String? ?? '',
+        sentAt: d['created_at'] != null
+            ? DateTime.tryParse(d['created_at'] as String)
+            : (d['sent_at'] != null
+                ? DateTime.tryParse(d['sent_at'] as String)
+                : null),
       );
 }

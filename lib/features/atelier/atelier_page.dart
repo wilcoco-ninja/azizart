@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import './models/atelier_model.dart';
-import '../../theme/aziz_colors.dart';
+
+import '../../core/app_data_provider.dart';
 import '../../core/localization/language_provider.dart';
+import '../../theme/aziz_colors.dart';
+import '../../widgets/optimized_image.dart';
+import '../home/shared_components.dart';
+import 'models/atelier_model.dart';
+import 'photo_tile.dart';
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Responsive Helper - Keep it simple, all in one file
+// RESPONSIVE (conservé pour compatibilité avec le reste du projet)
 // ══════════════════════════════════════════════════════════════════════════════
 
 enum ScreenType { mobile, tablet, desktop }
 
 extension ScreenTypeExtension on double {
   ScreenType get screenType {
-    if (this < 600) return ScreenType.mobile;
-    if (this < 1200) return ScreenType.tablet;
+    if (this < 768) return ScreenType.mobile;
+    if (this < 1024) return ScreenType.tablet;
     return ScreenType.desktop;
   }
 }
@@ -27,208 +30,208 @@ class ResponsiveConstraints {
 
   ResponsiveConstraints(this.width) : screenType = width.screenType;
 
+  bool get isMobile => screenType == ScreenType.mobile;
+  bool get isTablet => screenType == ScreenType.tablet;
+  bool get isDesktop => screenType == ScreenType.desktop;
+
   double get horizontalPadding {
     return switch (screenType) {
       ScreenType.mobile => 24.0,
-      ScreenType.tablet => 40.0,
-      ScreenType.desktop => 60.0,
+      ScreenType.tablet => 48.0,
+      ScreenType.desktop => width * 0.12,
     };
   }
 
-  int get photoGridColumns {
-    return switch (screenType) {
-      ScreenType.mobile => 1,
-      ScreenType.tablet => 2,
-      ScreenType.desktop => 3,
-    };
-  }
-
-  double get photoMaxWidth => 350.0;
+  double get photoMaxWidth => isMobile ? 400.0 : 350.0;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// AtelierPage - Main Widget
+// PAGE PRINCIPALE : ATELIER
 // ══════════════════════════════════════════════════════════════════════════════
 
 class AtelierPage extends StatelessWidget {
   final VoidCallback onContact;
-  final List<AtelierPhoto>? photos;
-  const AtelierPage({super.key, required this.onContact, this.photos});
+  const AtelierPage({super.key, required this.onContact});
 
   @override
   Widget build(BuildContext context) {
     context.watch<LanguageProvider>();
-    final size = MediaQuery.sizeOf(context);
-    final responsiveConstraints = ResponsiveConstraints(size.width);
+    final appData = context.watch<AppDataProvider>();
+    final photos = appData.atelierPhotos;
+    final loading = !appData.isReady;
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: _BannerSection(responsiveConstraints: responsiveConstraints),
-        ),
-        SliverToBoxAdapter(
-          child: _IntroSection(
-            responsiveConstraints: responsiveConstraints,
-            onContact: onContact,
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              responsiveConstraints.horizontalPadding,
-              0,
-              responsiveConstraints.horizontalPadding,
-              24,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.tr('atelier.gallery_title'),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    letterSpacing: 5,
-                    color: AzizColors.gold,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  context.tr('atelier.gallery_subtitle'),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: AzizColors.textPrimary,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  width: 48,
-                  height: 2,
-                  color: AzizColors.gold,
-                ),
-              ],
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = homeIsMobile(context);
+    final gutter = homeGutter(context);
+
+    final columns = width < 640 ? 2 : (width < 1100 ? 3 : 4);
+    final columnGap = isMobile ? 14.0 : 28.0;
+    final tileWidth =
+        (width - 2 * gutter - columnGap * (columns - 1)) / columns;
+    final tileHeight = tileWidth / 0.8 + PhotoTile.captionHeight;
+
+    return ColoredBox(
+      color: AzizColors.lightBackground,
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const SliverToBoxAdapter(child: _BannerSection()),
+          SliverToBoxAdapter(child: _IntroSection(onContact: onContact)),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding:
+                  EdgeInsets.fromLTRB(gutter, isMobile ? 8 : 24, gutter, 0),
+              child: HomeHeading(
+                title: context.tr('atelier.gallery_title'),
+                subtitle: context.tr('atelier.gallery_subtitle'),
+              ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(
-            horizontal: responsiveConstraints.horizontalPadding,
-          ),
-          // FIX PERFORMANCE : le Builder retourne maintenant un sliver
-          // directement (SliverToBoxAdapter ou SliverGrid via
-          // _ResponsivePhotoGrid), au lieu d'être enveloppé dans un
-          // SliverToBoxAdapter qui forçait un GridView "boîte" en
-          // shrinkWrap — voir le commentaire détaillé dans
-          // _ResponsivePhotoGrid ci-dessous.
-          sliver: Builder(builder: (context) {
-            // CORRECTION ICI : Remplacement de atelierPhotos par une liste vide
-            final displayPhotos = (photos != null && photos!.isNotEmpty)
-                ? photos!
-                : const <AtelierPhoto>[];
-
-            return displayPhotos.isEmpty
-                ? const SliverToBoxAdapter(child: _AtelierEmptyState())
-                : _ResponsivePhotoGrid(
-                    photos: displayPhotos,
-                    responsiveConstraints: responsiveConstraints,
-                  );
-          }),
-        ),
-        SliverToBoxAdapter(
-          child: _BottomCta(
-            onContact: onContact,
-            responsiveConstraints: responsiveConstraints,
-          ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 60)),
-      ],
+          if (loading)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 100),
+                child: Center(
+                  child: CircularProgressIndicator(color: AzizColors.saffron),
+                ),
+              ),
+            )
+          else if (photos.isEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: gutter),
+                child: const _AtelierEmptyState(),
+              ),
+            )
+          else
+            SliverPadding(
+              padding: EdgeInsets.fromLTRB(
+                gutter,
+                isMobile ? 32 : 48,
+                gutter,
+                isMobile ? 72 : 112,
+              ),
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: columnGap,
+                  mainAxisSpacing: 32,
+                  mainAxisExtent: tileHeight,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, i) => PhotoTile(
+                    photo: photos[i],
+                    onTap: () => _openLightbox(context, photos, i),
+                  ),
+                  childCount: photos.length,
+                ),
+              ),
+            ),
+          SliverToBoxAdapter(child: _BottomCta(onContact: onContact)),
+        ],
+      ),
     );
   }
 }
 
+void _openLightbox(
+  BuildContext context,
+  List<AtelierPhoto> photos,
+  int initialIndex,
+) {
+  showDialog<void>(
+    context: context,
+    barrierColor: Colors.black.withValues(alpha: 0.9),
+    builder: (_) => _Lightbox(photos: photos, initialIndex: initialIndex),
+  );
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
-// Banner Section - Responsive
+// BANNIÈRE
 // ══════════════════════════════════════════════════════════════════════════════
 
 class _BannerSection extends StatelessWidget {
-  final ResponsiveConstraints responsiveConstraints;
-  const _BannerSection({required this.responsiveConstraints});
+  const _BannerSection();
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = responsiveConstraints.screenType == ScreenType.mobile;
+    final bp = homeBreakpoint(context);
+    final gutter = homeGutter(context);
+    final height = switch (bp) {
+      HomeBreakpoint.mobile => 320.0,
+      HomeBreakpoint.tablet => 400.0,
+      HomeBreakpoint.desktop => 480.0,
+    };
+    final titleSize = switch (bp) {
+      HomeBreakpoint.mobile => 44.0,
+      HomeBreakpoint.tablet => 64.0,
+      HomeBreakpoint.desktop => 84.0,
+    };
 
-    return Container(
-      height: isMobile ? 180 : 240,
-      decoration: BoxDecoration(
-        gradient: AzizColors.bannerGradient,
-      ),
+    return SizedBox(
+      height: height,
+      width: double.infinity,
       child: Stack(
+        fit: StackFit.expand,
         children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 2,
-              color: AzizColors.gold,
+          publishedImage(
+            'atelier/banner.jpeg',
+            fit: BoxFit.cover,
+            memCacheWidth: 1600,
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AzizColors.trueIndigoDark.withValues(alpha: 0.35),
+                  AzizColors.trueIndigoDark.withValues(alpha: 0.88),
+                ],
+              ),
             ),
           ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  context.tr('atelier.title'),
-                  style: const TextStyle(
-                    fontSize: 10,
-                    letterSpacing: 5,
-                    color: AzizColors.gold,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  context.tr('atelier.banner_subtitle'),
-                  style: GoogleFonts.cormorantGaramond(
-                    fontSize: isMobile ? 28 : 42,
-                    color: AzizColors.textPrimary,
-                    fontWeight: FontWeight.w500,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 0.5,
-                      color: AzizColors.gold,
-                    ),
-                    const SizedBox(width: 10),
-                    Transform.rotate(
-                      angle: 0.785,
-                      child: Container(
-                        width: 5,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: AzizColors.gold,
-                          borderRadius: BorderRadius.circular(1),
-                        ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              gutter,
+              0,
+              gutter,
+              bp == HomeBreakpoint.mobile ? 32 : 56,
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      context.tr('atelier.title'),
+                      style: homeSerif(
+                        size: titleSize,
+                        color: AzizColors.lightBackground,
+                        height: 1.02,
+                        letterSpacing: -1.2,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Container(
-                      width: 40,
-                      height: 0.5,
-                      color: AzizColors.gold,
+                  ),
+                  const SizedBox(height: 16),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560),
+                    child: Text(
+                      context.tr('atelier.banner_subtitle'),
+                      style: homeSans(
+                        size: 17,
+                        color:
+                            AzizColors.lightBackground.withValues(alpha: 0.86),
+                        weight: FontWeight.w300,
+                        height: 1.7,
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -238,298 +241,179 @@ class _BannerSection extends StatelessWidget {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Intro Section - Responsive
+// INTRODUCTION + CHIFFRES CLÉS
 // ══════════════════════════════════════════════════════════════════════════════
 
 class _IntroSection extends StatelessWidget {
-  final ResponsiveConstraints responsiveConstraints;
   final VoidCallback onContact;
-  const _IntroSection({
-    required this.responsiveConstraints,
-    required this.onContact,
-  });
+
+  const _IntroSection({required this.onContact});
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = responsiveConstraints.screenType == ScreenType.mobile;
+    final isDesktop = homeIsDesktop(context);
+    final text = _IntroText(onContact: onContact);
+    const facts = _KeyFacts();
 
-    return Container(
-      color: AzizColors.background,
-      padding: EdgeInsets.symmetric(
-        horizontal: responsiveConstraints.horizontalPadding,
-        vertical: 56,
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 960),
-          child: isMobile ? _buildColumn(context) : _buildRow(context),
-        ),
-      ),
+    return HomeBand(
+      color: AzizColors.lightBackground,
+      child: isDesktop
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 6, child: text),
+                SizedBox(width: homeColumnGap(context)),
+                const Expanded(flex: 5, child: facts),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [text, const SizedBox(height: 56), facts],
+            ),
     );
   }
+}
 
-  Widget _buildRow(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(flex: 3, child: _buildText(context)),
-        const SizedBox(width: 60),
-        Expanded(flex: 2, child: _buildKeyFacts(context)),
-      ],
-    );
-  }
+class _IntroText extends StatelessWidget {
+  final VoidCallback onContact;
 
-  Widget _buildColumn(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildText(context),
-        const SizedBox(height: 40),
-        _buildKeyFacts(context),
-      ],
-    );
-  }
+  const _IntroText({required this.onContact});
 
-  Widget _buildText(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = homeIsMobile(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.tr('atelier.our_atelier'),
-          style: GoogleFonts.cormorantGaramond(
-            fontSize: 32,
-            fontWeight: FontWeight.w600,
-            color: AzizColors.textPrimary,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          width: 52,
-          height: 2,
-          color: AzizColors.gold,
-        ),
-        const SizedBox(height: 24),
-        Text(
-          context.tr('atelier.our_atelier_desc'),
-          style: GoogleFonts.lato(
-            fontSize: 15,
-            color: AzizColors.textSecondary,
-            height: 1.8,
-            letterSpacing: 0.3,
+          style: homeSerif(
+            size: isMobile ? 34 : 46,
+            height: 1.1,
+            letterSpacing: -0.8,
           ),
         ),
         const SizedBox(height: 24),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: Text(
+            context.tr('atelier.our_atelier_desc'),
+            style: homeSans(size: isMobile ? 16 : 17, height: 1.85),
+          ),
+        ),
+        const SizedBox(height: 40),
         Text(
           context.tr('atelier.philosophy'),
-          style: GoogleFonts.cormorantGaramond(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: AzizColors.terracotta,
-            fontStyle: FontStyle.italic,
+          style: homeSerif(
+            size: isMobile ? 24 : 28,
+            style: FontStyle.italic,
+            height: 1.2,
           ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          context.tr('atelier.philosophy_desc'),
-          style: GoogleFonts.lato(
-            fontSize: 15,
-            color: AzizColors.textSecondary,
-            height: 1.8,
-            letterSpacing: 0.3,
+        const SizedBox(height: 14),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 620),
+          child: Text(
+            context.tr('atelier.philosophy_desc'),
+            style: homeSans(size: isMobile ? 16 : 17, height: 1.85),
           ),
         ),
-        const SizedBox(height: 36),
-        _AnimatedCtaButton(onTap: onContact),
+        const SizedBox(height: 40),
+        HeroBtn(
+          label: context.tr('atelier.contact_cta'),
+          leading: const Icon(HomeIcons.email),
+          onTap: onContact,
+        ),
       ],
     );
   }
-
-  Widget _buildKeyFacts(BuildContext context) {
-    final facts = [
-      ('10+', context.tr('atelier.years_exp')),
-      ('500+', context.tr('atelier.works_created')),
-      ('100%', context.tr('atelier.natural_dyes')),
-      ('3', context.tr('atelier.generations')),
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: AzizColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AzizColors.divider),
-      ),
-      child: Column(
-        children: facts.map((f) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Column(
-              children: [
-                Text(
-                  f.$1,
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700,
-                    color: AzizColors.gold,
-                  ),
-                ),
-                Text(
-                  f.$2,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AzizColors.textSecondary,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const Divider(
-                  height: 24,
-                  color: AzizColors.divider,
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Animated CTA Button
-// ══════════════════════════════════════════════════════════════════════════════
-
-class _AnimatedCtaButton extends StatefulWidget {
-  final VoidCallback onTap;
-  const _AnimatedCtaButton({required this.onTap});
-
-  @override
-  State<_AnimatedCtaButton> createState() => _AnimatedCtaButtonState();
+class _Fact {
+  final String value;
+  final String label;
+  final IconData icon;
+  const _Fact(this.value, this.label, this.icon);
 }
 
-class _AnimatedCtaButtonState extends State<_AnimatedCtaButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _scaleAnimation = Tween(begin: 1.0, end: 0.98).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class _KeyFacts extends StatelessWidget {
+  const _KeyFacts();
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _controller.forward(),
-      onExit: (_) => _controller.reverse(),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () {
-          _controller.forward().then((_) => _controller.reverse());
-          widget.onTap();
-        },
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, _) {
-            return Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                decoration: BoxDecoration(
-                  gradient: AzizColors.terracottaGradient,
-                  borderRadius: BorderRadius.circular(3),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AzizColors.terracotta.withValues(alpha: 0.25),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Builder(
-                  builder: (context) => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        context.tr('atelier.contact_cta'),
-                        style: const TextStyle(
-                          fontSize: 11,
-                          letterSpacing: 3,
-                          fontWeight: FontWeight.w700,
-                          color: AzizColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Icon(
-                        Icons.arrow_forward,
-                        color: AzizColors.textPrimary,
-                        size: 16,
-                      ),
-                    ],
+    final facts = <_Fact>[
+      _Fact('10+', context.tr('atelier.years_exp'),
+          Icons.hourglass_top_outlined),
+      _Fact('500+', context.tr('atelier.works_created'),
+          Icons.brush_outlined),
+      _Fact('100%', context.tr('atelier.natural_dyes'), Icons.eco_outlined),
+      _Fact('3', context.tr('atelier.generations'),
+          Icons.family_restroom_outlined),
+    ];
+
+    return Column(
+      children: [
+        for (var row = 0; row < facts.length; row += 2)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _FactCell(fact: facts[row])),
+              const SizedBox(width: 24),
+              Expanded(
+                child: row + 1 < facts.length
+                    ? _FactCell(fact: facts[row + 1])
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+class _FactCell extends StatelessWidget {
+  final _Fact fact;
+
+  const _FactCell({required this.fact});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 28),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: AzizColors.lightBorder)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            fact.value,
+            style: homeSerif(
+              size: 52,
+              color: AzizColors.trueIndigo,
+              height: 1.0,
+              letterSpacing: -1,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(fact.icon, size: 18, color: AzizColors.trueIndigoLight),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  fact.label,
+                  style: homeSans(
+                    size: 14,
+                    color: AzizColors.lightTextSecondary,
+                    weight: FontWeight.w600,
+                    height: 1.4,
                   ),
                 ),
               ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// État vide — aucune photo d'atelier disponible
-// ══════════════════════════════════════════════════════════════════════════════
-class _AtelierEmptyState extends StatelessWidget {
-  const _AtelierEmptyState();
-
-  @override
-  Widget build(BuildContext context) {
-    final isEn = Localizations.maybeLocaleOf(context)?.languageCode == 'en';
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 80),
-      child: Column(
-        children: [
-          Icon(
-            Icons.photo_camera_back_outlined,
-            size: 48,
-            color: AzizColors.gold.withValues(alpha: 0.3),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            isEn
-                ? 'No workshop photos yet'
-                : 'Aucune photo d\'atelier pour le moment',
-            style: GoogleFonts.cormorantGaramond(
-              fontSize: 22,
-              color: AzizColors.textSecondary,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isEn
-                ? 'New behind-the-scenes shots will appear here soon.'
-                : 'De nouvelles images des coulisses arriveront bientôt ici.',
-            style: const TextStyle(
-              fontSize: 13,
-              color: AzizColors.textMuted,
-            ),
+            ],
           ),
         ],
       ),
@@ -538,217 +422,121 @@ class _AtelierEmptyState extends StatelessWidget {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Responsive Photo Grid - SliverGrid + SliverGridDelegateWithMaxCrossAxisExtent
-// (fix perf : ancien GridView.builder(shrinkWrap:true) remplacé par un
-// vrai sliver paresseux, voir commentaire détaillé dans build() ci-dessous)
+// VISITE : bandeau indigo
 // ══════════════════════════════════════════════════════════════════════════════
 
-class _ResponsivePhotoGrid extends StatelessWidget {
-  final List<AtelierPhoto> photos;
-  final ResponsiveConstraints responsiveConstraints;
-  const _ResponsivePhotoGrid({
-    required this.photos,
-    required this.responsiveConstraints,
-  });
+class _BottomCta extends StatelessWidget {
+  final VoidCallback onContact;
+
+  const _BottomCta({required this.onContact});
 
   @override
   Widget build(BuildContext context) {
-    // FIX PERFORMANCE (page Atelier lente) : l'ancien code utilisait
-    // GridView.builder(shrinkWrap: true, physics: NeverScrollableScrollPhysics())
-    // imbriqué dans le CustomScrollView parent. `shrinkWrap: true` oblige
-    // Flutter à construire ET mesurer TOUTES les photos d'un coup pour
-    // calculer la hauteur de la grille — ce qui déclenche le
-    // téléchargement simultané de TOUTES les images réseau dès
-    // l'ouverture de la page, au lieu de charger uniquement celles
-    // visibles à l'écran. C'était l'une des causes concrètes de lenteur
-    // sur cette page (dizaines de photos = dizaines de téléchargements
-    // simultanés).
-    //
-    // Un SliverGrid inséré directement dans les slivers du
-    // CustomScrollView (voir atelier_page.dart, AtelierPage.build)
-    // redonne à Flutter un vrai chargement paresseux : seules les
-    // tuiles proches de l'écran sont construites et leurs images
-    // chargées, exactement comme le fait déjà GalleryPage/MediaPage.
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: responsiveConstraints.photoMaxWidth,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.85,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (context, i) => _PhotoTile(
-          photo: photos[i],
-          onTap: () => _openLightbox(context, i),
+    final isMobile = homeIsMobile(context);
+
+    final text = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          context.tr('atelier.visit_title'),
+          style: homeSerif(
+            size: isMobile ? 32 : 46,
+            color: AzizColors.lightBackground,
+            height: 1.1,
+            letterSpacing: -0.8,
+          ),
         ),
-        childCount: photos.length,
-      ),
-    );
-  }
-
-  void _openLightbox(BuildContext context, int initialIndex) {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withValues(alpha: 0.92),
-      builder: (_) => _Lightbox(
-        photos: photos,
-        initialIndex: initialIndex,
-      ),
-    );
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Photo Tile - Fixed height to prevent layout shifts
-// ══════════════════════════════════════════════════════════════════════════════
-
-class _PhotoTile extends StatefulWidget {
-  final AtelierPhoto photo;
-  final VoidCallback onTap;
-  const _PhotoTile({required this.photo, required this.onTap});
-
-  @override
-  State<_PhotoTile> createState() => _PhotoTileState();
-}
-
-class _PhotoTileState extends State<_PhotoTile> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxWidth * 0.85;
-
-        return MouseRegion(
-          onEnter: (_) => setState(() => _hovered = true),
-          onExit: (_) => setState(() => _hovered = false),
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: widget.onTap,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox(
-                height: height,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    widget.photo.imageUrl.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: widget.photo.imageUrl,
-                            fit: BoxFit.cover,
-                            memCacheWidth: 600,
-                            placeholder: (_, __) =>
-                                Container(color: AzizColors.surface),
-                            errorWidget: (_, __, ___) => Container(
-                              color: AzizColors.surface,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: AzizColors.textSecondary,
-                                  size: 32,
-                                ),
-                              ),
-                            ),
-                          )
-                        : Image.asset(
-                            widget.photo.imagePath,
-                            fit: BoxFit.cover,
-                            cacheWidth: 600,
-                            cacheHeight:
-                                (height * 600 / constraints.maxWidth).round(),
-                            errorBuilder: (_, __, ___) => Container(
-                              color: AzizColors.surface,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: AzizColors.textSecondary,
-                                  size: 32,
-                                ),
-                              ),
-                            ),
-                          ),
-                    AnimatedOpacity(
-                      duration: const Duration(milliseconds: 220),
-                      opacity: _hovered ? 1.0 : 0.0,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              AzizColors.terracotta.withValues(alpha: 0.75),
-                            ],
-                          ),
-                        ),
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.photo.caption,
-                                  style: GoogleFonts.cormorantGaramond(
-                                    fontSize: 13,
-                                    color: AzizColors.textPrimary,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  widget.photo.detail,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 10,
-                                    color: Colors.white70,
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 220),
-                        opacity: _hovered ? 1.0 : 0.0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: AzizColors.gold.withValues(alpha: 0.7),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.zoom_in,
-                            color: AzizColors.background,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        const SizedBox(height: 16),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: Text(
+            context.tr('atelier.visit_desc'),
+            style: homeSans(
+              size: isMobile ? 15.5 : 17,
+              color: AzizColors.lightBackground.withValues(alpha: 0.78),
+              height: 1.75,
             ),
           ),
-        );
-      },
+        ),
+      ],
+    );
+
+    // Calendrier : le bouton réserve une visite.
+    final button = HeroBtn(
+      label: context.tr('atelier.book_appointment'),
+      leading: const Icon(Icons.event_available_outlined),
+      onTap: onContact,
+    );
+
+    return HomeBand(
+      color: AzizColors.trueIndigoDark,
+      background: const BatikTexture(opacity: 0.09, seed: 44),
+      child: isMobile
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                text,
+                const SizedBox(height: 32),
+                SizedBox(width: double.infinity, child: button),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(child: text),
+                const SizedBox(width: 40),
+                button,
+              ],
+            ),
     );
   }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// Lightbox - Responsive Dialog
+// ÉTAT VIDE
+// ══════════════════════════════════════════════════════════════════════════════
+
+class _AtelierEmptyState extends StatelessWidget {
+  const _AtelierEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 72),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              border: Border.all(color: AzizColors.lightBorder),
+              borderRadius: BorderRadius.circular(kHomeRadius),
+            ),
+            child: const Icon(
+              Icons.photo_camera_back_outlined,
+              size: 28,
+              color: AzizColors.trueIndigoLight,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            context.tr('atelier.empty_title'),
+            style: homeSerif(size: 26, height: 1.2),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            context.tr('atelier.empty_desc'),
+            style: homeSans(size: 15, height: 1.6),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VISIONNEUSE
 // ══════════════════════════════════════════════════════════════════════════════
 
 class _Lightbox extends StatefulWidget {
@@ -762,6 +550,7 @@ class _Lightbox extends StatefulWidget {
 
 class _LightboxState extends State<_Lightbox> {
   late final PageController _controller;
+  late final FocusNode _focusNode;
   late int _current;
 
   @override
@@ -769,19 +558,21 @@ class _LightboxState extends State<_Lightbox> {
     super.initState();
     _current = widget.initialIndex;
     _controller = PageController(initialPage: widget.initialIndex);
+    _focusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   void _prev() {
     if (_current > 0) {
       _controller.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
       );
     }
   }
@@ -789,286 +580,155 @@ class _LightboxState extends State<_Lightbox> {
   void _next() {
     if (_current < widget.photos.length - 1) {
       _controller.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final isMobile = size.width < 600;
+    final isMobile = homeIsMobile(context);
+    final total = widget.photos.length;
 
-    return KeyboardListener(
-      focusNode: FocusNode()..requestFocus(),
-      onKeyEvent: (KeyEvent e) {
+    return Focus(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: (FocusNode node, KeyEvent e) {
         if (e is KeyDownEvent) {
           final key = e.physicalKey;
-          if (key == PhysicalKeyboardKey.arrowLeft) _prev();
-          if (key == PhysicalKeyboardKey.arrowRight) _next();
-          if (key == PhysicalKeyboardKey.escape) Navigator.of(context).pop();
+          if (key == PhysicalKeyboardKey.arrowLeft) {
+            _prev();
+            return KeyEventResult.handled;
+          }
+          if (key == PhysicalKeyboardKey.arrowRight) {
+            _next();
+            return KeyEventResult.handled;
+          }
+          if (key == PhysicalKeyboardKey.escape) {
+            Navigator.of(context).pop();
+            return KeyEventResult.handled;
+          }
         }
+        return KeyEventResult.ignored;
       },
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.all(isMobile ? 8 : 16),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: size.width * (isMobile ? 0.95 : 0.9),
-                maxHeight: size.height * (isMobile ? 0.8 : 0.85),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: PageView.builder(
-                      controller: _controller,
-                      itemCount: widget.photos.length,
-                      onPageChanged: (i) => setState(() => _current = i),
-                      itemBuilder: (_, i) {
-                        final photo = widget.photos[i];
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
+        insetPadding: EdgeInsets.zero,
+        child: SizedBox.expand(
+          child: ColoredBox(
+            color: AzizColors.trueIndigoDark.withValues(alpha: 0.97),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned.fill(
+                  child: PageView.builder(
+                    controller: _controller,
+                    itemCount: total,
+                    onPageChanged: (i) => setState(() => _current = i),
+                    itemBuilder: (_, i) {
+                      final photo = widget.photos[i];
+                      final caption = photo.caption;
+                      final detail = photo.detail;
+
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 16 : 96,
+                          vertical: isMobile ? 72 : 40,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: photo.imageUrl.isNotEmpty
-                                    ? CachedNetworkImage(
-                                        imageUrl: photo.imageUrl,
-                                        fit: BoxFit.contain,
-                                        placeholder: (_, __) => SizedBox(
-                                          width: double.infinity,
-                                          height: isMobile ? 200 : 300,
-                                          child: const Center(
-                                            child: CircularProgressIndicator(
-                                              color: AzizColors.gold,
-                                            ),
-                                          ),
-                                        ),
-                                        errorWidget: (_, __, ___) => Container(
-                                          color: AzizColors.surface,
-                                          width: double.infinity,
-                                          height: isMobile ? 200 : 300,
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons
-                                                  .image_not_supported_outlined,
-                                              color: AzizColors.textSecondary,
-                                              size: 48,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Image.asset(
-                                        photo.imagePath,
-                                        fit: BoxFit.contain,
-                                        errorBuilder: (_, __, ___) => Container(
-                                          color: AzizColors.surface,
-                                          width: double.infinity,
-                                          height: isMobile ? 200 : 300,
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons
-                                                  .image_not_supported_outlined,
-                                              color: AzizColors.textSecondary,
-                                              size: 48,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                            Expanded(
+                              child: OptimizedImage(
+                                url: photo.displayImage,
+                                fit: BoxFit.contain,
+                                width: double.infinity,
+                                height: double.infinity,
+                                memCacheWidth: 1600,
                               ),
                             ),
+                            const SizedBox(height: 24),
+                            if (caption.isNotEmpty)
+                              Text(
+                                caption,
+                                textAlign: TextAlign.center,
+                                style: homeSerif(
+                                  size: isMobile ? 22 : 28,
+                                  color: AzizColors.lightBackground,
+                                  style: FontStyle.italic,
+                                  height: 1.25,
+                                ),
+                              ),
+                            if (detail.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              ConstrainedBox(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 640),
+                                child: Text(
+                                  detail,
+                                  textAlign: TextAlign.center,
+                                  style: homeSans(
+                                    size: isMobile ? 14 : 16,
+                                    color: AzizColors.lightBackground
+                                        .withValues(alpha: 0.8),
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 16),
                             Text(
-                              photo.caption,
-                              style: GoogleFonts.cormorantGaramond(
-                                fontSize: isMobile ? 16 : 18,
-                                color: AzizColors.textPrimary,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              photo.detail,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.lato(
-                                fontSize: isMobile ? 12 : 13,
-                                color: Colors.white70,
-                                height: 1.5,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              '${_current + 1} / ${widget.photos.length}',
-                              style: GoogleFonts.lato(
-                                fontSize: 11,
-                                color: Colors.white38,
-                                letterSpacing: 2,
+                              '${_current + 1} / $total',
+                              style: homeSans(
+                                size: 13,
+                                color: AzizColors.saffronLight,
+                                weight: FontWeight.w600,
+                                height: 1.2,
                               ),
                             ),
                           ],
-                        );
-                      },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                if (!isMobile) ...[
+                  Positioned(
+                    left: 24,
+                    child: HomeCircleBtn(
+                      icon: HomeIcons.back,
+                      onDark: true,
+                      semanticLabel:
+                          homeText(context, fr: 'Photo précédente', en: 'Previous photo'),
+                      onTap: _current > 0 ? _prev : null,
+                    ),
+                  ),
+                  Positioned(
+                    right: 24,
+                    child: HomeCircleBtn(
+                      icon: HomeIcons.next,
+                      onDark: true,
+                      semanticLabel:
+                          homeText(context, fr: 'Photo suivante', en: 'Next photo'),
+                      onTap: _current < total - 1 ? _next : null,
                     ),
                   ),
                 ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              child: _NavButton(
-                icon: Icons.chevron_left,
-                onTap: _current > 0 ? _prev : null,
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: _NavButton(
-                icon: Icons.chevron_right,
-                onTap: _current < widget.photos.length - 1 ? _next : null,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 20,
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: HomeCircleBtn(
+                    icon: Icons.close_rounded,
+                    onDark: true,
+                    semanticLabel: homeText(context, fr: 'Fermer', en: 'Close'),
+                    onTap: () => Navigator.of(context).pop(),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Navigation Button
-// ══════════════════════════════════════════════════════════════════════════════
-
-class _NavButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  const _NavButton({required this.icon, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = onTap != null;
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 200),
-        opacity: enabled ? 1.0 : 0.25,
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.45),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AzizColors.gold.withValues(alpha: 0.3),
-            ),
-          ),
-          child: Icon(icon, color: Colors.white, size: 24),
-        ),
-      ),
-    );
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
-// Bottom CTA - Responsive
-// ══════════════════════════════════════════════════════════════════════════════
-
-class _BottomCta extends StatelessWidget {
-  final VoidCallback onContact;
-  final ResponsiveConstraints responsiveConstraints;
-  const _BottomCta({
-    required this.onContact,
-    required this.responsiveConstraints,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isMobile = responsiveConstraints.screenType == ScreenType.mobile;
-
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: responsiveConstraints.horizontalPadding,
-        vertical: 48,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 48,
-        vertical: 40,
-      ),
-      decoration: BoxDecoration(
-        gradient: AzizColors.bannerGradient,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Text(
-            context.tr('atelier.visit_title'),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.cormorantGaramond(
-              fontSize: isMobile ? 22 : 28,
-              color: AzizColors.textPrimary,
-              fontWeight: FontWeight.w600,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            context.tr('atelier.visit_desc'),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.lato(
-              fontSize: 14,
-              color: Colors.white70,
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 28),
-          GestureDetector(
-            onTap: onContact,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 14,
-              ),
-              decoration: BoxDecoration(
-                color: AzizColors.gold,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              child: Text(
-                context.tr('atelier.book_appointment'),
-                style: const TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 3,
-                  fontWeight: FontWeight.w700,
-                  color: AzizColors.background,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

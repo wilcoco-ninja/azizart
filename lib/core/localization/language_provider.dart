@@ -25,10 +25,12 @@ class LanguageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String tr(String key) {
-    return _translations[_languageCode]?[key] ??
-        _translations['fr']?[key] ??
-        key;
+  String tr(String key) => trIn(_languageCode, key);
+
+  /// Traduction dans une langue précise, indépendamment de la langue active
+  /// (utilisée par l'éditeur de textes de l'admin).
+  String trIn(String lang, String key) {
+    return _translations[lang]?[key] ?? _translations['fr']?[key] ?? key;
   }
 
   static const Map<String, Map<String, String>> _translations = {
@@ -80,14 +82,14 @@ class LanguageProvider extends ChangeNotifier {
     'home.view_full_gallery': 'Voir toute la galerie',
     'home.footer_cta_title': 'Vous avez un projet ?',
     'home.footer_cta_subtitle':
-        "Commandes personnalisées, expositions, collaborations — parlons-en.",
+        'Commandes sur mesure, expositions, collaborations : parlons-en.',
     'home.footer_email_btn': 'Écrire un e-mail',
-    'home.footer_tagline': 'Art Batik Contemporain · Cotonou, Bénin',
+    'home.footer_tagline': 'Art batik contemporain, Cotonou, Bénin',
 
-    'home.about_tag': "L'ARTISTE",
+    'home.about_tag': "L'artiste",
     'home.about_title': 'Olga Indigo',
     'home.about_cta': 'Découvrir son parcours',
-    'home.follow_tag': 'NOUS SUIVRE',
+    'home.follow_tag': 'Nous suivre',
     'home.follow_title': "Suivez l'aventure\ncréative",
     'home.follow_subtitle':
         "Découvrez les coulisses de l'atelier, les nouvelles créations et les expositions à venir sur tous nos réseaux.",
@@ -96,70 +98,72 @@ class LanguageProvider extends ChangeNotifier {
     'home.follow_instagram_desc':
         "Photos de l'atelier, œuvres récentes et actualités quotidiennes.",
     'home.follow_tiktok_desc':
-        'Vidéos courtes sur le batik, la teinture naturelle et l\'art textile.',
+        "Vidéos courtes sur le batik, la teinture naturelle et l'art textile.",
     'home.follow_facebook_desc':
-        'Événements, expositions et actualités de la galerie AZIZART.',
+        'Événements, expositions et actualités de la galerie AZIZART COLORS.',
 
     // ── Galerie ───────────────────────────────────────────────────────────────
-    'gallery.title': 'GALERIE',
-    'gallery.original_works': 'Œuvres Originales',
+    'gallery.title': 'Galerie',
+    'gallery.original_works': 'Œuvres originales',
     'gallery.batik_description':
-        'BATIK SUR TISSU · TEINTURES NATURELLES · ARTISANAT BÉNINOIS',
+        'Batik sur tissu, teintures naturelles, artisanat béninois',
     'gallery.all': 'Tout',
     'gallery.available_filter': 'Disponibles',
     'gallery.sold_filter': 'Vendues',
-    'gallery.artworks_count': 'ŒUVRE',
+    'gallery.artworks_count': 'Œuvre',
     'gallery.available': 'Disponible',
     'gallery.sold': 'Vendue',
-    'gallery.discover': 'DÉCOUVRIR',
+    'gallery.discover': 'Découvrir',
     'gallery.close': 'Fermer',
     'gallery.dimensions': 'Dimensions',
     'gallery.year': 'Année',
     'gallery.technique': 'Technique',
-    'gallery.available_for_purchase': 'Disponible à l\'acquisition',
+    'gallery.available_for_purchase': "Disponible à l'acquisition",
     'gallery.sold_out': 'Œuvre vendue',
     'gallery.no_artworks': 'Aucune œuvre dans cette catégorie.',
-    'gallery.indigo_atelier': 'ATELIER OLGA INDIGO · COTONOU',
+    'gallery.indigo_atelier': 'Atelier Olga Indigo, Cotonou',
 
     // ── Atelier ───────────────────────────────────────────────────────────────
-    'atelier.title': "L'ATELIER",
-    'atelier.banner_subtitle': "Où naît l'art du batik",
-    'atelier.gallery_title': 'LA GALERIE',
+    'atelier.title': "L'atelier",
+    'atelier.banner_subtitle': "Là où naît l'art du batik",
+    'atelier.gallery_title': "Dans l'atelier",
     'atelier.gallery_subtitle': 'Instants de création',
-    'atelier.our_atelier': "Notre atelier",
+    'atelier.our_atelier': 'Notre atelier',
     'atelier.our_atelier_desc':
         "Au cœur de Cotonou, l'atelier d'Olga Indigo est un espace vivant où tradition et création se rencontrent chaque jour. La lumière naturelle, les bacs de teinture et l'odeur de la cire chaude y tissent une atmosphère unique.",
-    'atelier.philosophy': "Notre philosophie",
+    'atelier.philosophy': 'Notre philosophie',
     'atelier.philosophy_desc':
-        "Chaque pièce est réalisée à la main, dans le respect des techniques ancestrales du batik béninois. Nous utilisons exclusivement des teintures naturelles — indigo, cola, baobab, teck — pour préserver les savoirs vernaculaires et l'environnement.",
-    'atelier.contact_cta': 'NOUS CONTACTER',
+        "Chaque pièce est réalisée à la main, dans le respect des techniques ancestrales du batik béninois. Nous utilisons exclusivement des teintures naturelles (indigo, cola, baobab, teck) pour préserver les savoirs vernaculaires et l'environnement.",
+    'atelier.contact_cta': 'Nous contacter',
     'atelier.years_exp': "Années d'expérience",
-    'atelier.works_created': "Œuvres créées",
-    'atelier.natural_dyes': "Teintures naturelles",
-    'atelier.generations': "Générations de transmission",
-    'atelier.visit_title': "Visitez notre atelier",
+    'atelier.works_created': 'Œuvres créées',
+    'atelier.natural_dyes': 'Teintures naturelles',
+    'atelier.generations': 'Générations de transmission',
+    'atelier.visit_title': 'Visitez notre atelier',
     'atelier.visit_desc':
-        "Venez découvrir le processus créatif en direct, rencontrer Olga Indigo et peut-être repartir avec une pièce unique.",
-    'atelier.book_appointment': 'PRENDRE RENDEZ-VOUS',
+        'Venez découvrir le processus créatif en direct, rencontrer Olga Indigo et peut-être repartir avec une pièce unique.',
+    'atelier.book_appointment': 'Prendre rendez-vous',
+    'atelier.empty_title': 'Aucune photo pour le moment.',
+    'atelier.empty_desc': "Les photos de l'atelier apparaîtront ici.",
 
     // ── Médias ────────────────────────────────────────────────────────────────
-    'media.banner_title': 'MÉDIAS',
-    'media.banner_subtitle': 'Vidéos, Reportages & Actualités',
+    'media.banner_title': 'Médias',
+    'media.banner_subtitle': 'Vidéos, reportages et actualités',
     'media.filter_all': 'Tous',
     'media.filter_videos': 'Vidéos',
     'media.filter_reportages': 'Reportages',
     'media.filter_news': 'Actualités',
-    'media.watch_now': 'Regarder maintenant →',
+    'media.watch_now': 'Regarder maintenant',
     'media.click_to_watch': 'Cliquer pour regarder',
     'media.no_media': 'Aucun média dans cette catégorie',
     'media.add_media_hint':
         "Les médias peuvent être ajoutés depuis l'interface d'administration.",
-    'media.indigo_atelier': 'ATELIER OLGA INDIGO · COTONOU, BÉNIN',
+    'media.indigo_atelier': 'Atelier Olga Indigo, Cotonou, Bénin',
 
     // ── À propos ──────────────────────────────────────────────────────────────
-    'about.title': 'À PROPOS',
+    'about.title': "À propos de l'artiste",
     'about.name': 'Olga Indigo',
-    'about.heritage': 'Artiste Batik · Héritière du Dahomey',
+    'about.heritage': 'Artiste batik, héritière du Dahomey',
     'about.heritage_badge': 'Héritière du Royaume du Dahomey',
 
     'about.intro_title': "Une artiste enracinée dans l'histoire",
@@ -168,43 +172,43 @@ class LanguageProvider extends ChangeNotifier {
     'about.intro_text2':
         "Ses recherches portent sur la mémoire collective, les héritages féminins, les cosmologies africaines et la transmission des savoirs vernaculaires. Son travail est représenté par la Galerie SAGA en France.",
 
-    'about.origins_title': 'Origines & Parcours',
+    'about.origins_title': 'Origines et parcours',
     'about.origins_text1':
-        "Bohicon, ville carrefour du Bénin, baignée par l'histoire du Royaume du Dahomey — c'est là qu'Olga Indigo grandit entourée de femmes tisserandes et teinturières. Sa grand-mère lui transmet les secrets de l'indigo dès l'enfance, posant les fondements d'une vocation artistique hors du commun.",
+        "Bohicon, ville carrefour du Bénin, baignée par l'histoire du Royaume du Dahomey : c'est là qu'Olga Indigo grandit, entourée de femmes tisserandes et teinturières. Sa grand-mère lui transmet les secrets de l'indigo dès l'enfance, posant les fondements d'une vocation artistique hors du commun.",
     'about.origins_text2':
         "Après des années de formation auprès des maîtres artisans du Bénin et du Mali, Olga s'installe à Cotonou où elle ouvre son atelier. Elle expose depuis lors à travers l'Afrique de l'Ouest, en Europe et participe aux grandes biennales d'art africain contemporain.",
 
     'about.grandma_quote':
         "L'indigo ne ment jamais. Il révèle ce que le tissu a toujours su.",
-    'about.grandma_author': 'GRAND-MÈRE D\'OLGA · BOHICON, 1985',
+    'about.grandma_author': "La grand-mère d'Olga, Bohicon, 1985",
 
-    'about.art_title': 'L\'Art du Batik',
+    'about.art_title': "L'art du batik",
     'about.art_text1':
-        "Le batik est bien plus qu'une technique — c'est un langage. En appliquant la cire fondue sur le tissu avant chaque bain de teinture, l'artiste crée des réserves qui préservent la couleur originale du tissu, révélant à la fin un motif d'une complexité subtile.",
+        "Le batik est bien plus qu'une technique : c'est un langage. En appliquant la cire fondue sur le tissu avant chaque bain de teinture, l'artiste crée des réserves qui préservent la couleur originale du tissu, révélant à la fin un motif d'une complexité subtile.",
     'about.art_text2':
-        "Olga Indigo a fait évoluer cette technique ancestrale en y intégrant des superpositions de cires, des pigments naturels issus de la flore béninoise et des tissus Aho — un textile traditionnel tissé à la main, particulièrement absorbant et vivant sous la teinture.",
+        "Olga Indigo a fait évoluer cette technique ancestrale en y intégrant des superpositions de cires, des pigments naturels issus de la flore béninoise et des tissus Aho, un textile traditionnel tissé à la main, particulièrement absorbant et vivant sous la teinture.",
 
     'about.step1_title': 'Application de la cire',
     'about.step1_text':
-        'La cire chaude est appliquée au pinceau ou à la tjanting sur le tissu tendu. Elle pénètre les fibres et crée une barrière imperméable qui protégera la couleur lors du bain de teinture.',
+        "La cire chaude est appliquée au pinceau ou à la tjanting sur le tissu tendu. Elle pénètre les fibres et crée une barrière imperméable qui protégera la couleur lors du bain de teinture.",
     'about.step2_title': 'Bain de teinture',
     'about.step2_text':
-        'Le tissu plonge dans des bains successifs de teintures naturelles — indigo, cola ou baobab. Chaque immersion ajoute une couche de couleur et de profondeur au motif.',
+        "Le tissu plonge dans des bains successifs de teintures naturelles : indigo, cola ou baobab. Chaque immersion ajoute une couche de couleur et de profondeur au motif.",
     'about.step3_title': 'Révélation du motif',
     'about.step3_text':
-        'La cire est retirée à l\'eau bouillante, révélant le motif final. Les craquelures caractéristiques du batik — appelées "crackle" — sont la signature unique de cette technique.',
+        "La cire est retirée à l'eau bouillante, révélant le motif final. Les craquelures caractéristiques du batik, appelées « crackle », sont la signature unique de cette technique.",
 
-    'about.dyes_title': 'Les Teintures Naturelles',
-    'about.indigo_title': "L'Indigo",
+    'about.dyes_title': 'Les teintures naturelles',
+    'about.indigo_title': "L'indigo",
     'about.indigo_text':
         "Obtenu à partir des feuilles de l'indigotier, l'indigo est la couleur reine du batik béninois. Sa profondeur bleutée, du ciel à la nuit, en fait le pigment de prédilection d'Olga.",
-    'about.cola_title': 'La Cola',
+    'about.cola_title': 'La cola',
     'about.cola_text':
         "La noix de cola offre des teintes chaudes allant du brun doré à l'acajou profond. Associée à l'indigo, elle crée des harmonies chromatiques d'une richesse rare.",
-    'about.baobab_title': 'Le Baobab',
+    'about.baobab_title': 'Le baobab',
     'about.baobab_text':
         "L'écorce et les feuilles du baobab donnent des jaunes dorés et des ocres lumineux. Symbole de l'Afrique, l'arbre nourrit autant l'artiste que ses créations.",
-    'about.teck_title': 'Le Teck',
+    'about.teck_title': 'Le teck',
     'about.teck_text':
         "Le bois de teck produit des teintes profondes, du rouge brique au brun chocolat. Utilisé en infusion, il apporte des nuances chaudes et enveloppantes aux tissus.",
 
@@ -214,7 +218,7 @@ class LanguageProvider extends ChangeNotifier {
     'about.timeline_desc1':
         "Olga naît à Bohicon, ville historique du Bénin, héritière d'une lignée liée au Royaume du Dahomey. Sa grand-mère lui transmet dès l'enfance les techniques de teinture à l'indigo.",
     'about.timeline_year2': '2000',
-    'about.timeline_title2': 'Expositions en Afrique de l\'Ouest',
+    'about.timeline_title2': "Expositions en Afrique de l'Ouest",
     'about.timeline_desc2':
         "Début des expositions au Festival sur le Niger (Ségou, Mali) et dans plusieurs galeries de Bamako et Ouagadougou. Son style unique commence à se faire connaître sur le continent.",
     'about.timeline_year3': '2008',
@@ -222,7 +226,7 @@ class LanguageProvider extends ChangeNotifier {
     'about.timeline_desc3':
         "Exposition « AHO du Bénin » à Berlin et Paris. Olga Indigo porte le batik béninois sur la scène internationale et est remarquée par la galerie parisienne Anne de Villepoix.",
     'about.timeline_year4': '2023',
-    'about.timeline_title4': 'FINAB & Biennale de Dakar',
+    'about.timeline_title4': 'FINAB et Biennale de Dakar',
     'about.timeline_desc4':
         "Participation aux premières éditions du FINAB (Festival International des Arts du Bénin) à Cotonou. Présence remarquée à la Biennale de l'Art Africain Contemporain de Dakar 2026.",
 
@@ -233,7 +237,7 @@ class LanguageProvider extends ChangeNotifier {
     'about.stat_handmade': '100%',
     'about.stat_handmade_label': 'Œuvres faites à la main',
     'about.stat_heritage': '400',
-    'about.stat_heritage_label': 'Ans d\'héritage Dahomey',
+    'about.stat_heritage_label': "Ans d'héritage Dahomey",
 
     'about.representation_title': 'Représentation',
     'about.representation_text': 'Galerie SAGA, France — www.galeriesaga.com',
@@ -242,25 +246,26 @@ class LanguageProvider extends ChangeNotifier {
     'contact.title': 'Contactez-nous',
     'contact.intro':
         "N'hésitez pas à nous écrire pour toute question, commande ou demande de projet.",
-    'contact.available_now': 'Disponible maintenant · Répond sous 24h',
+    'contact.available_now': 'Disponible, réponse sous 24 h',
     'contact.whatsapp_cta': 'Écrire sur WhatsApp',
     'contact.email_cta': 'Envoyer un e-mail',
-    'contact.info_title': 'Nos Coordonnées',
-    'contact.label_address': 'ADRESSE',
-    'contact.label_phone': 'TÉLÉPHONE',
-    'contact.label_email': 'E-MAIL',
-    'contact.follow': 'SUIVRE',
-    'contact.response_time': 'Disponible Lun–Sam · 9h–18h\nRéponse sous 24h',
+    'contact.info_title': 'Nos coordonnées',
+    'contact.label_address': 'Adresse',
+    'contact.label_phone': 'Téléphone',
+    'contact.label_email': 'E-mail',
+    'contact.follow': 'Nous suivre',
+    'contact.response_time':
+        'Disponible du lundi au samedi, de 9 h à 18 h.\nRéponse sous 24 h.',
     'contact.copied': 'Copié dans le presse-papier',
     'contact.footer_note':
-        'AZIZART · Cotonou, Bénin\nArt Batik Contemporain par Olga Indigo',
+        'AZIZART COLORS, Cotonou, Bénin.\nArt batik contemporain par Olga Indigo.',
 
     // Formulaire
     'contact.form_title': 'Envoyer un message',
-    'contact.form_subtitle': 'Tous les champs marqués * sont obligatoires',
+    'contact.form_subtitle': 'Les champs marqués * sont obligatoires',
     'contact.name': 'Nom complet *',
     'contact.email': 'Adresse e-mail *',
-    'contact.phone': 'Téléphone (optionnel)',
+    'contact.phone': 'Téléphone',
     'contact.subject': 'Sujet *',
     'contact.message': 'Votre message *',
     'contact.message_hint': 'Décrivez votre projet, question ou demande…',
@@ -268,9 +273,131 @@ class LanguageProvider extends ChangeNotifier {
     'contact.privacy_note': 'Vos données ne sont jamais partagées.',
     'contact.field_required': 'Ce champ est obligatoire.',
     'contact.invalid_email': 'Adresse e-mail invalide.',
-    'contact.success_msg': 'Message envoyé ! Nous vous répondrons sous 24h.',
+    'contact.success_msg': 'Message envoyé ! Nous vous répondrons sous 24 h.',
     'contact.error_network': 'Erreur réseau. Vérifiez votre connexion.',
     'contact.error': 'Une erreur est survenue. Veuillez réessayer.',
+
+    // ── Admin · Éditeur « À propos » ─────────────────────────────────────────
+    'admin.about.page_title': 'Éditer la page « À propos »',
+    'admin.about.page_heading': 'Édition du profil',
+    'admin.about.page_intro':
+        "Modifiez ici toutes les informations affichées sur la page publique « À propos ». Les champs bilingues disposent d'une version française et anglaise.",
+    'admin.about.save': 'Enregistrer',
+    'admin.about.saving': 'Enregistrement…',
+    'admin.about.saved': 'Page « À propos » enregistrée',
+    'admin.about.error_saving': "Échec de l'enregistrement : {e}",
+    'admin.about.empty_info':
+        "Aucun contenu enregistré pour l'instant. Remplissez les champs ci-dessous puis cliquez sur Enregistrer pour créer la ligne.",
+    'admin.about.add': 'Ajouter',
+    'admin.about.remove': 'Supprimer',
+    'admin.about.item_n': 'Élément {n}',
+    'admin.about.list_empty':
+        'Aucun élément. Cliquez sur « Ajouter » pour créer le premier.',
+    'admin.about.dynamic_section': 'Contenus dynamiques',
+    'admin.about.dynamic_section_desc':
+        'Listes modulables affichées dans différentes sections de la page.',
+    'admin.about.back': 'Retour',
+
+    // Images
+    'admin.about.sec_images': 'Portrait et bannière',
+    'admin.about.sec_images_desc':
+        "Images affichées en haut de la page. Si vides, le thème utilise ses images par défaut.",
+    'admin.about.img_avatar': 'Portrait (avatar)',
+    'admin.about.img_banner': 'Bannière de fond',
+    'admin.about.img_remove': "Retirer l'image",
+
+    // Sections
+    'admin.about.sec_identity': "Identité de l'artiste",
+    'admin.about.sec_identity_desc':
+        'Informations affichées sous le nom principal',
+    'admin.about.sec_hero': 'En-tête principal',
+    'admin.about.sec_hero_desc': 'Éléments visibles en haut de la page',
+    'admin.about.sec_intro': 'Introduction',
+    'admin.about.sec_intro_desc': "Texte d'accroche et premiers paragraphes",
+    'admin.about.sec_origins': 'Origines et formation',
+    'admin.about.sec_origins_desc': "Récit des débuts et de l'apprentissage",
+    'admin.about.sec_quote': 'Citation personnelle',
+    'admin.about.sec_quote_desc': 'Paroles mises en exergue sur la page',
+    'admin.about.sec_art': "L'art du batik",
+    'admin.about.sec_art_desc': 'Présentation de la technique principale',
+    'admin.about.sec_dyes': 'Teintures naturelles',
+    'admin.about.sec_dyes_desc': 'Titre de la section des pigments naturels',
+    'admin.about.sec_timeline': 'Chronologie',
+    'admin.about.sec_timeline_desc': 'Titre de la section du parcours',
+    'admin.about.sec_repr': 'Représentation',
+    'admin.about.sec_repr_desc': "Galerie ou agent représentant l'artiste",
+
+    // Champs (labels + hints)
+    'admin.about.f.artist_name': "Nom de l'artiste",
+    'admin.about.f.artist_name_hint': 'ex. Olga Indigo',
+    'admin.about.f.location': 'Localisation',
+    'admin.about.f.location_hint': 'ex. Cotonou, Bénin',
+    'admin.about.f.career_start_year': 'Année de début de carrière',
+    'admin.about.f.career_start_year_hint': 'ex. 1995',
+    'admin.about.f.hero_label': 'Label au-dessus du nom',
+    'admin.about.f.hero_label_hint': "ex. À propos de l'artiste",
+    'admin.about.f.heritage_line': "Ligne d'héritage sous le nom",
+    'admin.about.f.heritage_line_hint':
+        'ex. Héritière du Royaume du Dahomey (1600–1904)',
+    'admin.about.f.heritage_badge': "Badge d'héritage",
+    'admin.about.f.heritage_badge_hint': 'ex. Mémoire royale du Bénin',
+    'admin.about.f.intro_title': "Titre d'accroche",
+    'admin.about.f.intro_title_hint': 'ex. Son histoire, notre mémoire',
+    'admin.about.f.intro_text': "Paragraphe d'introduction principal",
+    'admin.about.f.intro_text2': "Paragraphe d'introduction secondaire",
+    'admin.about.f.origins_title': 'Titre de la section',
+    'admin.about.f.origins_title_hint': 'ex. Origines et formation',
+    'admin.about.f.origins_text1': 'Premier paragraphe',
+    'admin.about.f.origins_text2': 'Second paragraphe',
+    'admin.about.f.quote': 'Texte de la citation',
+    'admin.about.f.quote_text': 'Texte de la citation',
+    'admin.about.f.quote_author': 'Auteur de la citation',
+    'admin.about.f.quote_author_hint':
+        'ex. Ma grand-mère, gardienne des savoirs',
+    'admin.about.f.art_title': 'Titre de la section',
+    'admin.about.f.art_title_hint': "ex. L'art du batik",
+    'admin.about.f.art_text1': 'Premier paragraphe',
+    'admin.about.f.art_text2': 'Second paragraphe',
+    'admin.about.f.dyes_title': 'Titre de la section',
+    'admin.about.f.dyes_title_hint': 'ex. Teintures naturelles',
+    'admin.about.f.timeline_title': 'Titre de la section',
+    'admin.about.f.timeline_title_hint': "ex. Parcours de l'artiste",
+    'admin.about.f.representation_title': 'Titre de la section',
+    'admin.about.f.representation_title_hint': 'ex. Représentation',
+    'admin.about.f.representation_text': 'Texte descriptif',
+    'admin.about.f.representation_text_hint':
+        'ex. Galerie SAGA, France — www.galeriesaga.com',
+    'admin.about.f.repr_title': 'Titre de la section',
+    'admin.about.f.repr_title_hint': 'ex. Représentation',
+    'admin.about.f.repr_text': 'Texte descriptif',
+    'admin.about.f.repr_text_hint':
+        'ex. Galerie SAGA, France — www.galeriesaga.com',
+
+    // Images (champs de la section images)
+    'admin.about.f.hero_image': 'Bannière de fond (URL)',
+    'admin.about.f.hero_image_hint': "URL de l'image de bannière",
+    'admin.about.f.portrait_image': 'Portrait (URL)',
+    'admin.about.f.portrait_image_hint': "URL du portrait de l'artiste",
+
+    // Listes dynamiques
+    'admin.about.list.technique_steps': 'Étapes de la technique batik',
+    'admin.about.list.technique_steps_desc':
+        'Les 3 étapes clés du processus de batik',
+    'admin.about.list.natural_dyes': 'Teintures naturelles',
+    'admin.about.list.natural_dyes_desc':
+        "Les pigments naturels utilisés par l'artiste",
+    'admin.about.list.timeline_events': 'Parcours chronologique',
+    'admin.about.list.timeline_events_desc':
+        'Les grandes dates de la carrière',
+    'admin.about.list.stats': 'Chiffres clés',
+    'admin.about.list.stats_desc':
+        'Les chiffres mis en avant en bas de page',
+    'admin.about.list_field.title': 'Titre',
+    'admin.about.list_field.text': 'Description',
+    'admin.about.list_field.year': 'Année',
+    'admin.about.list_field.description': 'Description',
+    'admin.about.list_field.value': 'Valeur affichée',
+    'admin.about.list_field.label': 'Légende',
   };
 
   // ════════════════════════════════════════════════════════════════════════════
@@ -317,14 +444,14 @@ class LanguageProvider extends ChangeNotifier {
     'home.view_full_gallery': 'View full gallery',
     'home.footer_cta_title': 'Got a project in mind?',
     'home.footer_cta_subtitle':
-        'Custom orders, exhibitions, collaborations — let\'s talk.',
+        "Custom orders, exhibitions, collaborations: let's talk.",
     'home.footer_email_btn': 'Send an email',
-    'home.footer_tagline': 'Contemporary Batik Art · Cotonou, Benin',
+    'home.footer_tagline': 'Contemporary batik art, Cotonou, Benin',
 
-    'home.about_tag': 'THE ARTIST',
+    'home.about_tag': 'The artist',
     'home.about_title': 'Olga Indigo',
     'home.about_cta': 'Discover her journey',
-    'home.follow_tag': 'FOLLOW US',
+    'home.follow_tag': 'Follow us',
     'home.follow_title': 'Follow the\ncreative journey',
     'home.follow_subtitle':
         'Go behind the scenes of the studio, discover new creations and upcoming exhibitions across all our channels.',
@@ -335,20 +462,20 @@ class LanguageProvider extends ChangeNotifier {
     'home.follow_tiktok_desc':
         'Short videos on batik, natural dyeing and textile art.',
     'home.follow_facebook_desc':
-        'Events, exhibitions and news from the AZIZART gallery.',
+        'Events, exhibitions and news from the AZIZART COLORS gallery.',
 
     // ── Gallery ───────────────────────────────────────────────────────────────
-    'gallery.title': 'GALLERY',
-    'gallery.original_works': 'Original Works',
+    'gallery.title': 'Gallery',
+    'gallery.original_works': 'Original works',
     'gallery.batik_description':
-        'BATIK ON FABRIC · NATURAL DYES · BENINESE CRAFTSMANSHIP',
+        'Batik on fabric, natural dyes, Beninese craftsmanship',
     'gallery.all': 'All',
     'gallery.available_filter': 'Available',
     'gallery.sold_filter': 'Sold',
-    'gallery.artworks_count': 'ARTWORK',
+    'gallery.artworks_count': 'Artwork',
     'gallery.available': 'Available',
     'gallery.sold': 'Sold',
-    'gallery.discover': 'DISCOVER',
+    'gallery.discover': 'Discover',
     'gallery.close': 'Close',
     'gallery.dimensions': 'Dimensions',
     'gallery.year': 'Year',
@@ -356,20 +483,20 @@ class LanguageProvider extends ChangeNotifier {
     'gallery.available_for_purchase': 'Available for acquisition',
     'gallery.sold_out': 'Artwork sold',
     'gallery.no_artworks': 'No artworks in this category.',
-    'gallery.indigo_atelier': 'ATELIER OLGA INDIGO · COTONOU',
+    'gallery.indigo_atelier': 'Atelier Olga Indigo, Cotonou',
 
     // ── Studio ────────────────────────────────────────────────────────────────
-    'atelier.title': 'THE STUDIO',
+    'atelier.title': 'The studio',
     'atelier.banner_subtitle': 'Where batik art is born',
-    'atelier.gallery_title': 'THE GALLERY',
+    'atelier.gallery_title': 'Inside the studio',
     'atelier.gallery_subtitle': 'Moments of creation',
     'atelier.our_atelier': 'Our studio',
     'atelier.our_atelier_desc':
         "In the heart of Cotonou, Olga Indigo's studio is a living space where tradition and creation meet every day. Natural light, dye vats and the scent of hot wax create a unique atmosphere.",
     'atelier.philosophy': 'Our philosophy',
     'atelier.philosophy_desc':
-        "Every piece is made by hand, respecting the ancestral techniques of Beninese batik. We use exclusively natural dyes — indigo, cola, baobab, teak — to preserve vernacular knowledge and the environment.",
-    'atelier.contact_cta': 'CONTACT US',
+        "Every piece is made by hand, respecting the ancestral techniques of Beninese batik. We use exclusively natural dyes (indigo, cola, baobab, teak) to preserve vernacular knowledge and the environment.",
+    'atelier.contact_cta': 'Contact us',
     'atelier.years_exp': 'Years of experience',
     'atelier.works_created': 'Works created',
     'atelier.natural_dyes': 'Natural dyes',
@@ -377,26 +504,28 @@ class LanguageProvider extends ChangeNotifier {
     'atelier.visit_title': 'Visit our studio',
     'atelier.visit_desc':
         'Come discover the creative process live, meet Olga Indigo and perhaps leave with a unique piece.',
-    'atelier.book_appointment': 'BOOK AN APPOINTMENT',
+    'atelier.book_appointment': 'Book an appointment',
+    'atelier.empty_title': 'No photos yet.',
+    'atelier.empty_desc': 'Studio photos will appear here.',
 
     // ── Media ─────────────────────────────────────────────────────────────────
-    'media.banner_title': 'MEDIA',
-    'media.banner_subtitle': 'Videos, Reports & News',
+    'media.banner_title': 'Media',
+    'media.banner_subtitle': 'Videos, reports and news',
     'media.filter_all': 'All',
     'media.filter_videos': 'Videos',
     'media.filter_reportages': 'Reports',
     'media.filter_news': 'News',
-    'media.watch_now': 'Watch now →',
+    'media.watch_now': 'Watch now',
     'media.click_to_watch': 'Click to watch',
     'media.no_media': 'No media in this category',
     'media.add_media_hint':
         'Media can be added from the administration interface.',
-    'media.indigo_atelier': 'ATELIER OLGA INDIGO · COTONOU, BENIN',
+    'media.indigo_atelier': 'Atelier Olga Indigo, Cotonou, Benin',
 
     // ── About ─────────────────────────────────────────────────────────────────
-    'about.title': 'ABOUT',
+    'about.title': 'About the artist',
     'about.name': 'Olga Indigo',
-    'about.heritage': 'Batik Artist · Heir to Dahomey',
+    'about.heritage': 'Batik artist, heir to Dahomey',
     'about.heritage_badge': 'Heir to the Kingdom of Dahomey',
 
     'about.intro_title': 'An artist rooted in history',
@@ -405,37 +534,37 @@ class LanguageProvider extends ChangeNotifier {
     'about.intro_text2':
         "Her research focuses on collective memory, feminine legacies, African cosmologies and the transmission of vernacular knowledge. Her work is represented by Galerie SAGA in France.",
 
-    'about.origins_title': 'Origins & Journey',
+    'about.origins_title': 'Origins and journey',
     'about.origins_text1':
-        "Bohicon, Benin's crossroads city steeped in the history of the Kingdom of Dahomey — it is here that Olga Indigo grew up surrounded by women weavers and dyers. Her grandmother passed on the secrets of indigo to her in childhood, laying the foundations of an exceptional artistic vocation.",
+        "Bohicon, Benin's crossroads city steeped in the history of the Kingdom of Dahomey: it is here that Olga Indigo grew up, surrounded by women weavers and dyers. Her grandmother passed on the secrets of indigo to her in childhood, laying the foundations of an exceptional artistic vocation.",
     'about.origins_text2':
         "After years of training with master craftsmen in Benin and Mali, Olga settled in Cotonou where she opened her studio. Since then she has exhibited across West Africa and Europe, and has participated in major contemporary African art biennials.",
 
     'about.grandma_quote':
         'Indigo never lies. It reveals what the fabric has always known.',
-    'about.grandma_author': "OLGA'S GRANDMOTHER · BOHICON, 1985",
+    'about.grandma_author': "Olga's grandmother, Bohicon, 1985",
 
-    'about.art_title': 'The Art of Batik',
+    'about.art_title': 'The art of batik',
     'about.art_text1':
-        "Batik is far more than a technique — it is a language. By applying molten wax to fabric before each dye bath, the artist creates resists that preserve the original colour of the cloth, ultimately revealing a pattern of subtle complexity.",
+        "Batik is far more than a technique: it is a language. By applying molten wax to fabric before each dye bath, the artist creates resists that preserve the original colour of the cloth, ultimately revealing a pattern of subtle complexity.",
     'about.art_text2':
-        "Olga Indigo has evolved this ancestral technique by integrating wax layering, natural pigments from Beninese flora and Aho fabrics — a traditional hand-woven textile that is particularly absorbent and vibrant under dye.",
+        "Olga Indigo has evolved this ancestral technique by integrating wax layering, natural pigments from Beninese flora and Aho fabrics, a traditional hand-woven textile that is particularly absorbent and vibrant under dye.",
 
     'about.step1_title': 'Wax application',
     'about.step1_text':
         'Hot wax is applied with a brush or tjanting onto stretched fabric. It penetrates the fibres and creates a waterproof barrier that will protect the colour during the dye bath.',
     'about.step2_title': 'Dye bath',
     'about.step2_text':
-        'The fabric is immersed in successive baths of natural dyes — indigo, cola or baobab. Each immersion adds a layer of colour and depth to the pattern.',
+        'The fabric is immersed in successive baths of natural dyes: indigo, cola or baobab. Each immersion adds a layer of colour and depth to the pattern.',
     'about.step3_title': 'Pattern reveal',
     'about.step3_text':
-        'The wax is removed in boiling water, revealing the final pattern. The characteristic cracks of batik — known as "crackle" — are the unique signature of this technique.',
+        'The wax is removed in boiling water, revealing the final pattern. The characteristic cracks of batik, known as "crackle", are the unique signature of this technique.',
 
-    'about.dyes_title': 'Natural Dyes',
+    'about.dyes_title': 'Natural dyes',
     'about.indigo_title': 'Indigo',
     'about.indigo_text':
         "Obtained from the leaves of the indigo plant, indigo is the queen colour of Beninese batik. Its deep blue tones, from sky to night, make it Olga's pigment of choice.",
-    'about.cola_title': 'Cola Nut',
+    'about.cola_title': 'Cola nut',
     'about.cola_text':
         "The cola nut offers warm tones ranging from golden brown to deep mahogany. Combined with indigo, it creates chromatic harmonies of rare richness.",
     'about.baobab_title': 'Baobab',
@@ -459,7 +588,7 @@ class LanguageProvider extends ChangeNotifier {
     'about.timeline_desc3':
         "The 'AHO du Bénin' exhibition in Berlin and Paris. Olga Indigo brings Beninese batik to the international stage and is noticed by Paris gallery Anne de Villepoix.",
     'about.timeline_year4': '2023',
-    'about.timeline_title4': 'FINAB & Dakar Biennale',
+    'about.timeline_title4': 'FINAB and Dakar Biennale',
     'about.timeline_desc4':
         "Participation in the first editions of FINAB (International Festival of Beninese Arts) in Cotonou. Notable presence at the Contemporary African Art Biennale in Dakar 2026.",
 
@@ -476,28 +605,29 @@ class LanguageProvider extends ChangeNotifier {
     'about.representation_text': 'Galerie SAGA, France — www.galeriesaga.com',
 
     // ── Contact ───────────────────────────────────────────────────────────────
-    'contact.title': 'Contact Us',
+    'contact.title': 'Contact us',
     'contact.intro':
         'Feel free to reach out with any questions, orders or project inquiries.',
-    'contact.available_now': 'Available now · Replies within 24h',
+    'contact.available_now': 'Available, replies within 24 hours',
     'contact.whatsapp_cta': 'Write on WhatsApp',
     'contact.email_cta': 'Send an email',
-    'contact.info_title': 'Our Contact Info',
-    'contact.label_address': 'ADDRESS',
-    'contact.label_phone': 'PHONE',
-    'contact.label_email': 'EMAIL',
-    'contact.follow': 'FOLLOW',
-    'contact.response_time': 'Available Mon–Sat · 9am–6pm\nReplies within 24h',
+    'contact.info_title': 'Our contact details',
+    'contact.label_address': 'Address',
+    'contact.label_phone': 'Phone',
+    'contact.label_email': 'Email',
+    'contact.follow': 'Follow us',
+    'contact.response_time':
+        'Available Monday to Saturday, 9 am to 6 pm.\nReplies within 24 hours.',
     'contact.copied': 'Copied to clipboard',
     'contact.footer_note':
-        'AZIZART · Cotonou, Benin\nContemporary Batik Art by Olga Indigo',
+        'AZIZART COLORS, Cotonou, Benin.\nContemporary batik art by Olga Indigo.',
 
     // Form
     'contact.form_title': 'Send a message',
-    'contact.form_subtitle': 'All fields marked * are required',
+    'contact.form_subtitle': 'Fields marked * are required',
     'contact.name': 'Full name *',
     'contact.email': 'Email address *',
-    'contact.phone': 'Phone (optional)',
+    'contact.phone': 'Phone',
     'contact.subject': 'Subject *',
     'contact.message': 'Your message *',
     'contact.message_hint': 'Describe your project, question or request…',
@@ -505,9 +635,129 @@ class LanguageProvider extends ChangeNotifier {
     'contact.privacy_note': 'Your data is never shared.',
     'contact.field_required': 'This field is required.',
     'contact.invalid_email': 'Invalid email address.',
-    'contact.success_msg': 'Message sent! We will reply within 24h.',
+    'contact.success_msg': 'Message sent! We will reply within 24 hours.',
     'contact.error_network': 'Network error. Check your connection.',
     'contact.error': 'An error occurred. Please try again.',
+
+    // ── Admin · About editor ─────────────────────────────────────────────────
+    'admin.about.page_title': 'Edit the "About" page',
+    'admin.about.page_heading': 'Profile editor',
+    'admin.about.page_intro':
+        'Edit everything displayed on the public "About" page. Bilingual fields have both French and English versions.',
+    'admin.about.save': 'Save',
+    'admin.about.saving': 'Saving…',
+    'admin.about.saved': '"About" page saved',
+    'admin.about.error_saving': 'Save failed: {e}',
+    'admin.about.empty_info':
+        'No content stored yet. Fill in the fields below and click Save to create the row.',
+    'admin.about.add': 'Add',
+    'admin.about.remove': 'Remove',
+    'admin.about.item_n': 'Item {n}',
+    'admin.about.list_empty':
+        'No items yet. Click "Add" to create the first one.',
+    'admin.about.dynamic_section': 'Dynamic content',
+    'admin.about.dynamic_section_desc':
+        'Modular lists shown in various sections of the page.',
+    'admin.about.back': 'Back',
+
+    // Images
+    'admin.about.sec_images': 'Portrait and banner',
+    'admin.about.sec_images_desc':
+        'Images displayed at the top of the page. If empty, the theme uses its default images.',
+    'admin.about.img_avatar': 'Portrait (avatar)',
+    'admin.about.img_banner': 'Background banner',
+    'admin.about.img_remove': 'Remove image',
+
+    // Sections
+    'admin.about.sec_identity': 'Artist identity',
+    'admin.about.sec_identity_desc': 'Information shown under the main name',
+    'admin.about.sec_hero': 'Hero header',
+    'admin.about.sec_hero_desc': 'Elements visible at the top of the page',
+    'admin.about.sec_intro': 'Introduction',
+    'admin.about.sec_intro_desc': 'Opening hook and first paragraphs',
+    'admin.about.sec_origins': 'Origins and training',
+    'admin.about.sec_origins_desc': 'The story of her beginnings',
+    'admin.about.sec_quote': 'Personal quote',
+    'admin.about.sec_quote_desc': 'Words highlighted on the page',
+    'admin.about.sec_art': 'The art of batik',
+    'admin.about.sec_art_desc': 'Presentation of the main technique',
+    'admin.about.sec_dyes': 'Natural dyes',
+    'admin.about.sec_dyes_desc': 'Title of the natural pigments section',
+    'admin.about.sec_timeline': 'Timeline',
+    'admin.about.sec_timeline_desc': 'Title of the journey section',
+    'admin.about.sec_repr': 'Representation',
+    'admin.about.sec_repr_desc': 'Gallery or agent representing the artist',
+
+    // Fields (labels + hints)
+    'admin.about.f.artist_name': 'Artist name',
+    'admin.about.f.artist_name_hint': 'e.g. Olga Indigo',
+    'admin.about.f.location': 'Location',
+    'admin.about.f.location_hint': 'e.g. Cotonou, Benin',
+    'admin.about.f.career_start_year': 'Career start year',
+    'admin.about.f.career_start_year_hint': 'e.g. 1995',
+    'admin.about.f.hero_label': 'Label above the name',
+    'admin.about.f.hero_label_hint': 'e.g. About the artist',
+    'admin.about.f.heritage_line': 'Heritage line under the name',
+    'admin.about.f.heritage_line_hint':
+        'e.g. Heir to the Kingdom of Dahomey (1600–1904)',
+    'admin.about.f.heritage_badge': 'Heritage badge',
+    'admin.about.f.heritage_badge_hint': 'e.g. Royal memory of Benin',
+    'admin.about.f.intro_title': 'Opening hook',
+    'admin.about.f.intro_title_hint': 'e.g. Her story, our memory',
+    'admin.about.f.intro_text': 'Main intro paragraph',
+    'admin.about.f.intro_text2': 'Secondary intro paragraph',
+    'admin.about.f.origins_title': 'Section title',
+    'admin.about.f.origins_title_hint': 'e.g. Origins and training',
+    'admin.about.f.origins_text1': 'First paragraph',
+    'admin.about.f.origins_text2': 'Second paragraph',
+    'admin.about.f.quote': 'Quote text',
+    'admin.about.f.quote_text': 'Quote text',
+    'admin.about.f.quote_author': 'Quote author',
+    'admin.about.f.quote_author_hint':
+        'e.g. My grandmother, keeper of knowledge',
+    'admin.about.f.art_title': 'Section title',
+    'admin.about.f.art_title_hint': 'e.g. The art of batik',
+    'admin.about.f.art_text1': 'First paragraph',
+    'admin.about.f.art_text2': 'Second paragraph',
+    'admin.about.f.dyes_title': 'Section title',
+    'admin.about.f.dyes_title_hint': 'e.g. Natural dyes',
+    'admin.about.f.timeline_title': 'Section title',
+    'admin.about.f.timeline_title_hint': "e.g. Artist's journey",
+    'admin.about.f.representation_title': 'Section title',
+    'admin.about.f.representation_title_hint': 'e.g. Representation',
+    'admin.about.f.representation_text': 'Descriptive text',
+    'admin.about.f.representation_text_hint':
+        'e.g. Galerie SAGA, France — www.galeriesaga.com',
+    'admin.about.f.repr_title': 'Section title',
+    'admin.about.f.repr_title_hint': 'e.g. Representation',
+    'admin.about.f.repr_text': 'Descriptive text',
+    'admin.about.f.repr_text_hint':
+        'e.g. Galerie SAGA, France — www.galeriesaga.com',
+
+    // Images (URL fields)
+    'admin.about.f.hero_image': 'Background banner (URL)',
+    'admin.about.f.hero_image_hint': 'Banner image URL',
+    'admin.about.f.portrait_image': 'Portrait (URL)',
+    'admin.about.f.portrait_image_hint': 'Artist portrait URL',
+
+    // Dynamic lists
+    'admin.about.list.technique_steps': 'Batik technique steps',
+    'admin.about.list.technique_steps_desc':
+        'The 3 key steps of the batik process',
+    'admin.about.list.natural_dyes': 'Natural dyes',
+    'admin.about.list.natural_dyes_desc':
+        'The natural pigments used by the artist',
+    'admin.about.list.timeline_events': 'Career timeline',
+    'admin.about.list.timeline_events_desc': 'Key dates in her career',
+    'admin.about.list.stats': 'Key figures',
+    'admin.about.list.stats_desc':
+        'Numbers highlighted at the bottom of the page',
+    'admin.about.list_field.title': 'Title',
+    'admin.about.list_field.text': 'Description',
+    'admin.about.list_field.year': 'Year',
+    'admin.about.list_field.description': 'Description',
+    'admin.about.list_field.value': 'Displayed value',
+    'admin.about.list_field.label': 'Caption',
   };
 }
 

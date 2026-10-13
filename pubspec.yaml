@@ -4,156 +4,75 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ^3.10.0
+  flutter: '>=3.38.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+    
 
-  # Localizations
+  # ═══════════════════════════════════════════════════════════════════════
+  # LOCALISATION
+  # ═══════════════════════════════════════════════════════════════════════
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
 
-  # State Management
+  # ═══════════════════════════════════════════════════════════════════════
+  # STATE MANAGEMENT
+  # ═══════════════════════════════════════════════════════════════════════
   provider: ^6.1.2
 
-  # Supabase (remplace firebase_core / firebase_auth / cloud_firestore /
-  # firebase_storage — un seul package couvre base de données, auth,
-  # temps réel et stockage de fichiers)
+  # ═══════════════════════════════════════════════════════════════════════
+  # BACKEND / STORAGE DISTANT
+  # ═══════════════════════════════════════════════════════════════════════
   supabase_flutter: ^2.0.0
+  http: ^1.2.0
+  mime: ^2.0.0
 
-  # HTTP / External links
+  # ═══════════════════════════════════════════════════════════════════════
+  # IMAGES & CACHE
+  # ═══════════════════════════════════════════════════════════════════════
+  cached_network_image: ^4.0.3
+  cached_network_image_platform_interface: ^5.0.2
+  flutter_cache_manager: ^3.4.1
+  shimmer: ^4.0.0
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # SÉLECTION DE FICHIERS (upload admin)
+  # ═══════════════════════════════════════════════════════════════════════
+  image_picker: ^1.0.5
+  file_picker: ^13.1.0
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # UI
+  # ═══════════════════════════════════════════════════════════════════════
   url_launcher: ^6.3.0
-
-  # Icons
+  google_fonts: ^9.0.0
   font_awesome_flutter: ^11.0.0
 
-  # Media
-  image_picker: ^1.0.5
-  cached_network_image: ^3.3.1
-
-  # UI
-  flutter_svg: ^2.3.0
-  google_fonts: ^6.1.0
-
-  # Storage (for preferences if needed)
+  # ═══════════════════════════════════════════════════════════════════════
+  # UTILITAIRES
+  # ═══════════════════════════════════════════════════════════════════════
   shared_preferences: ^2.2.2
+  timeago: ^3.6.0
+  image: ^4.0.0
+  web: ^1.0.0
+  translator: ^1.0.4+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
 
+  # ═══════════════════════════════════════════════════════════════════════
+  # ASSETS
+  # ═══════════════════════════════════════════════════════════════════════
   assets:
-    - assets/images/
-    - assets/data/
-    - assets/translations/
-
-    - assets/images/atelier/
-    - assets/images/gallery/
-    - assets/images/new/
-    - assets/images/media/
-    - assets/fonts/
-    - assets/images/logo/
-
-    # Atelier photos
-    - assets/images/atelier/t1.jpg
-    - assets/images/atelier/t2.jpg
-    - assets/images/atelier/t3.jpg
-    - assets/images/atelier/t4.jpg
-    - assets/images/atelier/t5.jpg
-    - assets/images/atelier/t6.jpg
-    - assets/images/atelier/t7.jpg
-    - assets/images/atelier/t8.jpg
-    - assets/images/atelier/t9.jpg
-    - assets/images/atelier/t10.jpg
-    - assets/images/atelier/t11.jpg
-    - assets/images/atelier/t12.jpg
-    - assets/images/atelier/t13.jpg
-    - assets/images/atelier/t14.jpg
-    - assets/images/atelier/t15.jpeg
-    - assets/images/atelier/t16.jpeg
-
-    # Gallery
-    - assets/images/gallery/1.jpeg
-    - assets/images/gallery/2.jpeg
-    - assets/images/gallery/3.jpeg
-    - assets/images/gallery/4.jpeg
-    - assets/images/gallery/5.jpeg
-    - assets/images/gallery/6.jpeg
-    - assets/images/gallery/7.jpeg
-    - assets/images/gallery/8.jpeg
-    - assets/images/gallery/9.jpeg
-    - assets/images/gallery/10.jpeg
-    - assets/images/gallery/13.jpeg
-    - assets/images/gallery/14.jpeg
-    - assets/images/gallery/16.jpeg
-    - assets/images/gallery/17.jpeg
-    - assets/images/gallery/19.jpeg
-    - assets/images/gallery/a1.jpg
-    - assets/images/gallery/a2.jpg
-    - assets/images/gallery/a3.jpg
-    - assets/images/gallery/a4.jpg
-    - assets/images/gallery/a5.jpg
-    - assets/images/gallery/a6.jpg
-    - assets/images/gallery/a7.jpg
-    - assets/images/gallery/a8.jpg
-    - assets/images/gallery/a11.jpg
-    - assets/images/gallery/a12.jpg
-    - assets/images/gallery/a13.jpg
-    - assets/images/gallery/a14.jpg
-    - assets/images/gallery/a15.jpg
-    - assets/images/gallery/o1.jpeg
-    - assets/images/gallery/o2.jpeg
-    - assets/images/gallery/o3.jpeg
-    - assets/images/gallery/o4.jpeg
-    - assets/images/gallery/o5.jpeg
-    - assets/images/gallery/tableau2.jpeg
-    - assets/images/gallery/tableau3.jpeg
-    - assets/images/gallery/tableau4.jpeg
-    - assets/images/gallery/tableau5.jpeg
-    - assets/images/gallery/tableau6.jpeg
-
-    # New / Actualités
-    - assets/images/new/a1.jpg
-    - assets/images/new/a2.jpg
-    - assets/images/new/a3.jpg
-    - assets/images/new/a4.jpg
-    - assets/images/new/a5.jpg
-    - assets/images/new/a6.jpg
-    - assets/images/new/a7.jpg
-    - assets/images/new/a8.jpg
-    - assets/images/new/a9.jpg
-    - assets/images/new/a10.jpg
-    - assets/images/new/a11.jpg
-    - assets/images/new/a12.jpg
-    - assets/images/new/actu1.jpeg
-    - assets/images/new/actu2.jpg
-    - assets/images/new/actu3.jpg
-
-    # Media
-    - assets/images/media/1.jpeg
-    - assets/images/media/2.jpeg
-    - assets/images/media/3.jpeg
-    - assets/images/media/4.jpeg
-    - assets/images/media/5.jpeg
-    - assets/images/media/6.jpeg
-    - assets/images/media/7.jpeg
-
-    # Fonts / Logo
-    - assets/fonts/hero.jpeg
-    - assets/fonts/footer.jpg
-    - assets/images/logo/logo.svg
-
-    # Data JSON
-    - assets/data/artworks.json
-    - assets/data/atelier_photos.json
-    - assets/data/media_items.json
-
-    # Translations
-    - assets/translations/fr.json
-    - assets/translations/en.json
+    - assets/

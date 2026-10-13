@@ -1,78 +1,42 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'breakpoints.dart';
 
 class Responsive {
   Responsive._();
 
-  static const double _mobileBreakpoint  = 600;
-  static const double _tabletBreakpoint  = 1024;
-  static const double _desktopBreakpoint = 1440;
+  static bool isMobile(BuildContext context) => context.breakpoint.isMobile;
+  static bool isTablet(BuildContext context) => context.breakpoint.isTablet;
+  static bool isDesktop(BuildContext context) => context.breakpoint.isTabletOrAbove;
+  static double hPad(BuildContext context) => azizPageHPad(context);
 
-  static bool isMobile(BuildContext context)  =>
-      MediaQuery.of(context).size.width < _mobileBreakpoint;
-  static bool isTablet(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    return w >= _mobileBreakpoint && w < _tabletBreakpoint;
-  }
-  static bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= _tabletBreakpoint;
-  static bool isWide(BuildContext context) =>
-      MediaQuery.of(context).size.width >= _desktopBreakpoint;
-
-  /// Padding horizontal adaptatif (double)
-  static double hPad(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w < _mobileBreakpoint)  return 20;
-    if (w < _tabletBreakpoint)  return 40;
-    if (w < _desktopBreakpoint) return 64;
-    return 80;
-  }
-
-  /// Padding vertical adaptatif
-  static double vPad(BuildContext context) => isMobile(context) ? 32 : 56;
-
-  /// Padding de page complet (EdgeInsets) — utilisé par AtelierPhotoGrid etc.
   static EdgeInsets pagePadding(BuildContext context) {
-    final h = hPad(context);
-    final v = vPad(context);
-    return EdgeInsets.symmetric(horizontal: h, vertical: v);
+    return EdgeInsets.symmetric(
+      horizontal: hPad(context),
+      vertical: azizSectionVPad(context),
+    );
   }
 
-  /// Largeur de contenu maximale
-  static double maxContentWidth(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w < _mobileBreakpoint)  return w;
-    if (w < _tabletBreakpoint)  return 720;
-    return 1200;
+  static double maxContentWidth(BuildContext context) => 1200.0;
+
+  // 🔴 NOUVEAU : Calcul dynamique de la taille du cache image
+  /// Calcule la taille optimale en pixels physiques pour le cache mémoire.
+  /// [widgetWidth] : La largeur allouée à l'image (via LayoutBuilder par exemple).
+  /// Si non fourni, utilise la largeur totale de l'écran.
+  static int getMemCacheWidth(BuildContext context, {double? widgetWidth}) {
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
+    final logicalWidth = widgetWidth ?? MediaQuery.of(context).size.width;
+    
+    // On multiplie par la densité de pixels de l'écran.
+    // On utilise clamp() pour éviter un cache inutilement lourd sur les écrans 4K,
+    // tout en gardant un minimum vital pour la netteté.
+    return (logicalWidth * pixelRatio).toInt().clamp(300, 1600);
   }
 
-  /// Colonnes pour grilles génériques
-  static int gridColumns(BuildContext context) {
-    if (isMobile(context))  return 1;
-    if (isTablet(context))  return 2;
-    if (isDesktop(context)) return 3;
-    return 4;
-  }
-
-  /// Colonnes pour galeries photo/atelier (légèrement différent)
-  static int galleryColumns(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    if (w < _mobileBreakpoint)  return 1;
-    if (w < 900)                return 2;
-    if (w < _tabletBreakpoint)  return 3;
-    return 4;
-  }
-
-  static double fontSize(BuildContext context,
-      {double mobile = 14, double tablet = 15, double desktop = 16}) {
-    if (isMobile(context)) return mobile;
-    if (isTablet(context)) return tablet;
-    return desktop;
-  }
-
-  static T value<T>(BuildContext context,
-      {required T mobile, required T desktop, T? tablet}) {
-    if (isMobile(context)) return mobile;
-    if (isTablet(context)) return tablet ?? desktop;
-    return desktop;
+  // 🔴 NOUVEAU : Facteur d'échelle pour les icônes de navigation
+  /// Retourne la taille idéale des icônes selon le type d'écran.
+  static double navIconSize(BuildContext context) {
+    if (isMobile(context)) return 24.0;
+    if (isTablet(context)) return 28.0;
+    return 32.0; // Desktop
   }
 }

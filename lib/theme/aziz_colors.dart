@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 
-/// 🎨 PALETTE AZIZART · TERRE & ÉMAIL
-/// Nouvelle direction artistique : un fond profond "vin/brique" qui rappelle
-/// les teintures batik, réchauffé par un accent ambre lumineux et ponctué de
-/// touches franches (bleu pétrole, vert tilleul, lavande) — plus contrasté
-/// et plus "atelier d'artiste" que la précédente palette pastel.
-///
-/// Couleurs sources fournies :
-///   #D9F3E4  Menthe très pâle   (texte clair / highlights)
-///   #007FA9  Bleu pétrole       (accent secondaire / Médias)
-///   #B7CE66  Vert tilleul       (accent vif / détails)
-///   #8FB43A  Vert sauge vif     (disponibilité / succès)
-///   #BE9CC7  Lavande            (accent doux / Atelier)
-///   #A9CEF4  Bleu ciel pâle     (variante claire du bleu pétrole)
-///   #EE7A46  Orange brûlé       (accent chaud / "vendu")
-///   #753E4E  Vin profond        (fond sombre / texte sur ambre)
-///   #FFB83C  Ambre              (COULEUR PRINCIPALE / CTA)
+/// 🎨 PALETTE AZIZART COLORS — mur de galerie, encre indigo, accents ambre.
 class AzizColors {
   AzizColors._();
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // PALETTE BRUTE — les 9 couleurs sources, accessibles directement
-  // ══════════════════════════════════════════════════════════════════════════════
-  static const Color paletteMint = Color(0xFFD9F3E4);
+  // ══════════════════════════════════════════════════════════════════════
+  // ── Direction "Immersion Indigo" — accueil public (v3) ──────────────────
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color dyeVoid = Color(0xFF0A0D1C);
+  static const Color dyeSurface = Color(0xFF161B3D);
+  static const Color dyeSurfaceHi = Color(0xFF232A5C);
+  static const Color dyeCurrent = Color(0xFF6B74E8);
+  static const Color dyeGold = Color(0xFFC9A24B);
+  static const Color dyeGoldLight = Color(0xFFE3C275);
+  static const Color dyeParchment = Color(0xFFEDE6D6);
+  static const Color dyeDust = Color(0xFF8B87A8);
+
+  // ══════════════════════════════════════════════════════════════════════
+  // PALETTE BRUTE
+  // ══════════════════════════════════════════════════════════════════════
   static const Color paletteTeal = Color(0xFF007FA9);
   static const Color paletteLime = Color(0xFFB7CE66);
   static const Color paletteSage = Color(0xFF8FB43A);
@@ -32,258 +28,162 @@ class AzizColors {
   static const Color paletteWine = Color(0xFF753E4E);
   static const Color paletteAmber = Color(0xFFFFB83C);
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // COULEURS PRINCIPALES — Terre & Émail
-  // ══════════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════
+  // ✨ ACCENT SIGNATURE — le véritable Indigo
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color trueIndigo = Color(0xFF223A63);
+  static const Color trueIndigoLight = Color(0xFF4C6690);
+  static const Color trueIndigoDark = Color(0xFF152845);
 
-  /// 🍷 Vin Profond — FOND SOMBRE PRINCIPAL (ex Brun Olive Nuit)
-  static const Color indigoDeep = paletteWine;
+  static LinearGradient get trueIndigoGradient => const LinearGradient(
+        colors: [trueIndigoDark, trueIndigo, trueIndigoLight],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
 
-  /// 🔵 Bleu Pétrole — COULEUR SECONDAIRE (ex Sauge Bleutée)
-  static const Color greenBatik = paletteTeal;
-
-  /// 🟡 Ambre — ACCENT PRINCIPAL · BOUTONS CTA (ex Vert Menthe)
+  // ══════════════════════════════════════════════════════════════════════
+  // COULEURS PRINCIPALES
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color deepWine = paletteWine;
+  static const Color petrolBlue = paletteTeal;
   static const Color saffron = paletteAmber;
-
-  /// 🟠 Orange Brûlé — ACCENT CHAUD · BADGE "VENDU" (ex Brun Olive)
   static const Color terraCotta = paletteBurntOrange;
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // FONDS — Univers Vin Profond
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// 🌑 Vin Profond — FOND SOMBRE · PRINCIPAL
+  // ══════════════════════════════════════════════════════════════════════
+  // FONDS SOMBRES (admin, bandes de contraste)
+  // ══════════════════════════════════════════════════════════════════════
   static const Color background = paletteWine;
-
-  /// 🌃 Vin Nuit — FOND SOMBRE ALTERNATIF
   static const Color backgroundDark = Color(0xFF522C38);
-
-  /// 🌆 Vin Adouci — FOND SECONDAIRE
   static const Color backgroundMedium = Color(0xFF8C4D5D);
-
-  /// 🟤 Surface Vin — SURFACE DES CARTES
   static const Color surface = Color(0xFF693846);
-
-  /// 🟤 Carte Vin — FOND DES CARTES
   static const Color card = Color(0xFF623441);
-
-  /// 🟤 Carte Vin Alternative
   static const Color cardBackground = Color(0xFF693846);
 
-  /// 🌿 Menthe Très Pâle — FOND CLAIR
-  /// Utilisé pour le thème clair et les zones lumineuses.
-  static const Color mistIndigo = paletteMint;
-
-  // ══════════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════
   // ACCENTS & DÉCLINAISONS
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// 🟡 Ambre Clair — pour survols et états actifs
+  // ══════════════════════════════════════════════════════════════════════
   static const Color saffronLight = Color(0xFFFFD37D);
-
-  /// 🟡 Ambre Foncé — pour états pressés
   static const Color saffronDark = Color(0xFFD89328);
-
-  /// 🔵 Bleu Ciel Pâle — variante claire du bleu pétrole (fournie dans la palette)
-  static const Color greenBatikLight = paletteSkyBlue;
-
-  /// 🔵 Bleu Pétrole Foncé — pour profondeur
-  static const Color greenBatikDark = Color(0xFF015C7D);
-
-  /// 🍷 Vin Clair — pour éléments secondaires
-  static const Color indigoLight = Color(0xFF9A5C6C);
-
-  /// 🟠 Orange Brûlé Clair — pour variations chaudes
+  static const Color petrolBlueLight = paletteSkyBlue;
+  static const Color petrolBlueDark = Color(0xFF015C7D);
+  static const Color wineLight = Color(0xFF9A5C6C);
   static const Color terraCottaLight = Color(0xFFF3A179);
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // ACCENTS COMPLÉMENTAIRES — Vert Tilleul & Lavande
-  // ══════════════════════════════════════════════════════════════════════════════
-  // Apportés par la nouvelle palette pour diversifier les catégories de la
-  // Galerie et les petites touches décoratives (badges de catégorie, puces,
-  // icônes), sans toucher aux rôles déjà établis ci-dessus.
-
-  /// 🟢 Vert Tilleul — accent vif (catégories, détails, hover secondaire)
   static const Color lime = paletteLime;
-
-  /// 🌸 Lavande — accent doux (catégories, Atelier, détails délicats)
   static const Color lavender = paletteLavender;
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // TEXTE — Menthe Très Pâle & déclinaisons
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// 📜 Menthe Très Pâle — TEXTE PRINCIPAL (sur fonds sombres)
-  static const Color textPrimary = paletteMint;
-
-  /// 📜 Menthe Adoucie — TEXTE SECONDAIRE
-  static const Color textSecondary = Color(0xFFB9D9C7);
-
-  /// 📜 Menthe Estompée — TEXTE TERTIAIRE / MUTED
-  static const Color textMuted = Color(0xFF8FAE9C);
-
-  /// 📜 Texte sur accent (ambre) — pour lisibilité
+  // ══════════════════════════════════════════════════════════════════════
+  // TEXTE — sur fonds foncés
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color textPrimary = Color(0xFFC8CEF0);
+  static const Color textSecondary = Color(0xFFA0A8D0);
+  static const Color textMuted = Color(0xFF7B85AE);
   static const Color textOnAccent = paletteWine;
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // BORDURES & SÉPARATEURS
-  // ══════════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════
+  // TEXTE — indigo foncé, pour fonds clairs
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color textIndigoDeeper = trueIndigoDark;
+  static const Color textIndigoDark = trueIndigo;
+  static const Color textIndigo = trueIndigoLight;
 
+  // ══════════════════════════════════════════════════════════════════════
+  // ÉLÉMENTS D'INTERFACE
+  // ══════════════════════════════════════════════════════════════════════
   static const Color border = Color(0xFF8C5C68);
   static const Color cardBorder = Color(0xFF8C5C68);
   static const Color divider = Color(0xFF8C5C68);
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // OVERLAY
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// Couleur de superposition semi-transparente (ex : VENDU sur image)
-  static const Color overlay = Color(0x8C753E4E); // Vin profond 55%
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // DISPONIBILITÉ DES ŒUVRES
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// ✅ Vert Sauge Vif pour les œuvres disponibles
+  static const Color overlay = Color(0x8C753E4E);
   static const Color available = paletteSage;
-
-  /// ❌ Orange Brûlé pour les œuvres vendues
   static const Color unavailable = paletteBurntOrange;
+  static const Color error = Color(0xFFD45B43);
+  static const Color success = paletteSage;
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // ÉTATS & FEEDBACK
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  static const Color error =
-      Color(0xFFD45B43); // dérivé orange brûlé, plus rouge
-  static const Color success = paletteSage; // vert sauge vif pour succès
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // DÉGRADÉS — Harmonie Terre & Émail
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// Dégradé principal — du Vin Nuit au Vin Profond
+  // ══════════════════════════════════════════════════════════════════════
+  // DÉGRADÉS
+  // ══════════════════════════════════════════════════════════════════════
   static LinearGradient get bannerGradient => const LinearGradient(
         colors: [Color(0xFF522C38), Color(0xFF753E4E), Color(0xFF522C38)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Ambre — pour boutons et CTA
   static LinearGradient get saffronGradient => const LinearGradient(
         colors: [Color(0xFFFFB83C), Color(0xFFFFD37D), Color(0xFFFFB83C)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Vin — pour éléments secondaires
-  static LinearGradient get indigoGradient => const LinearGradient(
+  static LinearGradient get wineGradient => const LinearGradient(
         colors: [Color(0xFF753E4E), Color(0xFF9A5C6C)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Orange Brûlé — pour accents chauds
   static LinearGradient get terraCottaGradient => const LinearGradient(
         colors: [Color(0xFFEE7A46), Color(0xFFD45B43)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Bleu Pétrole — pour éléments naturels
-  static LinearGradient get greenBatikGradient => const LinearGradient(
+  static LinearGradient get petrolBlueGradient => const LinearGradient(
         colors: [Color(0xFF007FA9), Color(0xFFA9CEF4)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Vert Tilleul / Sauge — pour badges "disponible" et accents nature
   static LinearGradient get limeGradient => const LinearGradient(
         colors: [Color(0xFFB7CE66), Color(0xFF8FB43A)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-
-  /// Dégradé Lavande — pour accents doux (Atelier, catégories)
   static LinearGradient get lavenderGradient => const LinearGradient(
         colors: [Color(0xFFBE9CC7), Color(0xFF9A6FA4)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
+  static LinearGradient get heroVeil => LinearGradient(
+        colors: [
+          trueIndigoDark.withValues(alpha: 0.15),
+          trueIndigoDark.withValues(alpha: 0.42),
+          trueIndigoDark.withValues(alpha: 0.88),
+        ],
+        stops: const [0.0, 0.42, 1.0],
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+      );
 
-  // ══════════════════════════════════════════════════════════════════════════════
-  // THÈME CLAIR — Page d'accueil (Home page)
-  // Ces couleurs permettent au home_page.dart d'utiliser un fond crème/lin
-  // élégant qui contraste avec le thème sombre des autres pages (wine/vin).
-  // ══════════════════════════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════════════════════
+  // THÈME CLAIR — « mur de galerie »
+  // Blanc neutre, filets gris, passe-partout blanc, encre indigo.
+  // ══════════════════════════════════════════════════════════════════════
+  static const Color lightBackground = Color(0xFFF4F4F1);
+  static const Color lightBackgroundAlt = Color(0xFFEAEAE6);
+  static const Color lightSurface = Color(0xFFE2E2DD);
+  static const Color lightCard = Color(0xFFD9D9D3);
+  static const Color lightBorder = Color(0xFFCFCFC8);
 
-  /// 🏠 Fond principal crème/lin — home page
-  static const Color lightBackground = Color(0xFFF8F4EE);
+  /// Passe-partout des œuvres.
+  static const Color mat = Color(0xFFFFFFFF);
 
-  /// 🏠 Fond alternatif légèrement plus chaud — sections alternées home
-  static const Color lightBackgroundAlt = Color(0xFFF2EDE5);
+  static const Color lightTextPrimary = trueIndigoDark;
+  static const Color lightTextSecondary = Color(0xFF3B4A63);
+  static const Color lightTextMuted = trueIndigoLight;
 
-  /// 🏠 Surface des cartes home — légèrement contrastée
-  static const Color lightSurface = Color(0xFFEDE8E0);
+  // ══════════════════════════════════════════════════════════════════════
+  // 🔄 ALIAS DE COMPATIBILITÉ (anciens noms → nouveaux noms)
+  // ══════════════════════════════════════════════════════════════════════
 
-  /// 🏠 Fond des cartes home — ton lin foncé
-  static const Color lightCard = Color(0xFFE8E2D8);
-
-  /// 📝 Texte principal — brun foncé (lisible sur fond crème)
-  static const Color lightTextPrimary = Color(0xFF2C1A12);
-
-  /// 📝 Texte secondaire — brun moyen
-  static const Color lightTextSecondary = Color(0xFF6B5B4E);
-
-  /// 📝 Texte atténué / muted — brun clair
-  static const Color lightTextMuted = Color(0xFF9E8C7D);
-
-  /// 🔲 Bordure légère — séparateur discret sur fond clair
-  static const Color lightBorder = Color(0xFFD4C8BB);
-
-  // ══════════════════════════════════════════════════════════════════════════════
-  // ALIASES DE COMPATIBILITÉ
-  // Pour assurer la transition avec l'ancien code (artwork_card.dart, navbar.dart…)
-  // ══════════════════════════════════════════════════════════════════════════════
-
-  /// @deprecated Utiliser [indigoDeep] à la place
-  static const Color indigo = indigoDeep;
-
-  /// @deprecated Utiliser [background] à la place
-  @Deprecated('Utiliser background ou backgroundDark selon le contexte')
+  /// Alias historique — préférer `saffron` (ou `dyeGold`).
   static const Color accent = saffron;
 
-  /// @deprecated Utiliser [saffronLight] à la place
-  @Deprecated('Utiliser saffronLight')
-  static const Color accentLight = saffronLight;
+  /// Alias historique — préférer `petrolBlue`.
+  static const Color greenBatik = petrolBlue;
 
-  /// @deprecated Utiliser [saffronDark] à la place
-  @Deprecated('Utiliser saffronDark')
-  static const Color accentDark = saffronDark;
-
-  /// @deprecated Utiliser [saffron] à la place (ambre, accent principal)
-  @Deprecated('Utiliser saffron (ambre)')
-  static const Color gold = saffron;
-
-  /// @deprecated Utiliser [saffronLight] à la place
-  @Deprecated('Utiliser saffronLight')
-  static const Color goldLight = saffronLight;
-
-  /// @deprecated Utiliser [terraCotta] à la place
-  @Deprecated('Utiliser terraCotta')
+  /// Alias historique (casse) — préférer `terraCotta` (camelCase).
   static const Color terracotta = terraCotta;
 
-  /// @deprecated Utiliser [indigoLight] à la place
-  @Deprecated('Utiliser indigoLight')
-  static const Color indigoDark = indigoLight;
-
-  /// Dégradé ambre — alias pour compatibilité
-  /// @deprecated Utiliser [saffronGradient]
-  @Deprecated('Utiliser saffronGradient')
-  static LinearGradient get goldGradient => saffronGradient;
-
-  /// Dégradé orange brûlé — alias pour compatibilité
-  /// @deprecated Utiliser [terraCottaGradient]
-  @Deprecated('Utiliser terraCottaGradient')
+  /// Alias historique (casse) — préférer `terraCottaGradient`.
   static LinearGradient get terracottaGradient => terraCottaGradient;
+
+  /// Alias historique — préférer `saffron` (ou `dyeGold`).
+  static const Color gold = saffron;
+
+  /// Alias historique — préférer `trueIndigoGradient`.
+  static LinearGradient get indigoGradient => trueIndigoGradient;
 }

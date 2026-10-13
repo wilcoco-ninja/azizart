@@ -1,0 +1,31 @@
+name: Déployer le site (Vercel)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
+      - run: flutter build web --release --no-wasm-dry-run
+
+      - name: Déployer sur Vercel (production)
+        working-directory: build/web
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cp ../../vercel.json ./vercel.json
+          npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"

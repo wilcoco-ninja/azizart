@@ -1,78 +1,105 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="AZIZART COLORS — la galerie d'Olga Indigo, artiste Aho : œuvres, atelier, médias et contact.">
+  <meta name="theme-color" content="#FAF8F5">
 
-  <!-- SEO Meta Tags -->
-  <meta name="description"
-    content="AZIZART — Olga Indigo. Artiste peintre et dessinatrice spécialisée en batik sur toile et tissu. Découvrez la galerie, l'atelier et les ateliers.">
-  <meta name="keywords" content="batik, peinture, toile, tissu, art, artiste, Olga Indigo, Dahomey, Bénin">
-  <meta name="author" content="Olga Indigo">
-  <meta name="theme-color" content="#2C1F6B">
-
-  <!-- Open Graph Meta Tags -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://azizart.com">
-  <meta property="og:title" content="AZIZART — Olga Indigo | Artiste Peintre">
-  <meta property="og:description"
-    content="Découvrez les œuvres en batik d'Olga Indigo. Galerie, atelier, et ateliers de peinture.">
-  <meta property="og:image" content="https://azizart.com/icons/Icon-192.png">
+  <meta property="og:site_name" content="AZIZART COLORS">
+  <meta property="og:title" content="AZIZART COLORS — Olga Indigo">
+  <meta property="og:description" content="Artiste batik : œuvres, atelier et actualités.">
 
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AZIZART — Olga Indigo">
-  <meta name="twitter:description" content="Galerie d'art batik et peinture sur toile et tissu">
-
-  <!-- iOS meta tags & icons -->
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="AZIZART">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="AZIZART COLORS">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <title>AZIZART — Olga Indigo | Artiste Peintre Batik</title>
+  <title>AZIZART COLORS — Olga Indigo</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="manifest" href="manifest.json">
-  <link rel="canonical" href="https://azizart.com">
 
-  <!-- Preload critical assets -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Connexions anticipées : stockage d'images (avec et sans CORS) et moteur CanvasKit -->
+  <link rel="preconnect" href="https://pub-683ade17eed84c96a53d0631e8f03742.r2.dev" crossorigin>
+  <link rel="preconnect" href="https://pub-683ade17eed84c96a53d0631e8f03742.r2.dev">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 
   <style>
-    /* Reset et styles de base */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    html, body { margin: 0; height: 100%; background: #FAF8F5; }
+    #splash {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: Georgia, serif; color: #2B2B3C; letter-spacing: .3em; text-align: center;
+      background: #FAF8F5; transition: opacity .3s ease;
     }
-
-    body {
-      font-family: Georgia, 'Times New Roman', serif;
-      background-color: #0D1526;
-      height: 100vh;
-      width: 100vw;
+    #splash.hide { opacity: 0; pointer-events: none; }
+    #splash img {
+      display: none; width: 160px; max-width: 60vw; height: auto;
     }
-
-    /* Flutter container */
-    #flutter-container {
-      width: 100%;
-      height: 100%;
+    #splash i {
+      display: block; width: 36px; height: 2px; margin-top: 16px; background: #2B2B3C;
+      animation: pulse 1.2s ease-in-out infinite;
     }
+    @keyframes pulse { 0%, 100% { transform: scaleX(.3); } 50% { transform: scaleX(1); } }
   </style>
 </head>
-
 <body>
-  <!-- Conteneur Flutter -->
-  <div id="flutter-container">
-    <script src="flutter_bootstrap.js" async></script>
+  <div id="splash" role="status" aria-live="polite">
+    <img id="splash-logo" alt="AZIZART COLORS" fetchpriority="high" decoding="async"
+         src="https://pub-683ade17eed84c96a53d0631e8f03742.r2.dev/logo/logo.png"
+         onload="this.style.display='block';document.getElementById('splash-text').style.display='none'">
+    <span id="splash-text">AZIZART COLORS</span>
+    <i></i>
   </div>
-</body>
+  <noscript>
+    <p style="font-family:Georgia,serif;text-align:center;padding:48px 24px;position:relative;z-index:20">
+      AZIZART COLORS — Olga Indigo. Activez JavaScript pour afficher le site.
+    </p>
+  </noscript>
 
+  <script>
+    (function () {
+      var supported = false;
+      try {
+        var c = document.createElement('canvas');
+        supported = !!(window.WebGL2RenderingContext && c.getContext('webgl2')) &&
+                    typeof Promise !== 'undefined' && !!Promise.allSettled;
+      } catch (e) { supported = false; }
+
+      // Navigateur trop ancien : Flutter n'est JAMAIS chargé (le script n'est pas injecté).
+      if (!supported) {
+        document.addEventListener('DOMContentLoaded', function () {
+          var s = document.getElementById('splash');
+          s.style.letterSpacing = 'normal';
+          s.innerHTML =
+            '<div style="text-align:center;padding:48px 24px">' +
+            '<h1 style="font-weight:600;letter-spacing:.2em">AZIZART COLORS</h1>' +
+            '<p>Ce navigateur est trop ancien pour afficher le site.<br>' +
+            'Mettez-le à jour ou ouvrez le site avec un Chrome ou un Safari récent.</p></div>';
+        });
+        return;
+      }
+
+      // Retire l'écran d'attente dès que Flutter a dessiné sa première image.
+      function hideSplash() {
+        var s = document.getElementById('splash');
+        if (!s) return;
+        s.classList.add('hide');
+        setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 400);
+      }
+      window.addEventListener('flutter-first-frame', hideSplash);
+      setTimeout(hideSplash, 20000); // filet de sécurité
+
+      var script = document.createElement('script');
+      script.src = 'flutter_bootstrap.js';
+      script.async = true;
+      document.head.appendChild(script);
+    })();
+  </script>
+</body>
 </html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945136337080",
+    "project_id": "azizart",
+    "storage_bucket": "azizart.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945136337080:android:29df4e9c8c029d97a7744d",
+        "android_client_info": {
+          "package_name": "com.example.azizart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcYjaSpuaUA_y-n0sjPgpLSbiXMmLx-NI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

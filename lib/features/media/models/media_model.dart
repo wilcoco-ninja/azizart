@@ -1,58 +1,55 @@
 import 'package:flutter/material.dart';
 
+import '../../../services/media_url_resolver.dart';
+
 // ══════════════════════════════════════════════════════════════════════════════
 // MediaType
 // ══════════════════════════════════════════════════════════════════════════════
-enum MediaType { video, reportage, news }
+enum MediaType { video, press, documentary }
 
 extension MediaTypeX on MediaType {
-  // Libellé localisé
   String getLabel(BuildContext context) {
     final isEn = Localizations.maybeLocaleOf(context)?.languageCode == 'en';
     switch (this) {
       case MediaType.video:
-        return isEn ? 'VIDEO' : 'VIDÉO';
-      case MediaType.reportage:
-        return isEn ? 'REPORT' : 'REPORTAGE';
-      case MediaType.news:
-        return isEn ? 'NEWS' : 'ACTUALITÉ';
+        return isEn ? 'Video' : 'Vidéo';
+      case MediaType.press:
+        return isEn ? 'Press' : 'Presse';
+      case MediaType.documentary:
+        return isEn ? 'Documentary' : 'Documentaire';
     }
   }
 
-  // Couleur accent par type (utilisée dans media_page.dart)
-  Color get color {
-    switch (this) {
-      case MediaType.video:
-        return const Color(0xFFE53935); // rouge YouTube
-      case MediaType.reportage:
-        return const Color(0xFF1565C0); // bleu presse
-      case MediaType.news:
-        return const Color(0xFF2E7D32); // vert actu
-    }
-  }
-
-  // Icône par type
   IconData get icon {
     switch (this) {
       case MediaType.video:
         return Icons.play_circle_outline;
-      case MediaType.reportage:
-        return Icons.article_outlined;
-      case MediaType.news:
+      case MediaType.press:
         return Icons.newspaper_outlined;
+      case MediaType.documentary:
+        return Icons.movie_outlined;
     }
   }
 
-  // Parse depuis chaîne (JSON / Supabase)
-  // Accepte les anciennes valeurs FR ('actualite', 'reportage')
+  Color get color {
+    switch (this) {
+      case MediaType.video:
+        return const Color(0xFF3F51B5);
+      case MediaType.press:
+        return const Color(0xFFE8C56A);
+      case MediaType.documentary:
+        return const Color(0xFF6B4FA0);
+    }
+  }
+
   static MediaType fromString(String s) {
     switch (s.toLowerCase().trim()) {
-      case 'reportage':
-        return MediaType.reportage;
-      case 'actualite':
-      case 'actualité':
-      case 'news':
-        return MediaType.news;
+      case 'press':
+      case 'presse':
+        return MediaType.press;
+      case 'documentary':
+      case 'documentaire':
+        return MediaType.documentary;
       default:
         return MediaType.video;
     }
@@ -61,15 +58,11 @@ extension MediaTypeX on MediaType {
 
 // ══════════════════════════════════════════════════════════════════════════════
 // MediaItem
-// Compatible JSON local (camelCase — inchangé) et Supabase/Postgres
-// (snake_case — voir schema.sql).
-//
-// FIX : `descriptionFr` / `descriptionEn` ajoutés — le JSON local
-// (media_items.json) contient ces textes sous les clés `subtitleFr` /
-// `subtitleEn`, mais l'ancien modèle ne les lisait pas du tout : le texte
-// existait dans les données mais disparaissait silencieusement au
-// parsing, jamais affiché nulle part.
 // ══════════════════════════════════════════════════════════════════════════════
+
+/// Élément média (vidéo, presse, documentaire) affiché sur le site.
+/// Les vignettes sont hébergées sur Cloudflare R2 (dossier `media/`).
+@immutable
 class MediaItem {
   final String id;
   final String titleFr;
@@ -79,11 +72,16 @@ class MediaItem {
   final MediaType type;
   final String source;
   final String url;
+
+  /// Clé R2 relative de la vignette (ex. `media/thumb.jpg` ou `thumb.jpg`).
   final String thumbnailPath;
+
+  /// URL publique R2 complète de la vignette (optionnelle).
   final String thumbnailUrl;
   final String year;
-  final String? duration; // ex: "2:45" ou "45 min"
-  final DateTime? date; // date de parution / événement
+  final String? duration;
+  final DateTime? date;
+  final bool isPublished;
 
   const MediaItem({
     required this.id,
@@ -99,15 +97,14 @@ class MediaItem {
     this.year = '',
     this.duration,
     this.date,
+    this.isPublished = true,
   });
 
-  // Titre localisé (avec BuildContext)
   String getTitle(BuildContext context) {
     final isEn = Localizations.maybeLocaleOf(context)?.languageCode == 'en';
     return (isEn && titleEn.isNotEmpty) ? titleEn : titleFr;
   }
 
-  // Description/sous-titre localisé (avec BuildContext)
   String getDescription(BuildContext context) {
     final isEn = Localizations.maybeLocaleOf(context)?.languageCode == 'en';
     return (isEn && descriptionEn.isNotEmpty) ? descriptionEn : descriptionFr;
@@ -115,40 +112,61 @@ class MediaItem {
 
   bool get hasNetworkThumb =>
       thumbnailUrl.isNotEmpty && thumbnailUrl.startsWith('http');
-  String get displayThumb => hasNetworkThumb ? thumbnailUrl : thumbnailPath;
 
-  // ── JSON local (assets/data/media_items.json) ───────────────────────────
-  factory MediaItem.fromMap(Map<String, dynamic> j) => MediaItem.fromJson(j);
+  /// URL publique R2 de la vignette (dossier `media/` par défaut).
+  /// Les anciennes URLs Supabase / r2.dev sont ramenées au domaine actuel.
+  String get displayThumb {
+    final direct = thumbnailUrl.trim();
+    final reference = direct.isNotEmpty ? direct : thumbnailPath.trim();
+    if (reference.startsWith('assets/')) return reference;
+    return MediaUrlResolver.resolve(reference, folder: 'media');
+  }
 
-  factory MediaItem.fromJson(Map<String, dynamic> j) {
-    DateTime? parsedDate;
-    final rawDate = j['date'];
-    if (rawDate is String && rawDate.isNotEmpty) {
-      parsedDate = DateTime.tryParse(rawDate);
-    }
+  /// Lien d'ouverture du média. Un lien externe (YouTube, site de presse)
+  /// reste inchangé ; un fichier hébergé sur R2 (ancien domaine inclus)
+  /// est ramené au domaine actuel.
+  String get displayUrl {
+    final raw = url.trim();
+    if (!raw.startsWith('http')) return raw;
+    return MediaUrlResolver.resolve(raw, folder: 'media');
+  }
+
+  MediaItem copyWith({
+    String? id,
+    String? titleFr,
+    String? titleEn,
+    String? descriptionFr,
+    String? descriptionEn,
+    MediaType? type,
+    String? source,
+    String? url,
+    String? thumbnailPath,
+    String? thumbnailUrl,
+    String? year,
+    String? duration,
+    DateTime? date,
+    bool? isPublished,
+  }) {
     return MediaItem(
-      id: j['id']?.toString() ?? '',
-      titleFr: j['titleFr'] as String? ?? j['title'] as String? ?? '',
-      titleEn: j['titleEn'] as String? ?? '',
-      // FIX : lit désormais subtitleFr/subtitleEn (présents dans le JSON
-      // mais jusqu'ici jamais capturés par le modèle).
-      descriptionFr:
-          j['subtitleFr'] as String? ?? j['descriptionFr'] as String? ?? '',
-      descriptionEn:
-          j['subtitleEn'] as String? ?? j['descriptionEn'] as String? ?? '',
-      type: MediaTypeX.fromString(j['type'] as String? ?? 'video'),
-      source: j['source'] as String? ?? '',
-      url: j['url'] as String? ?? '',
-      thumbnailPath: j['thumbnailPath'] as String? ?? '',
-      thumbnailUrl: j['thumbnailUrl'] as String? ?? '',
-      year: j['year']?.toString() ?? '',
-      duration: j['duration'] as String?,
-      date: parsedDate,
+      id: id ?? this.id,
+      titleFr: titleFr ?? this.titleFr,
+      titleEn: titleEn ?? this.titleEn,
+      descriptionFr: descriptionFr ?? this.descriptionFr,
+      descriptionEn: descriptionEn ?? this.descriptionEn,
+      type: type ?? this.type,
+      source: source ?? this.source,
+      url: url ?? this.url,
+      thumbnailPath: thumbnailPath ?? this.thumbnailPath,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      year: year ?? this.year,
+      duration: duration ?? this.duration,
+      date: date ?? this.date,
+      isPublished: isPublished ?? this.isPublished,
     );
   }
 
-  // ── Parsing Supabase (table public.media_items) ─────────────────────────
-  factory MediaItem.fromSupabase(Map<String, dynamic> d) {
+  /// Lecture d'une ligne de la table `media_items`.
+  factory MediaItem.fromMap(Map<String, dynamic> d) {
     final rawDate = d['date'];
     return MediaItem(
       id: d['id']?.toString() ?? '',
@@ -166,10 +184,13 @@ class MediaItem {
       date: rawDate is String && rawDate.isNotEmpty
           ? DateTime.tryParse(rawDate)
           : null,
+      isPublished: d['is_published'] as bool? ?? true,
     );
   }
 
-  // ── Sérialisation vers Supabase (insert / update) ───────────────────────
+  factory MediaItem.fromJson(Map<String, dynamic> json) =>
+      MediaItem.fromMap(json);
+
   Map<String, dynamic> toMap() => {
         'title_fr': titleFr,
         'title_en': titleEn.isEmpty ? titleFr : titleEn,
@@ -183,5 +204,47 @@ class MediaItem {
         'year': year,
         'duration': duration,
         'date': date?.toIso8601String(),
+        'is_published': isPublished,
       };
+
+  @override
+  String toString() =>
+      'MediaItem(id: $id, type:${type.name}, published: $isPublished, titleFr:$titleFr)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MediaItem &&
+          other.id == id &&
+          other.titleFr == titleFr &&
+          other.titleEn == titleEn &&
+          other.descriptionFr == descriptionFr &&
+          other.descriptionEn == descriptionEn &&
+          other.type == type &&
+          other.source == source &&
+          other.url == url &&
+          other.thumbnailPath == thumbnailPath &&
+          other.thumbnailUrl == thumbnailUrl &&
+          other.year == year &&
+          other.duration == duration &&
+          other.date == date &&
+          other.isPublished == isPublished);
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        titleFr,
+        titleEn,
+        descriptionFr,
+        descriptionEn,
+        type,
+        source,
+        url,
+        thumbnailPath,
+        thumbnailUrl,
+        year,
+        duration,
+        date,
+        isPublished,
+      ]);
 }

@@ -1,180 +1,100 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../features/gallery/models/artwork.dart';
-import '../theme/aziz_colors.dart';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// ArtworkCard — Carte d'œuvre réutilisable (galerie, accueil, etc.)
-// ══════════════════════════════════════════════════════════════════════════════
+import '../features/gallery/models/artwork.dart';
+import '../features/home/shared_components.dart';
+import '../theme/aziz_colors.dart';
+import 'optimized_image.dart';
+
+/// Œuvre sur son passe-partout, avec son cartel (titre, technique, année).
+/// L'image n'est jamais recadrée.
 class ArtworkCard extends StatefulWidget {
   final Artwork artwork;
   final VoidCallback? onTap;
+  final String heroTagPrefix;
+
+  /// Hauteur réservée au cartel sous le cadre.
+  static const double labelHeight = 64;
 
   const ArtworkCard({
     super.key,
     required this.artwork,
     this.onTap,
+    this.heroTagPrefix = 'gallery',
   });
 
   @override
   State<ArtworkCard> createState() => _ArtworkCardState();
 }
 
-class _ArtworkCardState extends State<ArtworkCard>
-    with SingleTickerProviderStateMixin {
+class _ArtworkCardState extends State<ArtworkCard> {
   bool _hovered = false;
-  late final AnimationController _ctrl;
-  late final Animation<double> _scale;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _scale = Tween<double>(begin: 1.0, end: 1.03).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  void _onHover(bool hovered) {
-    setState(() => _hovered = hovered);
-    if (hovered) {
-      _ctrl.forward();
-    } else {
-      _ctrl.reverse();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final artwork = widget.artwork;
+    final details = <String>[
+      if (artwork.technique.trim().isNotEmpty) artwork.technique.trim(),
+      if (artwork.year.trim().isNotEmpty) artwork.year.trim(),
+    ].join(', ');
 
     return MouseRegion(
-      onEnter: (_) => _onHover(true),
-      onExit: (_) => _onHover(false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: ScaleTransition(
-          scale: _scale,
-          child: Container(
-            decoration: BoxDecoration(
-              color: AzizColors.surface,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: _hovered
-                    ? AzizColors.gold.withValues(alpha: 0.4)
-                    : AzizColors.border,
-                width: _hovered ? 1 : 0.5,
+      child: Semantics(
+        button: true,
+        label: artwork.title,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: widget.onTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: HomeMat(
+                  raised: _hovered,
+                  padding: 12,
+                  child: Hero(
+                    tag: '${widget.heroTagPrefix}-artwork-${artwork.id}',
+                    child: _ArtworkImage(artwork: artwork),
+                  ),
+                ),
               ),
-              boxShadow: _hovered
-                  ? [
-                      BoxShadow(
-                        color: AzizColors.gold.withValues(alpha: 0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      )
-                    ]
-                  : [],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Image
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(4)),
-                    child: Stack(
-                      fit: StackFit.expand,
+              SizedBox(
+                height: ArtworkCard.labelHeight,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        artwork.hasNetworkImage
-                            ? CachedNetworkImage(
-                                imageUrl: artwork.imageUrl,
-                                fit: BoxFit.cover,
-                                memCacheWidth: 700,
-                                placeholder: (_, __) =>
-                                    Container(color: AzizColors.card),
-                                errorWidget: (_, __, ___) => Container(
-                                  color: AzizColors.card,
-                                  child: const Icon(
-                                    Icons.image_not_supported_outlined,
-                                    color: AzizColors.textMuted,
-                                    size: 40,
-                                  ),
-                                ),
-                              )
-                            : Image.asset(
-                                artwork.imagePath,
-                                fit: BoxFit.cover,
-                                cacheWidth: 700,
-                                errorBuilder: (_, __, ___) => Container(
-                                  color: AzizColors.card,
-                                  child: const Icon(
-                                    Icons.image_not_supported_outlined,
-                                    color: AzizColors.textMuted,
-                                    size: 40,
-                                  ),
-                                ),
-                              ),
-                        // Badge disponibilité
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: _AvailabilityBadge(
-                              isAvailable: artwork.isAvailable),
+                        Text(
+                          artwork.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: homeSerif(
+                            size: 16.5,
+                            style: FontStyle.italic,
+                            height: 1.25,
+                          ),
                         ),
+                        if (details.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            details,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: homeSans(size: 13, height: 1.4),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
-                // Infos
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        artwork.title,
-                        style: const TextStyle(
-                          color: AzizColors.textPrimary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.3,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        artwork.category,
-                        style: const TextStyle(
-                          color: AzizColors.textSecondary,
-                          fontSize: 11,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        artwork.dimensions,
-                        style: const TextStyle(
-                          color: AzizColors.textMuted,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -182,29 +102,48 @@ class _ArtworkCardState extends State<ArtworkCard>
   }
 }
 
-class _AvailabilityBadge extends StatelessWidget {
-  final bool isAvailable;
-  const _AvailabilityBadge({required this.isAvailable});
+class _ArtworkImage extends StatelessWidget {
+  final Artwork artwork;
+  const _ArtworkImage({required this.artwork});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isAvailable
-            ? AzizColors.gold.withValues(alpha: 0.9)
-            : AzizColors.terracotta.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: Text(
-        isAvailable ? 'Disponible' : 'Vendue',
-        style: const TextStyle(
-          color: AzizColors.background,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.8,
-        ),
-      ),
+    final src = artwork.displayImage;
+
+    if (src.isEmpty) return const _ImageFallback();
+
+    if (src.startsWith('assets/')) {
+      return Image.asset(
+        src,
+        fit: BoxFit.contain,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) => const _ImageFallback(),
+      );
+    }
+
+    return OptimizedImage(
+      url: src,
+      fit: BoxFit.contain,
+      width: double.infinity,
+      height: double.infinity,
+      memCacheWidth: 600,
+      errorWidget: const _ImageFallback(),
     );
   }
+}
+
+class _ImageFallback extends StatelessWidget {
+  const _ImageFallback();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: AzizColors.lightSurface,
+        alignment: Alignment.center,
+        child: const Icon(
+          Icons.image_not_supported_outlined,
+          color: AzizColors.lightTextSecondary,
+          size: 28,
+        ),
+      );
 }

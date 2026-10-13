@@ -1,106 +1,211 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../gallery/models/artwork.dart';
-import '../../../core/data/json_data_service.dart';
+import '../../../services/r2_reference_guard.dart';
+import '../../../services/r2_storage_service.dart';
+import '../models/artwork.dart';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// GalleryService — CRUD Supabase (table 'artworks')
-//
-// Remplace Firestore par Supabase (Postgres + Realtime + Row Level
-// Security). Mêmes noms de méthodes qu'avant : aucun changement requis
-// dans les fichiers qui utilisent GalleryService (admin_forms.dart,
-// app.dart, home_service.dart…).
-// ══════════════════════════════════════════════════════════════════════════════
+/// Œuvres de la galerie : métadonnées dans la table `artworks`,
+/// fichiers sur Cloudflare R2 (dossier `gallery/`).
 class GalleryService {
-  final _db = Supabase.instance.client;
-  static const _table = 'artworks';
+  SupabaseClient get _db => Supabase.instance.client;
+  static const String _table = 'artworks';
+  static const String _folder = 'gallery';
 
-  // ── Streams temps réel ───────────────────────────────────────────────────
-  // IMPORTANT : le Stream retourné ici doit être créé UNE SEULE FOIS par
-  // l'appelant (ex. dans initState / un champ `late final`), jamais
-  // recréé à l'intérieur d'un build() — sinon la connexion Realtime est
-  // perdue et recréée à chaque frame (même bug que celui déjà corrigé
-  // sur _NewsEventsSection côté Firebase).
+  /// Visiteur non connecté : seules les œuvres publiées sont visibles.
+  /// Un administrateur connecté voit tout (la RLS fait foi côté serveur).
+  bool get _publishedOnly => _db.auth.currentUser == null;
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONTRÔLE ADMIN
+  // ═══════════════════════════════════════════════════════════════════════
+
+  Future<void> _checkAdmin() async {
+    if (_db.auth.currentUser == null) {
+      throw Exception(
+        'Utilisateur non connecté. Veuillez vous connecter pour publier.',
+      );
+    }
+    try {
+      final isAdmin = await _db.rpc('is_admin');
+      if (isAdmin != true) {
+        throw Exception(
+          'Permissions insuffisantes. Votre compte n\'a pas les droits administrateur.',
+        );
+      }
+    } on PostgrestException catch (e) {
+      throw Exception(
+        'Impossible de vérifier vos droits administrateur (${e.message}). Réessayez.',
+      );
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // LECTURE
+  // ═══════════════════════════════════════════════════════════════════════
+
   Stream<List<Artwork>> watchArtworks() {
-    return _db
-        .from(_table)
-        .stream(primaryKey: ['id'])
-        .map((rows) => rows.map(Artwork.fromSupabase).toList())
-        .handleError((e) => debugPrint('GalleryService stream error: $e'));
+    var query = _db.from(_table).stream(primaryKey: ['id']);
+    if (_publishedOnly) query = query.eq('is_published', true);
+    return query
+        .order('created_at', ascending: false)
+        .map((rows) => rows.map(Artwork.fromJson).toList());
   }
 
   Stream<List<Artwork>> watchFeatured() {
+    final publishedOnly = _publishedOnly;
+    // Le flux temps réel n'accepte qu'un seul filtre : la publication
+    // est donc filtrée côté client pour les visiteurs.
     return _db
         .from(_table)
         .stream(primaryKey: ['id'])
         .eq('featured', true)
-        .limit(6)
-        .map((rows) => rows.map(Artwork.fromSupabase).toList())
-        .handleError(
-            (e) => debugPrint('GalleryService watchFeatured error: $e'));
+        .order('created_at', ascending: false)
+        .map((rows) => rows
+            .map(Artwork.fromJson)
+            .where((a) => !publishedOnly || a.isPublished)
+            .toList());
   }
 
-  // ── Futures ponctuels ────────────────────────────────────────────────────
   Future<List<Artwork>> fetchArtworks() async {
     try {
-      final rows = await _db.from(_table).select();
-      if (rows.isNotEmpty) {
-        return rows.map(Artwork.fromSupabase).toList();
-      }
+      final base = _db.from(_table).select();
+      final rows = await (_publishedOnly ? base.eq('is_published', true) : base)
+          .order('created_at', ascending: false);
+      return rows.map(Artwork.fromJson).toList();
     } catch (e) {
-      debugPrint(
-          'GalleryService fetchArtworks Supabase error: $e — fallback JSON');
+      debugPrint('GalleryService: erreur fetchArtworks — $e');
+      return [];
     }
-    // Fallback JSON local
-    return JsonDataService().loadArtworks();
   }
 
   Future<Artwork?> fetchById(String id) async {
-    final row = await _db.from(_table).select().eq('id', id).maybeSingle();
-    if (row == null) return null;
-    return Artwork.fromSupabase(row);
+    try {
+      final row = await _db.from(_table).select().eq('id', id).maybeSingle();
+      return row == null ? null : Artwork.fromJson(row);
+    } catch (e) {
+      debugPrint('GalleryService: erreur fetchById — $e');
+      return null;
+    }
   }
 
-  // ── Écriture ─────────────────────────────────────────────────────────────
-  /// Ajoute une nouvelle œuvre. Retourne l'id généré par Supabase.
+  // ═══════════════════════════════════════════════════════════════════════
+  // ÉCRITURE
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Ajoute une œuvre et retourne son identifiant (généré par la base).
   Future<String> addArtwork(Artwork artwork) async {
-    final row =
-        await _db.from(_table).insert(artwork.toMap()).select().single();
-    final id = row['id'].toString();
-    debugPrint('GalleryService: œuvre ajoutée — id: $id');
-    return id;
+    await _checkAdmin();
+    final data = artwork.toMap()..remove('id');
+    try {
+      final row = await _db.from(_table).insert(data).select().single();
+      final id = row['id'].toString();
+      debugPrint('GalleryService: œuvre ajoutée — id: $id');
+      return id;
+    } catch (e) {
+      debugPrint('GalleryService: erreur addArtwork — $e');
+      rethrow;
+    }
   }
 
-  /// Met à jour une œuvre existante.
+  /// Met à jour une œuvre. Si l'image a été remplacée, l'ancien fichier est
+  /// supprimé de R2, sauf si une autre ligne le référence encore.
   Future<void> updateArtwork(String id, Artwork artwork) async {
-    await _db.from(_table).update({
-      ...artwork.toMap(),
-      'updated_at': DateTime.now().toIso8601String(),
-    }).eq('id', id);
-    debugPrint('GalleryService: œuvre mise à jour — id: $id');
+    await _checkAdmin();
+    final data = artwork.toMap()..remove('id');
+
+    Map<String, dynamic>? before;
+    try {
+      before = await _db
+          .from(_table)
+          .select('image_url, image_path')
+          .eq('id', id)
+          .maybeSingle();
+    } catch (e) {
+      debugPrint('GalleryService: lecture de l\'ancienne image impossible — $e');
+    }
+
+    try {
+      await _db.from(_table).update(data).eq('id', id);
+      debugPrint('GalleryService: œuvre mise à jour — id: $id');
+    } catch (e) {
+      debugPrint('GalleryService: erreur updateArtwork — $e');
+      rethrow;
+    }
+
+    await _purgeReplaced(before, artwork);
   }
 
-  /// Supprime une œuvre.
+  /// Supprime l'œuvre PUIS ses fichiers R2 (si plus aucune ligne ne les
+  /// référence). Un refus de la RLS (0 ligne) ne fait ainsi jamais perdre
+  /// l'image d'une œuvre qui reste affichée.
   Future<void> deleteArtwork(String id) async {
-    await _db.from(_table).delete().eq('id', id);
+    await _checkAdmin();
+
+    final row = await _db
+        .from(_table)
+        .select('image_url, image_path')
+        .eq('id', id)
+        .maybeSingle();
+    if (row == null) {
+      debugPrint('GalleryService: œuvre déjà supprimée — id: $id');
+      return;
+    }
+
+    final deleted = await _db.from(_table).delete().eq('id', id).select('id');
+    if (deleted.isEmpty) {
+      throw Exception(
+        'Suppression refusée : droits insuffisants ou œuvre introuvable.',
+      );
+    }
     debugPrint('GalleryService: œuvre supprimée — id: $id');
+
+    await _purgeUnreferenced([
+      row['image_url'] as String?,
+      row['image_path'] as String?,
+    ]);
   }
 
-  /// Bascule la disponibilité d'une œuvre.
-  Future<void> toggleAvailability(String id,
-      {required bool isAvailable}) async {
-    await _db.from(_table).update({
-      'is_available': isAvailable,
-      'updated_at': DateTime.now().toIso8601String(),
-    }).eq('id', id);
+  // ═══════════════════════════════════════════════════════════════════════
+  // STOCKAGE — Cloudflare R2
+  // ═══════════════════════════════════════════════════════════════════════
+
+  /// Supprime de R2 les fichiers que plus aucune ligne ne référence.
+  /// N'interrompt jamais l'appelant : la base est déjà à jour.
+  Future<void> _purgeUnreferenced(Iterable<String?> references) async {
+    try {
+      final deletable = await R2ReferenceGuard.unreferenced(
+        references,
+        defaultFolder: _folder,
+      );
+      if (deletable.isEmpty) return;
+      await R2StorageService().deleteReferences(deletable);
+    } catch (e) {
+      debugPrint('GalleryService: fichier R2 non supprimé — $e');
+    }
   }
 
-  /// Bascule le statut "vedette" d'une œuvre.
-  Future<void> toggleFeatured(String id, {required bool featured}) async {
-    await _db.from(_table).update({
-      'featured': featured,
-      'updated_at': DateTime.now().toIso8601String(),
-    }).eq('id', id);
+  Future<void> _purgeReplaced(
+    Map<String, dynamic>? before,
+    Artwork after,
+  ) async {
+    if (before == null) return;
+
+    String? keyOf(Object? reference) => R2StorageService.keyFromReference(
+          reference is String ? reference : '',
+          defaultFolder: _folder,
+        );
+
+    final keep = <String>{
+      ?keyOf(after.imageUrl),
+      ?keyOf(after.imagePath),
+    };
+    final stale = <String>{
+      for (final reference in [before['image_url'], before['image_path']])
+        if (keyOf(reference) case final key? when !keep.contains(key)) key,
+    };
+    if (stale.isEmpty) return;
+
+    await _purgeUnreferenced(stale);
   }
 }

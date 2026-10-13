@@ -1,51 +1,75 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# ═══════════════════════════════════════════════════════════════
+# Variables d'environnement & secrets
+# ═══════════════════════════════════════════════════════════════
 .env
+.env.*
+!.env.example
+supabase/functions/.env
+
+# Clés, certificats et signatures (Android / iOS / serveurs)
+*.pem
+*.key
+*.p12
 *.jks
 *.keystore
 key.properties
-google-services.json
-GoogleService-Info.plist
+
+# ═══════════════════════════════════════════════════════════════
+# Flutter SDK cloné par Vercel (à la racine uniquement !)
+# ⚠️ Le "/" initial est essentiel : sans lui, `flutter/` ignorerait aussi
+#    windows/flutter/, linux/flutter/, ios/Flutter/ et macos/Flutter/,
+#    qui contiennent des fichiers nécessaires au build.
+# ═══════════════════════════════════════════════════════════════
+/flutter/
+/.flutter/
+
+# ═══════════════════════════════════════════════════════════════
+# Builds et dépendances
+# ═══════════════════════════════════════════════════════════════
+build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+coverage/
+node_modules/
+app.*.symbols
+app.*.map.json
+
+# ═══════════════════════════════════════════════════════════════
+# Outils de déploiement / backend local
+# ═══════════════════════════════════════════════════════════════
+.vercel
+.vercel/
+.wrangler/
+supabase/.temp/
+supabase/.branches/
+
+# ═══════════════════════════════════════════════════════════════
+# IDE
+# ═══════════════════════════════════════════════════════════════
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.log
+
+# ═══════════════════════════════════════════════════════════════
+# Système
+# ═══════════════════════════════════════════════════════════════
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ═══════════════════════════════════════════════════════════════
+# Plateformes natives (généré)
+# ═══════════════════════════════════════════════════════════════
+android/.gradle/
+ios/Pods/
+ios/.symlinks/
+macos/Pods/
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/

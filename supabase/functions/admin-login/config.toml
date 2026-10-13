@@ -1,0 +1,8 @@
+# À ajouter dans supabase/config.toml de ton projet.
+# La fonction vérifie elle-même l'utilisateur ET le rôle admin : la
+# vérification « legacy JWT » de la passerelle doit rester désactivée,
+# sinon les jetons des nouvelles clés de signature sont refusés en 401.
+ 
+[functions.r2-presign]
+verify_jwt = false
+ 

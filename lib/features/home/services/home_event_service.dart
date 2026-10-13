@@ -1,116 +1,179 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-// ══════════════════════════════════════════════════════════════════════════════
-// HomeEvent — modèle événement/actualité page d'accueil
-// HomeEventService — CRUD Supabase (table 'home_events')
-//
-// Postgres n'a pas la limitation "index composite" de Firestore : on peut
-// combiner .eq() et .order() librement dans une seule requête, sans
-// configuration manuelle supplémentaire.
-// ══════════════════════════════════════════════════════════════════════════════
+import '../../../services/r2_reference_guard.dart';
+import '../../../services/r2_storage_service.dart';
+import '../models/home_event_model.dart';
 
-class HomeEvent {
-  final String id;
-  final String titleFr;
-  final String titleEn;
-  final String descriptionFr;
-  final String descriptionEn;
-  final String imageUrl;
-  final String type; // 'news' | 'event' | 'exhibition'
-  final DateTime? eventDate;
-  final DateTime? createdAt;
-  final bool isPublished;
-
-  const HomeEvent({
-    required this.id,
-    required this.titleFr,
-    this.titleEn = '',
-    required this.descriptionFr,
-    this.descriptionEn = '',
-    this.imageUrl = '',
-    this.type = 'news',
-    this.eventDate,
-    this.createdAt,
-    this.isPublished = true,
-  });
-
-  Map<String, dynamic> toMap() => {
-        'title_fr': titleFr,
-        'title_en': titleEn.isEmpty ? titleFr : titleEn,
-        'description_fr': descriptionFr,
-        'description_en': descriptionEn.isEmpty ? descriptionFr : descriptionEn,
-        'image_url': imageUrl,
-        'type': type,
-        'event_date': eventDate?.toIso8601String(),
-        'is_published': isPublished,
-      };
-
-  factory HomeEvent.fromSupabase(Map<String, dynamic> d) => HomeEvent(
-        id: d['id']?.toString() ?? '',
-        titleFr: d['title_fr'] as String? ?? '',
-        titleEn: d['title_en'] as String? ?? '',
-        descriptionFr: d['description_fr'] as String? ?? '',
-        descriptionEn: d['description_en'] as String? ?? '',
-        imageUrl: d['image_url'] as String? ?? '',
-        type: d['type'] as String? ?? 'news',
-        eventDate: d['event_date'] != null
-            ? DateTime.tryParse(d['event_date'].toString())
-            : null,
-        createdAt: d['created_at'] != null
-            ? DateTime.tryParse(d['created_at'].toString())
-            : null,
-        isPublished: d['is_published'] as bool? ?? true,
-      );
-}
-
+/// Actualités et événements de l'accueil : table `home_events`,
+/// images sur Cloudflare R2 (dossier `home_events/`).
 class HomeEventService {
   final _db = Supabase.instance.client;
   static const _table = 'home_events';
+  static const _folder = 'home_events';
 
-  Future<String> addEvent(HomeEvent event) async {
-    final row = await _db.from(_table).insert(event.toMap()).select().single();
-    return row['id'].toString();
+  // ── CONTRÔLE ADMIN ─────────────────────────────────────────────────────
+
+  Future<User> _checkAdmin() async {
+    final user = _db.auth.currentUser;
+    if (user == null) {
+      throw Exception(
+        'Utilisateur non connecté. Veuillez vous connecter pour publier.',
+      );
+    }
+    try {
+      final isAdmin = await _db.rpc('is_admin');
+      if (isAdmin != true) {
+        throw Exception(
+          'Permissions insuffisantes. Votre compte n\'a pas les droits administrateur.',
+        );
+      }
+    } on PostgrestException catch (e) {
+      throw Exception(
+        'Impossible de vérifier vos droits administrateur (${e.message}). Réessayez.',
+      );
+    }
+    return user;
   }
 
-  /// Lecture ponctuelle (sans abonnement temps réel) des actualités
-  /// publiées. Utilisée par _NewsEventsSection comme repli en cas
-  /// d'échec de watchPublished() (ex. réseau bloquant les WebSocket).
+  // ── LECTURE ────────────────────────────────────────────────────────────
+
+  Future<List<HomeEvent>> fetchAll() async {
+    final rows =
+        await _db.from(_table).select().order('event_date', ascending: false);
+    return rows.map(HomeEvent.fromMap).toList();
+  }
+
   Future<List<HomeEvent>> fetchPublished() async {
-    final rows = await _db
+    try {
+      final rows = await _db
+          .from(_table)
+          .select()
+          .eq('is_published', true)
+          .order('event_date', ascending: false);
+      return rows.map(HomeEvent.fromMap).toList();
+    } catch (e) {
+      debugPrint('HomeEventService: erreur fetchPublished — $e');
+      return [];
+    }
+  }
+
+  /// Flux temps réel : réservé aux écrans admin.
+  Stream<List<HomeEvent>> watchAll() {
+    return _db
         .from(_table)
-        .select()
+        .stream(primaryKey: ['id'])
+        .order('event_date', ascending: false)
+        .map((list) => list.map(HomeEvent.fromMap).toList());
+  }
+
+  Stream<List<HomeEvent>> watchPublished() {
+    return _db
+        .from(_table)
+        .stream(primaryKey: ['id'])
         .eq('is_published', true)
-        .order('created_at', ascending: false);
-    return rows.map(HomeEvent.fromSupabase).toList();
+        .order('event_date', ascending: false)
+        .map((list) => list.map(HomeEvent.fromMap).toList());
+  }
+
+  // ── ÉCRITURE ───────────────────────────────────────────────────────────
+
+  Future<String> addEvent(HomeEvent event) async {
+    final user = await _checkAdmin();
+
+    final data = {
+      ...event.toMap(),
+      'created_by': user.id,
+    };
+
+    try {
+      final row = await _db.from(_table).insert(data).select().single();
+      final id = row['id'].toString();
+      debugPrint('HomeEventService: événement ajouté — id: $id');
+      return id;
+    } catch (e) {
+      debugPrint('HomeEventService: erreur addEvent — $e');
+      rethrow;
+    }
   }
 
   Future<void> updateEvent(HomeEvent event) async {
-    await _db.from(_table).update({
-      ...event.toMap(),
-      'updated_at': DateTime.now().toIso8601String(),
-    }).eq('id', event.id);
+    await _checkAdmin();
+
+    try {
+      await _db.from(_table).update({
+        ...event.toMap(),
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('id', event.id);
+      debugPrint('HomeEventService: événement mis à jour — id: ${event.id}');
+    } catch (e) {
+      debugPrint('HomeEventService: erreur updateEvent — $e');
+      rethrow;
+    }
   }
 
+  /// Publie / retire un événement sans réécrire les autres champs.
+  /// Lève une exception si la RLS refuse l'écriture (aucune ligne modifiée).
+  Future<void> setPublished(String id, bool value) async {
+    await _checkAdmin();
+    final rows = await _db
+        .from(_table)
+        .update({
+          'is_published': value,
+          'updated_at': DateTime.now().toUtc().toIso8601String(),
+        })
+        .eq('id', id)
+        .select('id');
+    if (rows.isEmpty) {
+      throw Exception(
+        'Modification refusée : droits insuffisants ou événement introuvable.',
+      );
+    }
+    debugPrint('HomeEventService: publication=$value — id: $id');
+  }
+
+  // ── SUPPRESSION & STOCKAGE (Cloudflare R2) ──────────────────────────────
+
+  /// Supprime de R2 une image devenue inutile, sauf si une autre ligne la
+  /// référence encore. Sans interrompre l'appelant en cas d'échec :
+  /// l'événement est déjà enregistré.
+  Future<void> purgeOrphanImage({required String imageUrl}) async {
+    final url = imageUrl.trim();
+    if (url.isEmpty) return;
+    try {
+      final keys = await R2ReferenceGuard.unreferenced(
+        [url],
+        defaultFolder: _folder,
+      );
+      if (keys.isNotEmpty) await R2StorageService().deleteReferences(keys);
+    } catch (e) {
+      debugPrint('HomeEventService.purgeOrphanImage: échec — $e');
+    }
+  }
+
+  /// Supprime la ligne PUIS l'image R2. Un refus de la RLS (0 ligne) ne fait
+  /// ainsi jamais perdre l'image d'un événement qui reste affiché.
   Future<void> deleteEvent(String id) async {
-    await _db.from(_table).delete().eq('id', id);
+    await _checkAdmin();
+
+    final row = await _db
+        .from(_table)
+        .select('image_url')
+        .eq('id', id)
+        .maybeSingle();
+    if (row == null) {
+      debugPrint('HomeEventService: événement déjà supprimé — id: $id');
+      return;
+    }
+
+    final deleted = await _db.from(_table).delete().eq('id', id).select('id');
+    if (deleted.isEmpty) {
+      throw Exception(
+        'Suppression refusée : droits insuffisants ou événement introuvable.',
+      );
+    }
+    debugPrint('HomeEventService: événement supprimé — id: $id');
+
+    await purgeOrphanImage(imageUrl: (row['image_url'] as String?) ?? '');
   }
-
-  /// Actualités publiées, triées de la plus récente à la plus ancienne.
-  Stream<List<HomeEvent>> watchPublished() => _db
-      .from(_table)
-      .stream(primaryKey: ['id'])
-      .eq('is_published', true)
-      .order('created_at', ascending: false)
-      .map((rows) => rows.map(HomeEvent.fromSupabase).toList())
-      .handleError(
-          (e) => debugPrint('HomeEventService watchPublished error: $e'));
-
-  /// Toutes les actualités (publiées ou non), pour l'écran d'admin.
-  Stream<List<HomeEvent>> watchAll() => _db
-      .from(_table)
-      .stream(primaryKey: ['id'])
-      .order('created_at', ascending: false)
-      .map((rows) => rows.map(HomeEvent.fromSupabase).toList())
-      .handleError((e) => debugPrint('HomeEventService watchAll error: $e'));
 }
